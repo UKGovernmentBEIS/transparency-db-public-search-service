@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.model.SearchResults;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
@@ -31,6 +33,15 @@ public class SearchController {
 	public ResponseEntity<List<SearchResults>> getSearchResults(@Valid @RequestBody SearchInput searchInput) {
 		
 		return new ResponseEntity<List<SearchResults>>(searchService.getSearchResults(searchInput), HttpStatus.OK);
+	}
+
+	@GetMapping("/grantingAuthorities")
+	public ResponseEntity<List<GrantingAuthority>> getGrantingAuthorities(@RequestParam(required = false) String name, 
+		@RequestParam(required = false) String legalBasis,
+		@RequestParam(required = false) String status) {
+	
+		return new ResponseEntity<List<GrantingAuthority>>(searchService.findMatchingGrantingAuthorities(
+			name, legalBasis, status), HttpStatus.OK);
 	}
 	
 }
