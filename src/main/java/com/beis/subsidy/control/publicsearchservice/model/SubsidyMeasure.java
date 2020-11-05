@@ -2,19 +2,27 @@ package com.beis.subsidy.control.publicsearchservice.model;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity(name = "SUBSIDY_MEASURE_READ")
 @Data
@@ -25,9 +33,19 @@ public class SubsidyMeasure {
 	//TODO - Implement Custom sequence generator
 	@Id
 	@Column(name="SC_NUMBER")
-	private String subdidyControlNumber;
+	private String scNumber;
+	
+	//TODO - Add entity relationships with Awards
+	@OneToMany(mappedBy="subsidyMeasure")
+	@ToString.Exclude
+	@JsonIgnore
+	private List<Award> awards;
 	
 	//TODO - Add entity relationships with GA
+	@ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "gaId", nullable = false)
+	@ToString.Exclude
+	private GrantingAuthority grantingAuthority;
 	
 	@Column(name = "SUBSIDY_MEASURE_TITLE")
 	private String subsidyMeasureTitle;
@@ -45,13 +63,16 @@ public class SubsidyMeasure {
 	private String budget;
 	
 	@Column(name = "ADHOC")
-	private boolean adhoc = false;
+	private boolean adhoc;
 			
 	@Column(name = "GA_SUBSIDY_WEBLINK")
 	private String gaSubsidyWeblink;
 	
 	@Column(name = "LEGAL_BASIS")
 	private String legalBasis;
+	
+	@Column(name = "PUBLISHED_MEASURE_DATE")
+	private Date publishedMeasureDate;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;

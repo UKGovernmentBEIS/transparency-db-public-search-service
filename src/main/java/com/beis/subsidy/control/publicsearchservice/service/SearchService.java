@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.model.SearchResults;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
@@ -42,6 +43,11 @@ public class SearchService {
 	public List<SubsidyMeasure> getAllSubsidyMeasures() {
 		return smRepository.findAll();
 	}
+
+	public List<Award> getAllAwards() {
+		return awardRepository.findAll();
+	}
+
 
 	
 	
