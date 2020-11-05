@@ -36,14 +36,16 @@ public class Award {
 	private Beneficiary beneficiary;
 	
 	//TODO - Add entity relationships with GA
+	@ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "gaId", nullable = false)
+	@ToString.Exclude
+	private GrantingAuthority gratingAuthority;
 	
 	//TODO - Add entity relationships with SM
-	
-	@Column(name = "SC_NUMBER")
-	private String subdidyControlNumber;
-	
-	@Column(name = "GA_ID")
-	private Long gratingAuthorityId;
+	@ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "scNumber", nullable = false)
+	@ToString.Exclude
+	private SubsidyMeasure subsidyMeasure;
 	
 	@Column(name = "SUBSIDY_ELEMENT_FULL_AMOUNT_RANGE")
 	private String subsidyFullAmountRange;
@@ -68,6 +70,9 @@ public class Award {
 	
 	@Column(name = "SUBSIDY_INSTRUMENT")
 	private String subsidyInstrument;
+	
+	@Column(name = "SPENDING_SECTOR")
+	private String spendiingSector;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;

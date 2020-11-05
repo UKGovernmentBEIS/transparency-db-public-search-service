@@ -11,6 +11,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.model.SearchResults;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
@@ -66,6 +67,12 @@ public class SearchService {
 		
 		return gaRepository.findAll(Example.of(example, matcher));
 	}
+	public List<Award> getAllAwards() {
+		return awardRepository.findAll();
+	}
+
+
+	
 	
 	
 }
