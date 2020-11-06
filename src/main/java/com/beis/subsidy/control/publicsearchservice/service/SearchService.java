@@ -1,6 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.service;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
 import java.util.List;
 
@@ -35,10 +36,10 @@ public class SearchService {
 		
 		ExampleMatcher searchMatcher = ExampleMatcher
 				.matchingAll()
-				.withMatcher("beneficiaryName", contains().ignoreCase())
-				.withMatcher("subsidyMeasureTitle", contains().ignoreCase())
-				.withMatcher("susidyObjective", contains().ignoreCase())
-				.withMatcher("spendingRegion", contains().ignoreCase())	;
+				.withMatcher("beneficiaryName", exact())
+				.withMatcher("subsidyMeasureTitle", exact())
+				.withMatcher("susidyObjective", exact())
+				.withMatcher("spendingRegion", exact())	;
 			
 
 			Award awardExample = Award
