@@ -32,13 +32,11 @@ public class GrantingAuthority {
 	@Column(name="GA_ID")
 	private Long gaId;
 	
-	//TODO - Add entity relationships with Award
 	@OneToMany(mappedBy="gratingAuthority")
 	@ToString.Exclude
 	@JsonIgnore
 	private List<Award> awards;
 
-	//TODO - Add entity relationships with SM
 	@OneToMany(mappedBy="grantingAuthority")
 	@ToString.Exclude
 	@JsonIgnore

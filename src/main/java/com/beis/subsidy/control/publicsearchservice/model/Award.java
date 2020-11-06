@@ -16,10 +16,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Builder
 @Entity(name = "AWARD_READ")
 @Data
 @AllArgsConstructor
@@ -35,13 +37,11 @@ public class Award {
 	@ToString.Exclude
 	private Beneficiary beneficiary;
 	
-	//TODO - Add entity relationships with GA
 	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "gaId", nullable = false)
 	@ToString.Exclude
 	private GrantingAuthority gratingAuthority;
 	
-	//TODO - Add entity relationships with SM
 	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "scNumber", nullable = false)
 	@ToString.Exclude
@@ -54,7 +54,7 @@ public class Award {
 	private BigDecimal subsidyFullAmountExact;
 	
 	@Column(name = "SUBSIDY_OBJECTIVE")
-	private String susidyObjective;
+	private String subsidyObjective;
 	
 	@Column(name = "GOOD_SERVICES_FILTER")
 	private String goodsServicesFilter;

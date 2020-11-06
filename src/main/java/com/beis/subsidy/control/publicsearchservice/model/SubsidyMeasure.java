@@ -20,10 +20,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Builder
 @Entity(name = "SUBSIDY_MEASURE_READ")
 @Data
 @AllArgsConstructor
@@ -35,16 +37,15 @@ public class SubsidyMeasure {
 	@Column(name="SC_NUMBER")
 	private String scNumber;
 	
-	//TODO - Add entity relationships with Awards
 	@OneToMany(mappedBy="subsidyMeasure")
 	@ToString.Exclude
 	@JsonIgnore
 	private List<Award> awards;
 	
-	//TODO - Add entity relationships with GA
 	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "gaId", nullable = false)
 	@ToString.Exclude
+	@JsonIgnore
 	private GrantingAuthority grantingAuthority;
 	
 	@Column(name = "SUBSIDY_MEASURE_TITLE")

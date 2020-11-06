@@ -37,8 +37,6 @@ public class Beneficiary {
 		@JsonIgnore
 		private List<Award> awards;
 		
-		//TODO - Add entity relationships with GA
-		
 		@Column(name = "BENEFICIARY_NAME")
 		private String beneficiaryName;
 		

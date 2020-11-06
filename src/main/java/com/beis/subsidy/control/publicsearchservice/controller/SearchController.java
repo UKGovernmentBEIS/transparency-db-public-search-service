@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.model.SearchResults;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
@@ -35,10 +37,16 @@ public class SearchController {
 		return new ResponseEntity<List<Award>>(searchService.getAllAwards(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/searchResults")
-	public ResponseEntity<List<SearchResults>> getSearchResults(@Valid @RequestBody SearchInput searchInput) {
+	@PostMapping("/searchResults")
+	public ResponseEntity<SearchResults> getSearchResults(@Valid @RequestBody SearchInput searchInput) {
 		
-		return new ResponseEntity<List<SearchResults>>(searchService.getSearchResults(searchInput), HttpStatus.OK);
+		SearchResults searchResults = searchService.findMatchingAwards(searchInput);
+		
+		if(searchResults.totalSearchResults == 0) {
+			throw new SearchResultNotFoundException("No matching search result found.");
+		}
+		
+		return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
 	}
 
 	@GetMapping("/grantingAuthorities")
