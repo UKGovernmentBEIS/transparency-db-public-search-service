@@ -32,21 +32,21 @@ public class SearchService {
 	private SubsidyMeasureRepository smRepository;
 	
 	public SearchResults findMatchingAwards(SearchInput searchinput) {
-
+		
 		ExampleMatcher searchMatcher = ExampleMatcher
 				.matchingAll()
 				.withMatcher("beneficiaryName", contains().ignoreCase())
 				.withMatcher("subsidyMeasureTitle", contains().ignoreCase())
 				.withMatcher("susidyObjective", contains().ignoreCase())
-				.withMatcher("spendingRegion", contains().ignoreCase());
+				.withMatcher("spendingRegion", contains().ignoreCase())	;
 			
 
 			Award awardExample = Award
 				.builder()
-				.subsidyObjective(searchinput.getSusidyObjective())
-				.spendingRegion(searchinput.getSpendingRegion())
-				.beneficiary(Beneficiary.builder().beneficiaryName(searchinput.getBeneficiaryName()).build())
-				.subsidyMeasure(SubsidyMeasure.builder().subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle()).build())
+				.subsidyObjective((searchinput.getSusidyObjective() == null || searchinput.getSusidyObjective().isEmpty())  ? null : searchinput.getSusidyObjective() )
+				.spendingRegion((searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().isEmpty())  ? null : searchinput.getSpendingRegion())
+				.beneficiary((searchinput.getBeneficiaryName() == null || searchinput.getBeneficiaryName().isEmpty())  ? null : Beneficiary.builder().beneficiaryName(searchinput.getBeneficiaryName()).build())
+				.subsidyMeasure((searchinput.getSubsidyMeasureTitle() == null || searchinput.getSubsidyMeasureTitle().isEmpty())  ? null : SubsidyMeasure.builder().subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle()).build())
 				.build();
 			
 			List<Award> awards = awardRepository.findAll(Example.of(awardExample, searchMatcher));
