@@ -1,6 +1,5 @@
 package com.beis.subsidy.control.publicsearchservice.service;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
 import java.util.List;
@@ -12,13 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.Beneficiary;
-import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.model.SearchResults;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 
 @Service
 public class SearchService {
@@ -26,11 +22,6 @@ public class SearchService {
 	@Autowired
 	private AwardRepository awardRepository;
 	
-	@Autowired
-	private GrantingAuthorityRepository gaRepository;
-	
-	@Autowired
-	private SubsidyMeasureRepository smRepository;
 	
 	public SearchResults findMatchingAwards(SearchInput searchinput) {
 		
@@ -50,15 +41,14 @@ public class SearchService {
 				.subsidyMeasure((searchinput.getSubsidyMeasureTitle() == null || searchinput.getSubsidyMeasureTitle().isEmpty())  ? null : SubsidyMeasure.builder().subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle()).build())
 				.build();
 			
-			List<Award> awards = awardRepository.findAll(Example.of(awardExample, searchMatcher));
+			List<Award> awards = awardRepository.findAll(Example.of(awardExample, searchMatcher.withIgnoreCase()));
 			
 			return (null != awards) ? SearchResults.builder().awards(awards).totalSearchResults(awards.size()).build() : null;
 			
 	}
 
-	public List<SubsidyMeasure> getAllSubsidyMeasures() {
-		return smRepository.findAll();
-	}
+	
+	/* Commenting below method - as the requirements need to be discussed and later it will be used for impl. 
 
 	public List<GrantingAuthority> findMatchingGrantingAuthorities(String name, String legalBasis, String status) {
 		
@@ -78,6 +68,7 @@ public class SearchService {
 		
 		return gaRepository.findAll(Example.of(example, matcher));
 	}
+	*/
 	
 	public List<Award> getAllAwards() {
 		return awardRepository.findAll();

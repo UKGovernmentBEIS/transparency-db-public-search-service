@@ -20,7 +20,7 @@ Add the **appSettings** section to the **configuration** section of **azure-weba
     <configuration> 
         <schemaVersion>V2</schemaVersion>  
         <resourceGroup>BEIS</resourceGroup>  
-        <appName>public-search-service</appName>
+        <appName>subsidy-search-service</appName>
         <appServicePlanResourceGroup>BEIS</appServicePlanResourceGroup>
         <appServicePlanName>transparency-app-svc-plan</appServicePlanName>
         <pricingTier>P2v2</pricingTier>  
