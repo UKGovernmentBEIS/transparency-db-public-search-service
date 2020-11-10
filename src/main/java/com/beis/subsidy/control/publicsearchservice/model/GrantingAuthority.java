@@ -32,7 +32,7 @@ public class GrantingAuthority {
 	@Column(name="GA_ID")
 	private Long gaId;
 	
-	@OneToMany(mappedBy="gratingAuthority")
+	@OneToMany(mappedBy="grantingAuthority")
 	@ToString.Exclude
 	@JsonIgnore
 	private List<Award> awards;
