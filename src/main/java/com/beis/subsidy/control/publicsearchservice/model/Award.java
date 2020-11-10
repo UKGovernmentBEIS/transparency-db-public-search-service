@@ -40,7 +40,7 @@ public class Award {
 	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "gaId", nullable = false)
 	@ToString.Exclude
-	private GrantingAuthority gratingAuthority;
+	private GrantingAuthority grantingAuthority;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "scNumber", nullable = false)
@@ -72,7 +72,7 @@ public class Award {
 	private String subsidyInstrument;
 	
 	@Column(name = "SPENDING_SECTOR")
-	private String spendiingSector;
+	private String spendingSector;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;
