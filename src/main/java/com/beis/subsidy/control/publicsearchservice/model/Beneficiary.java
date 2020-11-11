@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -75,11 +76,13 @@ public class Beneficiary {
 		
 		@CreationTimestamp
 		@Temporal(TemporalType.TIMESTAMP)
+		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
 		@Column(name = "CREATED_TIMESTAMP")
 		private Date createdTimestamp;
 		
 		@UpdateTimestamp
 		@Temporal(TemporalType.TIMESTAMP)
+		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
 		@Column(name = "LAST_MODIFIED_TIMESTAMP")
 		private Date lastModifiedTimestamp;
 		
