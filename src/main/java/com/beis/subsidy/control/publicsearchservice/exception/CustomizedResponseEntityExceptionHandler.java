@@ -12,12 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
+/**
+ * 
+ * Controller Advice - Custom Exception Handler
+ *
+ */
 @ControllerAdvice
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
 
 		
+	/**
+	 * To handle all exceptions 
+	 * @param ex - Exception object
+	 * @param request - web request 
+	 * @return ResponseEntity - response entity
+	 */
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
@@ -29,6 +39,12 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	/**
+	 * To handle search result not found exception 
+	 * @param ex - Search Result not found exception 
+	 * @param request - web request
+	 * @return ResponseEntity - response entity
+	 */
 	@ExceptionHandler(SearchResultNotFoundException.class)
 	public final ResponseEntity<Object> handleAwardNotFoundException(SearchResultNotFoundException ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),

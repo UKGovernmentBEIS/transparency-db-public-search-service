@@ -23,6 +23,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 
+ * Award Entity class 
+ */
 @Builder
 @Entity(name = "AWARD_READ")
 @Data

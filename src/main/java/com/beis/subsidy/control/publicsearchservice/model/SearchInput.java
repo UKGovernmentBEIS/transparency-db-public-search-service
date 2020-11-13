@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * Search Input object - represents search input criteria for public search service
+ *
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

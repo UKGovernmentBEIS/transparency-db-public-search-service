@@ -22,6 +22,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 
+ * Granting Authority Entity Class 
+ *
+ */
 @Builder
 @Entity(name = "GRANTING_AUTHORITY_READ")
 @Data

@@ -6,6 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * Exception response object - used to define meaniningful exception details
+ *
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

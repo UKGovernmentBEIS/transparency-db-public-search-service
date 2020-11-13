@@ -16,13 +16,21 @@ import com.beis.subsidy.control.publicsearchservice.model.SearchResults;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
 
+/**
+ * Service class for Public Search service 
+ *
+ */
 @Service
 public class SearchService {
 
 	@Autowired
 	private AwardRepository awardRepository;
 	
-	
+	/**
+	 * To return matching awards based on search inputs 
+	 * @param searchinput - Search input object, that contains search criteria
+	 * @return SearchResults - Returns search result based on search criteria
+	 */
 	public SearchResults findMatchingAwards(SearchInput searchinput) {
 		
 		ExampleMatcher searchMatcher = ExampleMatcher
@@ -35,10 +43,10 @@ public class SearchService {
 
 			Award awardExample = Award
 				.builder()
-				.subsidyObjective((searchinput.getSusidyObjective() == null || searchinput.getSusidyObjective().isEmpty())  ? null : searchinput.getSusidyObjective().trim() )
-				.spendingRegion((searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().isEmpty())  ? null : searchinput.getSpendingRegion().trim())
-				.beneficiary((searchinput.getBeneficiaryName() == null || searchinput.getBeneficiaryName().isEmpty())  ? null : Beneficiary.builder().beneficiaryName(searchinput.getBeneficiaryName().trim()).build())
-				.subsidyMeasure((searchinput.getSubsidyMeasureTitle() == null || searchinput.getSubsidyMeasureTitle().isEmpty())  ? null : SubsidyMeasure.builder().subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle().trim()).build())
+				.subsidyObjective((searchinput.getSusidyObjective() == null || searchinput.getSusidyObjective().trim().isEmpty())  ? null : searchinput.getSusidyObjective().trim() )
+				.spendingRegion((searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().trim().isEmpty())  ? null : searchinput.getSpendingRegion().trim())
+				.beneficiary((searchinput.getBeneficiaryName() == null || searchinput.getBeneficiaryName().trim().isEmpty())  ? null : Beneficiary.builder().beneficiaryName(searchinput.getBeneficiaryName().trim()).build())
+				.subsidyMeasure((searchinput.getSubsidyMeasureTitle() == null || searchinput.getSubsidyMeasureTitle().trim().isEmpty())  ? null : SubsidyMeasure.builder().subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle().trim()).build())
 				.build();
 			
 			List<Award> awards = awardRepository.findAll(Example.of(awardExample, searchMatcher.withIgnoreCase()));
@@ -70,6 +78,10 @@ public class SearchService {
 	}
 	*/
 	
+	/**
+	 * To get all awards from transparency database
+	 * @return List<Award> - Returns list of awards
+	 */
 	public List<Award> getAllAwards() {
 		return awardRepository.findAll();
 	}

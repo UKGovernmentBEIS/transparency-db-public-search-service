@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * Search results object - Represents search results for award search
+ *
+ */
 @Builder
 @Data
 @AllArgsConstructor

@@ -9,6 +9,9 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
+/**
+ * This is main class for spring boot based Public Search Service. 
+ */
 @SpringBootApplication
 public class PublicSearchServiceApplication {
 
@@ -16,6 +19,12 @@ public class PublicSearchServiceApplication {
 		SpringApplication.run(PublicSearchServiceApplication.class, args);
 	}
 
+	/**
+	 * This method is for open API documentation - used for API contracts. 
+	 * @param appDesciption - Taken from pom file
+	 * @param appVersion - taken from pom file
+	 * @return OpenAPI - OpenAPI object
+	 */
 	@Bean
     public OpenAPI customOpenAPI(@Value("${application-description}") String appDesciption, @Value("${application-version}") String appVersion) {
      return new OpenAPI()

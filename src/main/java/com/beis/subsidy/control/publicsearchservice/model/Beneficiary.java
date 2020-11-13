@@ -22,6 +22,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 
+ * Beneficiary Entity class
+ *
+ */
 @Builder
 @Entity(name = "BENEFICIARY_READ")
 @Data

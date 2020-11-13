@@ -26,6 +26,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 
+ * Subsidy Measure entity class
+ *
+ */
 @Builder
 @Entity(name = "SUBSIDY_MEASURE_READ")
 @Data
