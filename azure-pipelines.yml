@@ -24,6 +24,6 @@ steps:
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Pipeline.Workspace)/s/target/*.jar'
+    targetPath: '$(Pipeline.Workspace)/s/target'
     artifact: 'public-search-service-mx'
     publishLocation: 'pipeline'
