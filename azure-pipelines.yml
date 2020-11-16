@@ -27,6 +27,8 @@ steps:
     SourceFolder: '$(Pipeline.Workspace)'
     Contents: '**/target/*.?(jar|war)'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true
+    
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
