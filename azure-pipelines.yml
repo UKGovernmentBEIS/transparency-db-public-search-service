@@ -22,8 +22,13 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Pipeline.Workspace)'
+    Contents: '**/target/*.?(jar|war)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Pipeline.Workspace)/s/target'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
     artifact: 'public-search-service-mx'
     publishLocation: 'pipeline'
