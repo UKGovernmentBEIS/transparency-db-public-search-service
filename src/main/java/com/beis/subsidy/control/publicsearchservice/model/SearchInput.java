@@ -1,5 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +20,22 @@ public class SearchInput {
 	
 	private String subsidyMeasureTitle;
 	
-	private String susidyObjective;
+	private List<String> subsidyObjective;
 	
-	private String spendingRegion;
+	private List<String> spendingRegion;
+	
+	private List<String> subsidyInstrument;
+	
+	private List<String> spendingSector;
+		
+	private String legalGrantingFromDate;
+	
+	private String legalGrantingToDate;
+
+	private int pageNumber;
+	
+	private int totalRecordsPerPage;
+	
+	private String[] sortBy;
 	
 }

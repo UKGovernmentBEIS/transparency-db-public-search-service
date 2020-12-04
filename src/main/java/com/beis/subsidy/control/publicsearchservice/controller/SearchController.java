@@ -1,5 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -54,15 +55,26 @@ public class SearchController {
 	 * @return ResponseEntity - Return response status and description
 	 */
 	@PostMapping("/searchResults")
-	public ResponseEntity<SearchResults> getSearchResults(@Valid @RequestBody SearchInput searchInput) {
+	public ResponseEntity<SearchResults> findSearchResults(@Valid @RequestBody SearchInput searchInput) {
 		
-		SearchResults searchResults = searchService.findMatchingAwards(searchInput);
-		
-		if(searchResults.totalSearchResults == 0) {
-			throw new SearchResultNotFoundException("No matching search result found.");
+		try {
+			
+			//Set Default Page records
+			if(searchInput.getTotalRecordsPerPage() == 0) {
+				searchInput.setTotalRecordsPerPage(10);
+			}
+			
+			SearchResults searchResults = searchService.findMatchingAwards(searchInput);
+			
+			if(searchResults == null) {
+				throw new SearchResultNotFoundException("No matching search result found.");
+			}
+			return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
+
+		} catch(ParseException e) {
+			throw new SearchResultNotFoundException("Invalid Date format.");
 		}
 		
-		return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
 	}
 
 	/* Commenting below method - as the requirements need to be discussed and later it will be used for impl. 

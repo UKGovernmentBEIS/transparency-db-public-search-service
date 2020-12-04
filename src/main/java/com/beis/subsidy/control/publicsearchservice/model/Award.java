@@ -1,6 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -66,10 +67,10 @@ public class Award {
 	private String goodsServicesFilter;
 	
 	@Column(name = "LEGAL_GRANTING_DATE")
-	private Date legalGrantingDate;
+	private LocalDate legalGrantingDate;
 	
 	@Column(name = "PUBLISHED_AWARD_DATE")
-	private Date publishedAwardDate;
+	private LocalDate publishedAwardDate;
 	
 	@Column(name = "SPENDING_REGION")
 	private String spendingRegion;

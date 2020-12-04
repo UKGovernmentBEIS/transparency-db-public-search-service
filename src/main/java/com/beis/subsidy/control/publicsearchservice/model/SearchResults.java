@@ -18,7 +18,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SearchResults {
 
-	public int totalSearchResults;
+	public long totalSearchResults;
+	public int currentPage;
+	public int totalPages;
 	public List<Award> awards;
 	
 }
