@@ -121,7 +121,6 @@ public class SearchService {
 	        orders.add(new Order(getSortDirection("desc"), "legalGrantingDate"));
 	      }
 
-	      System.out.println("oders in service" + orders); 
 		return orders;
 	}
 
