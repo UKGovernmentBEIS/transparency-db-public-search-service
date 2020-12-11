@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 
- * Exception response object - used to define meaniningful exception details
+ * Exception response object - used to define meaningful exception details
  *
  */
 @Data
