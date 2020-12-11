@@ -2,6 +2,7 @@ package com.beis.subsidy.control.publicsearchservice.exception;
 
 import java.util.Date;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 @RestController
+@Slf4j
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
 
 		
@@ -33,8 +35,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 				request.getDescription(false));
 		
-		System.out.println("Exception message = " + ex.getMessage() + " Cause = " + ex.getCause() + " Supressed = " + ex.getSuppressed());
-		System.out.println("Exception Stack-trace = " + ex.getStackTrace());
+		log.error("Exception message = " + ex.getMessage() + " Cause = " + ex.getCause() + " Supressed = " + ex.getSuppressed());
+		log.error("Exception Stack-trace = " + ex.getStackTrace());
 		
 		return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -51,6 +53,14 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 				request.getDescription(false));
 		return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
+
+	@ExceptionHandler(InvalidRequestException.class)
+	public ResponseEntity<Object> customValidationError(
+			InvalidRequestException ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -59,7 +69,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 				ex.getBindingResult().toString());
 		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
+
 	
 }
