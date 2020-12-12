@@ -38,7 +38,7 @@ public class AwardResponse {
     @JsonProperty
     private String legalGrantingDate;
 
-    public AwardResponse(Award award) {
+    public AwardResponse(Award award, boolean flag) {
 
         this.awardNumber = award.getAwardNumber();
         this.subsidyFullAmountRange = award.getSubsidyFullAmountRange();
@@ -47,8 +47,11 @@ public class AwardResponse {
         this.spendingSector = award.getSpendingSector();
         this.subsidyInstrument = award.getSubsidyInstrument();
         this.legalGrantingDate = SearchUtils.dateToFullMonthNameInDate(award.getLegalGrantingDate());
-        this.beneficiary = new BeneficiaryResponse(award.getBeneficiary());
-        this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure());
+        if (flag) {
+            this.beneficiary = new BeneficiaryResponse(award.getBeneficiary());
+            this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),false);
+        }
+
 
     }
 

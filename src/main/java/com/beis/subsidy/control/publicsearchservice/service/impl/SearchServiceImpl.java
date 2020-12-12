@@ -1,10 +1,14 @@
 package com.beis.subsidy.control.publicsearchservice.service.impl;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
+import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
@@ -30,6 +34,9 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	private AwardRepository awardRepository;
+
+	@Autowired
+	private SubsidyMeasureRepository subsidyMeasureRepository;
 
 	/**
 	 * To return matching awards based on search inputs 
@@ -98,6 +105,26 @@ public class SearchServiceImpl implements SearchService {
 			}
 
 			return searchResults;
+	}
+
+	@Override
+	public AwardResponse findByAwardNumber(Long awardNumber) {
+
+		Award award = awardRepository.findByAwardNumber(awardNumber);
+		if (award == null) {
+			throw new SearchResultNotFoundException("AwardResults NotFound");
+		}
+		return new AwardResponse(award, false);
+	}
+
+	@Override
+	public SubsidyMeasureResponse getSubsidyMeasureDetails(String scNumber) {
+
+		SubsidyMeasure subsidyMeasure = subsidyMeasureRepository.findByScNumber(scNumber);
+		if (subsidyMeasure == null) {
+			throw new SearchResultNotFoundException("SubsidyMeasure Detail NotFound for the scNumber");
+		}
+		return new SubsidyMeasureResponse(subsidyMeasure, true);
 	}
 
 	/**

@@ -73,7 +73,7 @@ public class SubsidyMeasure {
 	private boolean adhoc;
 			
 	@Column(name = "GA_SUBSIDY_WEBLINK")
-	private String gaSubsidyWeblink;
+	private String gaSubsidyWebLink;
 	
 	@Column(name = "LEGAL_BASIS")
 	private String legalBasis;

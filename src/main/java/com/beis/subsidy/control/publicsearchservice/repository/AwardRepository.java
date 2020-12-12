@@ -10,6 +10,7 @@ import com.beis.subsidy.control.publicsearchservice.model.Award;
  *
  */
 public interface AwardRepository extends JpaRepository<Award, Long>, JpaSpecificationExecutor<Award> {
-	
-	
+
+
+    Award findByAwardNumber(Long awardNumber);
 }
