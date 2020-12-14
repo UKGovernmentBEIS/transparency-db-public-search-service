@@ -1,6 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
+import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -21,10 +22,10 @@ public class SubsidyMeasureResponse {
     private String scNumber;
 
     @JsonProperty
-    private Date startDate;
+    private String startDate;
 
     @JsonProperty
-    private Date endDate;
+    private String endDate;
 
     @JsonProperty
     private BigInteger duration;
@@ -63,8 +64,8 @@ public class SubsidyMeasureResponse {
             this.legalBasis = subsidyMeasure.getLegalBasis();
             this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
-            this.startDate = subsidyMeasure.getStartDate();
-            this.endDate = subsidyMeasure.getEndDate();
+            this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
+            this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
             this.budget = subsidyMeasure.getBudget();
             this.publishedMeasureDate = subsidyMeasure.getPublishedMeasureDate();
             this.createdBy = subsidyMeasure.getCreatedBy();

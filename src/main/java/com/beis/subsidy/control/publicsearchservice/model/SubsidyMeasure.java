@@ -1,6 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.model;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -58,10 +59,10 @@ public class SubsidyMeasure {
 	private String subsidyMeasureTitle;
 	
 	@Column(name = "START_DATE")
-	private Date startDate;
+	private LocalDate startDate;
 	
 	@Column(name = "END_DATE")
-	private Date endDate;
+	private LocalDate endDate;
 	
 	@Column(name = "DURATION")
 	private BigInteger duration;
