@@ -74,7 +74,7 @@ public class SubsidyMeasure {
 			
 	@Column(name = "GA_SUBSIDY_WEBLINK")
 	private String gaSubsidyWebLink;
-	
+
 	@Column(name = "LEGAL_BASIS")
 	private String legalBasis;
 	
@@ -101,6 +101,4 @@ public class SubsidyMeasure {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private Date lastModifiedTimestamp;
-
-	
 }

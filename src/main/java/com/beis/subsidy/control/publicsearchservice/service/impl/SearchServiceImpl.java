@@ -114,7 +114,7 @@ public class SearchServiceImpl implements SearchService {
 		if (award == null) {
 			throw new SearchResultNotFoundException("AwardResults NotFound");
 		}
-		return new AwardResponse(award, false);
+		return new AwardResponse(award, true);
 	}
 
 	@Override
