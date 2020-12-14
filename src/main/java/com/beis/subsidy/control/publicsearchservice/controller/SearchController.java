@@ -72,7 +72,7 @@ public class SearchController {
 			path = "/award/{awardNumber}",
 			produces = APPLICATION_JSON_VALUE
 	)
-	public ResponseEntity<AwardResponse> getAwardDetailsByBeneficiaryName(@PathVariable("awardNumber") Long awardNumber) {
+	public ResponseEntity<AwardResponse> getAwardDetailsByAwardNumber(@PathVariable("awardNumber") Long awardNumber) {
 
 		if(StringUtils.isEmpty(awardNumber)) {
 			throw new InvalidRequestException("Invalid Request");
@@ -82,7 +82,7 @@ public class SearchController {
 	}
 
 	/**
-	 * To get SubsidyMeasure details of scumber
+	 * To get SubsidyMeasure details of scNumber
 	 * @return ResponseEntity - Return associated SubsidyMeasure details in the response
 	 */
 	@GetMapping(
