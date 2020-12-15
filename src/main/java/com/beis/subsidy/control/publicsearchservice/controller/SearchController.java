@@ -1,7 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
@@ -79,22 +78,5 @@ public class SearchController {
 		}
 		AwardResponse awardResponse = searchService.findByAwardNumber(awardNumber);
 		return new ResponseEntity<AwardResponse>(awardResponse, HttpStatus.OK);
-	}
-
-	/**
-	 * To get SubsidyMeasure details of scNumber
-	 * @return ResponseEntity - Return associated SubsidyMeasure details in the response
-	 */
-	@GetMapping(
-			path = "/subsidymeasure/{scNumber}",
-			produces = APPLICATION_JSON_VALUE
-	)
-	public ResponseEntity<SubsidyMeasureResponse> getSubsidyMeasureDetailsByScNumber(@PathVariable("scNumber") String scNumber) {
-
-		if(StringUtils.isEmpty(scNumber)) {
-			throw new InvalidRequestException("Invalid Request");
-		}
-		SubsidyMeasureResponse subsidyMeasureResponse = searchService.getSubsidyMeasureDetails(scNumber);
-		return new ResponseEntity<SubsidyMeasureResponse>(subsidyMeasureResponse, HttpStatus.OK);
 	}
 }

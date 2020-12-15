@@ -3,10 +3,8 @@ package com.beis.subsidy.control.publicsearchservice.service.impl;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
-import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
 import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
@@ -115,16 +113,6 @@ public class SearchServiceImpl implements SearchService {
 			throw new SearchResultNotFoundException("AwardResults NotFound");
 		}
 		return new AwardResponse(award, true);
-	}
-
-	@Override
-	public SubsidyMeasureResponse getSubsidyMeasureDetails(String scNumber) {
-
-		SubsidyMeasure subsidyMeasure = subsidyMeasureRepository.findByScNumber(scNumber);
-		if (subsidyMeasure == null) {
-			throw new SearchResultNotFoundException("SubsidyMeasure Detail NotFound for the scNumber");
-		}
-		return new SubsidyMeasureResponse(subsidyMeasure, true);
 	}
 
 	/**
