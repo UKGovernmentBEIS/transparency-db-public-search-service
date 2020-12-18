@@ -1,19 +1,22 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
+import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
+import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
 import java.text.ParseException;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 /**
  * This is rest controller for Public Search service - which has exposed required APIs for front end to talk to backend APIs.
  *
@@ -58,5 +61,22 @@ public class SearchController {
 			throw new SearchResultNotFoundException("Invalid Date format.");
 		}
 		
+	}
+
+	/**
+	 * To get details of award based on awardNumber
+	 * @return ResponseEntity - Return associated award details in the response
+	 */
+	@GetMapping(
+			path = "/award/{awardNumber}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<AwardResponse> getAwardDetailsByAwardNumber(@PathVariable("awardNumber") Long awardNumber) {
+
+		if(StringUtils.isEmpty(awardNumber)) {
+			throw new InvalidRequestException("Invalid Request");
+		}
+		AwardResponse awardResponse = searchService.findByAwardNumber(awardNumber);
+		return new ResponseEntity<AwardResponse>(awardResponse, HttpStatus.OK);
 	}
 }

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @NoArgsConstructor
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,6 +22,9 @@ public class AwardResponse {
 
     @JsonProperty
     private SubsidyMeasureResponse subsidyMeasure;
+
+    @JsonProperty
+    private GrantingAuthorityResponse grantingAuthorityResponse;
 
     @JsonProperty
     private String subsidyFullAmountRange;
@@ -36,9 +42,31 @@ public class AwardResponse {
     private String spendingSector;
 
     @JsonProperty
+    private String goodsServicesFilter;
+
+    @JsonProperty
     private String legalGrantingDate;
 
-    public AwardResponse(Award award) {
+    @JsonProperty
+    private String createdBy;
+
+    @JsonProperty
+    private String approvedBy;
+
+    @JsonProperty
+    private String status;
+
+    @JsonProperty
+    private Date createdTimestamp;
+
+    @JsonProperty
+    private Date lastModifiedTimestamp;
+
+    @JsonProperty
+    private LocalDate publishedAwardDate;
+
+
+    public AwardResponse(Award award, boolean flag) {
 
         this.awardNumber = award.getAwardNumber();
         this.subsidyFullAmountRange = award.getSubsidyFullAmountRange();
@@ -47,9 +75,19 @@ public class AwardResponse {
         this.spendingSector = award.getSpendingSector();
         this.subsidyInstrument = award.getSubsidyInstrument();
         this.legalGrantingDate = SearchUtils.dateToFullMonthNameInDate(award.getLegalGrantingDate());
-        this.beneficiary = new BeneficiaryResponse(award.getBeneficiary());
-        this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure());
-
+        if (flag) {
+            this.goodsServicesFilter = award.getGoodsServicesFilter();
+            this.status = award.getStatus();
+            this.createdBy = award.getCreatedBy();
+            this.approvedBy = award.getApprovedBy();
+            this.createdTimestamp = award.getCreatedTimestamp();
+            this.lastModifiedTimestamp = award.getLastModifiedTimestamp();
+            this.publishedAwardDate = award.getPublishedAwardDate();
+        }
+        this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
+        this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
+        if (flag) {
+         this.grantingAuthorityResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
+        }
     }
-
 }

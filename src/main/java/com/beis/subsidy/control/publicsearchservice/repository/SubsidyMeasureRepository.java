@@ -11,4 +11,5 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
  */
 public interface SubsidyMeasureRepository extends JpaRepository<SubsidyMeasure, String> {
 
+    SubsidyMeasure findByScNumber(String scNumber);
 }

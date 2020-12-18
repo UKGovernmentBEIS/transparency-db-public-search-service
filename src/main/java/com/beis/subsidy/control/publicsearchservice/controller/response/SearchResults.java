@@ -25,13 +25,13 @@ public class SearchResults {
 	public int currentPage;
 	public int totalPages;
 	@JsonProperty
-	private List<AwardResponse> award;
+	private List<AwardResponse> awards;
 
 	public SearchResults(List<Award> awards, long totalSearchResults,
 						 int currentPage, int totalPages) {
 
-		this.award = awards.stream().map(award ->
-				new AwardResponse(award)).collect(Collectors.toList());
+		this.awards = awards.stream().map(award ->
+				new AwardResponse(award, false)).collect(Collectors.toList());
 		this.totalSearchResults = totalSearchResults;
 		this.currentPage = currentPage;
 		this.totalPages = totalPages;
