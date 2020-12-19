@@ -61,15 +61,6 @@ public class Beneficiary {
 		@Column(name = "SIZE_OF_ORG")
 		private String orgSize;
 		
-		@Column(name = "POST_CODE")
-		private String postCode;
-		
-		@Column(name = "REGION")
-		private String region;
-		
-		@Column(name = "COUNTRY")
-		private String country;
-		
 		@Column(name = "CREATED_BY")
 		private String createdBy;
 		

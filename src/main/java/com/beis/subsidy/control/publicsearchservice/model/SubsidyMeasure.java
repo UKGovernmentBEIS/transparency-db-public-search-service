@@ -39,7 +39,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class SubsidyMeasure {
 
-	//TODO - Implement Custom sequence generator
 	@Id
 	@Column(name="SC_NUMBER")
 	private String scNumber;
@@ -76,15 +75,12 @@ public class SubsidyMeasure {
 	@Column(name = "GA_SUBSIDY_WEBLINK")
 	private String gaSubsidyWebLink;
 
-	@Column(name = "LEGAL_BASIS")
-	private String legalBasis;
-	
 	@Column(name = "PUBLISHED_MEASURE_DATE")
 	private Date publishedMeasureDate;
-	
+
 	@Column(name = "CREATED_BY")
 	private String createdBy;
-	
+
 	@Column(name = "APPROVED_BY")
 	private String approvedBy;
 	

@@ -1,55 +1,34 @@
 package com.beis.subsidy.control.publicsearchservice.model;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 
- * Granting Authority Entity Class 
+ * OPTION Entity Class
  *
  */
 @Builder
-@Entity(name = "GRANTING_AUTHORITY_READ")
+@Entity(name = "OPTION")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GrantingAuthority {
+public class Option {
 	
 	@Id
-	@Column(name="GA_ID")
-	private Long gaId;
-	
-	@OneToMany(mappedBy="grantingAuthority")
-	@ToString.Exclude
-	@JsonIgnore
-	private List<Award> awards;
+	@Column(name="OPTION_ID")
+	private Long optionId;
 
-	@OneToMany(mappedBy="grantingAuthority")
-	@ToString.Exclude
-	@JsonIgnore
-	private List<SubsidyMeasure> subsidyMeasure;
-	
-	@Column(name = "GA_NAME")
-	private String grantingAuthorityName;
+	@Column(name = "LEGAL_BASIS_TEXT")
+	private String legalBasisText;
 
 	@Column(name = "CREATED_BY")
 	private String createdBy;
@@ -71,6 +50,4 @@ public class GrantingAuthority {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private Date lastModifiedTimestamp;
-	
-
 }
