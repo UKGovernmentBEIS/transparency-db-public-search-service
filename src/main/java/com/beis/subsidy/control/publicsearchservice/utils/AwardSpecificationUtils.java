@@ -5,9 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.criteria.Predicate;
-
 import org.springframework.data.jpa.domain.Specification;
-
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 /**
  * 

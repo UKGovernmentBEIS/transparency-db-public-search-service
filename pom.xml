@@ -12,7 +12,7 @@
 	<artifactId>public-search-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>public-search-service</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Transparency DB Public Search Service Api</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,50 +66,90 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>3.4.6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>2.0.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>3.4.6</version>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin> 
-		        <groupId>com.microsoft.azure</groupId>  
-		        <artifactId>azure-webapp-maven-plugin</artifactId>  
-		        <version>1.9.1</version>  
-		        <configuration> 
-		          <schemaVersion>V2</schemaVersion>  
-		          <resourceGroup>BEIS</resourceGroup>  
+			<plugin>
+		        <groupId>com.microsoft.azure</groupId>
+		        <artifactId>azure-webapp-maven-plugin</artifactId>
+		        <version>1.9.1</version>
+		        <configuration>
+		          <schemaVersion>V2</schemaVersion>
+		          <resourceGroup>BEIS</resourceGroup>
 	        	  <appName>subsidy-search-service</appName>
 				  <appServicePlanResourceGroup>BEIS</appServicePlanResourceGroup>
 		          <appServicePlanName>transparency-app-svc-plan</appServicePlanName>
-		          <pricingTier>P2v2</pricingTier>  
-		          <region>northeurope</region>  
-		          <runtime> 
-		            <os>linux</os>  
-					<javaVersion>jre8</javaVersion>  
-		          </runtime>  
-		          <appSettings> 
+		          <pricingTier>P2v2</pricingTier>
+		          <region>northeurope</region>
+		          <runtime>
+		            <os>linux</os>
+					<javaVersion>jre8</javaVersion>
+		          </runtime>
+		          <appSettings>
 		            <property>
-					  <name>PORT</name> 
+					  <name>PORT</name>
 					  <value>8581</value>
 		            </property>
-		          </appSettings>  
-		          <deployment> 
-		            <resources> 
-		              <resource> 
-		                <directory>${project.basedir}/target</directory>  
-		                <includes> 
-		                  <include>*.jar</include> 
-		                </includes> 
-		              </resource> 
-		            </resources> 
-				  </deployment> 
+		          </appSettings>
+		          <deployment>
+		            <resources>
+		              <resource>
+		                <directory>${project.basedir}/target</directory>
+		                <includes>
+		                  <include>*.jar</include>
+		                </includes>
+		              </resource>
+		            </resources>
+				  </deployment>
 				  <stopAppDuringDeployment>true</stopAppDuringDeployment>
-		        </configuration> 
-	      </plugin> 
+		        </configuration>
+	      </plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.1</version>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>

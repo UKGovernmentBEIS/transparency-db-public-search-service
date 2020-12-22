@@ -57,10 +57,10 @@ public class AwardResponse {
     private String status;
 
     @JsonProperty
-    private Date createdTimestamp;
+    private LocalDate createdTimestamp;
 
     @JsonProperty
-    private Date lastModifiedTimestamp;
+    private LocalDate lastModifiedTimestamp;
 
     @JsonProperty
     private LocalDate publishedAwardDate;
@@ -69,7 +69,7 @@ public class AwardResponse {
     public AwardResponse(Award award, boolean flag) {
 
         this.awardNumber = award.getAwardNumber();
-        this.subsidyFullAmountRange = award.getSubsidyFullAmountRange();
+        this.subsidyFullAmountRange = award.getSubsidyFullAmountRange();//SearchUtils.formatedFullAmountRange(
         this.subsidyFullAmountExact = SearchUtils.decimalNumberFormat(award.getSubsidyFullAmountExact());
         this.subsidyObjective = award.getSubsidyObjective();
         this.spendingSector = award.getSpendingSector();

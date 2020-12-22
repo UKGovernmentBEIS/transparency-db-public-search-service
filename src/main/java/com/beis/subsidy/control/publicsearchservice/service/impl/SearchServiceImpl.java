@@ -6,7 +6,6 @@ import com.beis.subsidy.control.publicsearchservice.controller.response.SearchRe
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
@@ -32,9 +31,6 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	private AwardRepository awardRepository;
-
-	@Autowired
-	private SubsidyMeasureRepository subsidyMeasureRepository;
 
 	/**
 	 * To return matching awards based on search inputs 
@@ -81,8 +77,6 @@ public class SearchServiceImpl implements SearchService {
 						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()))
 			    ;
 			
-
-			//TODO - re-factor below to separate method
 			List<Order> orders = getOrderByCondition(searchinput.getSortBy());
 			
 			Pageable pagingSortAwards = PageRequest.of(searchinput.getPageNumber() - 1, searchinput.getTotalRecordsPerPage(), Sort.by(orders));
