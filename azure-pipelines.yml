@@ -34,18 +34,19 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)'
     artifact: 'public-search-service-mx'
     publishLocation: 'pipeline'
-
+- task: AzureAppServiceSettings@1
+  inputs:
+    azureSubscription: 'BEIS_COG_Subsidy_Control_Transparency_DB(8e9969b3-7574-441c-a10f-7114dc3314f7)'
+    appName: 'dev-transparency-db-public-search-service'
+    resourceGroupName: 'BEIS-DEV-RG'
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'BEIS_COG_Subsidy_Control_Transparency_DB(8e9969b3-7574-441c-a10f-7114dc3314f7)'
     appType: 'webAppLinux'
     WebAppName: 'dev-transparency-db-public-search-service'
+    deployToSlotOrASE: true
+    ResourceGroupName: 'BEIS-DEV-RG'
+    SlotName: 'production'
     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
     RuntimeStack: 'TOMCAT|9.0-jre8'
-    StartupCommand: 'DeployToDev'
-- task: AzureAppServiceSettings@1
-  inputs:
-    azureSubscription: 'BEIS_COG_Subsidy_Control_Transparency_DB(8e9969b3-7574-441c-a10f-7114dc3314f7)'
-    appName: 'dev-transparency-db-public-search-service'
-    resourceGroupName: 'BEIS-DEV-RG'
