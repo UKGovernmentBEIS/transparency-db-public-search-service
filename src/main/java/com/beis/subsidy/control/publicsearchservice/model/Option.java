@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -27,11 +28,12 @@ public class Option {
 	@Column(name="OPTION_ID")
 	private Long optionId;
 
-	@Column(name = "LEGAL_BASIS_TEXT")
-	private String legalBasisText;
+	@Column(name = "OPTION_NAME")
+	private String optionName;
 
-	@Column(name = "CREATED_BY")
-	private String createdBy;
+	@Column(name = "OPTION_VALUE")
+	@NaturalId
+	private String optionValue;
 	
 	@Column(name = "APPROVED_BY")
 	private String approvedBy;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -26,11 +27,11 @@ public class LegalBasis {
 	@Column(name="LEGAL_BASIS_ID")
 	private Long legalBasisId;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "scNumber", nullable = false)
 	private SubsidyMeasure subsidyMeasure;
-	
-	@Column(name = "LEGAL_BASIS_TEXT")
+
+	@Column(name="LEGAL_BASIS_TEXT")
 	private String legalBasisText;
 
 	@Column(name = "CREATED_BY")

@@ -5,15 +5,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -50,9 +42,11 @@ public class SubsidyMeasure {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "gaId", nullable = false)
-	@ToString.Exclude
 	@JsonIgnore
 	private GrantingAuthority grantingAuthority;
+
+	@OneToOne(mappedBy="subsidyMeasure")
+	private LegalBasis legalBases;
 	
 	@Column(name = "SUBSIDY_MEASURE_TITLE")
 	private String subsidyMeasureTitle;
@@ -76,7 +70,7 @@ public class SubsidyMeasure {
 	private String gaSubsidyWebLink;
 
 	@Column(name = "PUBLISHED_MEASURE_DATE")
-	private Date publishedMeasureDate;
+	private LocalDate publishedMeasureDate;
 
 	@Column(name = "CREATED_BY")
 	private String createdBy;

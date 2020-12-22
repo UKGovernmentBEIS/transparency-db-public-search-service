@@ -91,16 +91,16 @@ public class Award {
 	private String status;
 	
 	@CreationTimestamp
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
-	@Temporal(TemporalType.TIMESTAMP)
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	//@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_TIMESTAMP")
-	private Date createdTimestamp;
+	private LocalDate createdTimestamp;
 	
 	@UpdateTimestamp
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
-	@Temporal(TemporalType.TIMESTAMP)
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	//@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
-	private Date lastModifiedTimestamp;
+	private LocalDate lastModifiedTimestamp;
 
 		
 }

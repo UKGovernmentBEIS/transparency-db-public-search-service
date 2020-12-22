@@ -54,4 +54,24 @@ public class SearchUtils {
         DecimalFormat numberFormat = new DecimalFormat("###,###.##");
         return  numberFormat.format(subsidyFullAmountExact.longValue());
 	}
+
+	/**
+	 * To convert Amount Range to by adding pound and , for thousands.
+	 * @param amountRange
+	 * @return formatted string
+	 */
+	public static String formatedFullAmountRange(String amountRange) {
+		StringBuilder format = new StringBuilder("£");
+		String [] tokens = amountRange.split("-");
+		String finalAmtRange = null;
+		if (tokens.length == 2) {
+			finalAmtRange = format.append(decimalNumberFormat(new BigDecimal(tokens[0])))
+					.append("-")
+					.append("£")
+					.append(decimalNumberFormat(new BigDecimal(tokens[1]))).toString();
+		} else {
+			finalAmtRange = format.append(decimalNumberFormat(new BigDecimal(amountRange))).toString();
+		}
+		return  finalAmtRange;
+	}
 }
