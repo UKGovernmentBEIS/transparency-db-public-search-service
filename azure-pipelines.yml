@@ -34,3 +34,10 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)'
     artifact: 'public-search-service-mx'
     publishLocation: 'pipeline'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: '8e9969b3-7574-441c-a10f-7114dc3314f7'
+    appType: webAppLinux
+    appName: 'dev-transparency-db-public-search-service'
+    package: '$(System.DefaultWorkingDirectory)/**/*.war'
