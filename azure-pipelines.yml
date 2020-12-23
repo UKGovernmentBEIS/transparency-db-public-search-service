@@ -4,11 +4,24 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
+# Maven package Java project Web App to Linux on Azure
+# Build your Java project and deploy it to Azure as a Linux web app
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
+variables:
+
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: '4c8e7db9-7472-409e-8b5a-49c63cab73e1'
+  
+  # Web app name
+  webAppName: 'java-spring-boot'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
 
 steps:
 - task: Maven@3
