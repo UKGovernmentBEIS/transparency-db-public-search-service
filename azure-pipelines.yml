@@ -63,7 +63,6 @@ stages:
             displayName: 'Download Pipeline Artifact'
             inputs:
               buildType: 'current'
-
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: gs-spring-boot'
             inputs:
