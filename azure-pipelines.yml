@@ -16,7 +16,7 @@ variables:
   webAppName: 'dev-transparency-db-public-search-service'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  vmImageName: 'ubuntu-20.04'
 
 stages:
 - stage: Build
