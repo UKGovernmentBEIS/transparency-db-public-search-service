@@ -48,14 +48,23 @@ public class SearchUtilsTest {
 
     @Test
     public void testFormatAmountRange() {
-        String dataIp ="50000-4000";
+        String dataIp =">1000000 - 2000000";
         String formatAmountRange = null;
         formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp);
         assertThat(formatAmountRange).isNotNull();
+        assertThat(formatAmountRange.contains(">")).isTrue();
         assertThat(formatAmountRange.contains("-")).isTrue();
         assertThat(formatAmountRange.contains("£")).isTrue();
-        String dataIp1 ="50000";
+        assertThat(formatAmountRange.contains(" ")).isTrue();
+
+        String dataIp1 ="1000000 - 2000000";
         formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp1);
+        assertThat(formatAmountRange).isNotNull();
+        assertThat(formatAmountRange.contains("-")).isTrue();
+        assertThat(formatAmountRange.contains("£")).isTrue();
+
+        String dataIp2 ="50000";
+        formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp2);
         assertThat(formatAmountRange.contains("-")).isFalse();
         assertThat(formatAmountRange.contains("£")).isTrue();
     }

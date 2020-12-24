@@ -2,27 +2,19 @@ package com.beis.subsidy.control.publicsearchservice.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * 
@@ -91,16 +83,10 @@ public class Award {
 	private String status;
 	
 	@CreationTimestamp
-	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	//@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_TIMESTAMP")
 	private LocalDate createdTimestamp;
 	
 	@UpdateTimestamp
-	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	//@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private LocalDate lastModifiedTimestamp;
-
-		
 }

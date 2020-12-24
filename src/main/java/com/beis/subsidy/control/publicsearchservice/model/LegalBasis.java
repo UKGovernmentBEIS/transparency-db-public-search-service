@@ -1,16 +1,19 @@
 package com.beis.subsidy.control.publicsearchservice.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
+import java.util.Date;
 /**
  * 
  * LegalBasis Entity Class
@@ -44,14 +47,10 @@ public class LegalBasis {
 	private String status;
 	
 	@CreationTimestamp
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
 	@UpdateTimestamp
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private Date lastModifiedTimestamp;
 }

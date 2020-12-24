@@ -61,17 +61,29 @@ public class SearchUtils {
 	 * @return formatted string
 	 */
 	public static String formatedFullAmountRange(String amountRange) {
-		StringBuilder format = new StringBuilder("£");
+		StringBuilder format = new StringBuilder();
 		String [] tokens = amountRange.split("-");
 		String finalAmtRange = null;
 		if (tokens.length == 2) {
-			finalAmtRange = format.append(decimalNumberFormat(new BigDecimal(tokens[0])))
-					.append("-")
+			finalAmtRange = format.append(convertDecimalValue(tokens[0]))
+					.append(" - ")
 					.append("£")
-					.append(decimalNumberFormat(new BigDecimal(tokens[1]))).toString();
+					.append(decimalNumberFormat(new BigDecimal(tokens[1].trim()))).toString();
 		} else {
-			finalAmtRange = format.append(decimalNumberFormat(new BigDecimal(amountRange))).toString();
+			finalAmtRange = format.append("£").append(decimalNumberFormat(new BigDecimal(amountRange))).toString();
 		}
 		return  finalAmtRange;
+	}
+
+	public static String convertDecimalValue(String token){
+
+		String removedLessThanVal = token.contains(">") ? token.substring(1,token.length()).trim():token.trim();
+		String formatNumber = decimalNumberFormat(new BigDecimal(removedLessThanVal));
+		if (token.contains(">")) {
+			formatNumber = ">£" + formatNumber;
+		} else {
+			formatNumber = "£" + formatNumber;
+		}
+		return formatNumber;
 	}
 }
