@@ -37,8 +37,11 @@ stages:
         jdkArchitectureOption: 'x64'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'clean package'
-
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false 
+        goals: 'package'
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
       inputs:
