@@ -37,7 +37,7 @@ stages:
         jdkArchitectureOption: 'x64'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'build'
+        goals: 'clean package'
 
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
