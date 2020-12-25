@@ -3,12 +3,11 @@ package com.beis.subsidy.control.publicsearchservice.controller;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
-import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
-import java.text.ParseException;
 import javax.validation.Valid;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +47,7 @@ public class SearchController {
 	@CrossOrigin
 	@PostMapping
 	public ResponseEntity<SearchResults> findSearchResults(@Valid @RequestBody SearchInput searchInput) {
-		
-		try {
+
 			//Set Default Page records
 			if(searchInput.getTotalRecordsPerPage() == 0) {
 				searchInput.setTotalRecordsPerPage(10);
@@ -57,12 +55,22 @@ public class SearchController {
 			SearchResults searchResults = searchService.findMatchingAwards(searchInput);
 			
 			return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
-
-		} catch(ParseException e) {
-			throw new SearchResultNotFoundException("Invalid Date format.");
-		}
-		
 	}
+
+	/**
+	 * To get search input from UI and return search results based on search criteria
+	 *
+	 * @param searchInput - Input as SearchInput object from front end
+	 * @return ResponseEntity - Return response status and description
+	 */
+	@CrossOrigin
+	@PostMapping("/exportAll")
+	public ResponseEntity<XSSFWorkbook> exportAllSearchResultsInExcel(@Valid @RequestBody SearchInput searchInput) {
+
+			XSSFWorkbook xssfWorkbook = searchService.exportMatchingAwards(searchInput);
+			return new ResponseEntity<XSSFWorkbook>(xssfWorkbook, HttpStatus.OK);
+	}
+
 
 	/**
 	 * To get details of award based on awardNumber

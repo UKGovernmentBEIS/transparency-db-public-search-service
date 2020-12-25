@@ -9,6 +9,7 @@ import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,8 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,52 +34,17 @@ public class SearchServiceImpl implements SearchService {
 
 	/**
 	 * To return matching awards based on search inputs 
-	 * @param searchinput - Search input object, that contains search criteria
+	 * @param searchInput - Search input object, that contains search criteria
 	 * @return SearchResults - Returns search result based on search criteria
 	 */
-	public SearchResults findMatchingAwards(SearchInput searchinput) throws ParseException{
+	public SearchResults findMatchingAwards(SearchInput searchInput) {
 		
 		
-		Specification<Award> awardSpecifications = Specification
-			    
-				// getSubsidyObjective from input parameter
-			    .where(
-			    		searchinput.getSubsidyObjective() == null || searchinput.getSubsidyObjective().isEmpty()
-			    			? null : AwardSpecificationUtils.subsidyObjectiveIn(searchinput.getSubsidyObjective()))
-			    
-			    // getSpendingRegion from input parameter
-			    .and(searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().isEmpty()
-    						? null : AwardSpecificationUtils.spendingRegionIn(searchinput.getSpendingRegion()))
-			    
-			    // getSpendingSector from input parameter
-			    .and(searchinput.getSpendingSector() == null || searchinput.getSpendingSector().isEmpty()  
-    						? null : AwardSpecificationUtils.spendingSectorIn(searchinput.getSpendingSector()))
-			    
-			    // getSubsidyInstrument from input parameter
-			    .and(searchinput.getSubsidyInstrument() == null || searchinput.getSubsidyInstrument().isEmpty()
-    						? null : AwardSpecificationUtils.subsidyInstrumentIn(searchinput.getSubsidyInstrument()))
-			    
-			    // getSubsidyMeasureTitle from input parameter
-			    .and(SearchUtils.checkNullOrEmptyString(searchinput.getSubsidyMeasureTitle())
-						? null : AwardSpecificationUtils.subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle().trim()))
-			    
-			    // LegalGranting Date Range from/to input parameter
-			    .and(SearchUtils.checkNullOrEmptyString(searchinput.getLegalGrantingFromDate())
-			    		|| SearchUtils.checkNullOrEmptyString(searchinput.getLegalGrantingToDate())
-						? null : AwardSpecificationUtils
-								.legalGrantingDateRange(
-										SearchUtils.stringToDate(searchinput.getLegalGrantingFromDate()), 
-										SearchUtils.stringToDate(searchinput.getLegalGrantingToDate())
-										))
-			    
-			    // getBeneficiaryName from input parameter
-			    .and(SearchUtils.checkNullOrEmptyString(searchinput.getBeneficiaryName())
-						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()))
-			    ;
-			
-			List<Order> orders = getOrderByCondition(searchinput.getSortBy());
-			
-			Pageable pagingSortAwards = PageRequest.of(searchinput.getPageNumber() - 1, searchinput.getTotalRecordsPerPage(), Sort.by(orders));
+			Specification<Award> awardSpecifications = getSpecificationAwardDetails(searchInput);
+
+			List<Order> orders = getOrderByCondition(searchInput.getSortBy());
+
+			Pageable pagingSortAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
 			
 			Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 			
@@ -107,6 +72,22 @@ public class SearchServiceImpl implements SearchService {
 			throw new SearchResultNotFoundException("AwardResults NotFound");
 		}
 		return new AwardResponse(award, true);
+	}
+
+	@Override
+	public XSSFWorkbook exportMatchingAwards(SearchInput searchInput) {
+		Specification<Award> awardSpecifications = getSpecificationAwardDetails(searchInput);
+		List<Award> awards = awardRepository.findAll(awardSpecifications);
+		if (awards.size() == 0) {
+			throw new SearchResultNotFoundException("No results found for the search criteria");
+		}
+		XSSFWorkbook xssfWorkbook = null;
+		try {
+			xssfWorkbook = SearchUtils.prepareAwardDetailsSheet(awards);
+		} catch (IOException e) {
+
+		}
+		return xssfWorkbook;
 	}
 
 	/**
@@ -144,5 +125,44 @@ public class SearchServiceImpl implements SearchService {
 			sortDir = Sort.Direction.DESC;
 	    }
 	    return sortDir;
+	}
+
+	public Specification<Award>  getSpecificationAwardDetails(SearchInput searchinput) {
+
+		Specification<Award> awardSpecifications = Specification
+
+				// getSubsidyObjective from input parameter
+				.where(
+						searchinput.getSubsidyObjective() == null || searchinput.getSubsidyObjective().isEmpty()
+								? null : AwardSpecificationUtils.subsidyObjectiveIn(searchinput.getSubsidyObjective()))
+
+				// getSpendingRegion from input parameter
+				.and(searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().isEmpty()
+						? null : AwardSpecificationUtils.spendingRegionIn(searchinput.getSpendingRegion()))
+
+				// getSpendingSector from input parameter
+				.and(searchinput.getSpendingSector() == null || searchinput.getSpendingSector().isEmpty()
+						? null : AwardSpecificationUtils.spendingSectorIn(searchinput.getSpendingSector()))
+
+				// getSubsidyInstrument from input parameter
+				.and(searchinput.getSubsidyInstrument() == null || searchinput.getSubsidyInstrument().isEmpty()
+						? null : AwardSpecificationUtils.subsidyInstrumentIn(searchinput.getSubsidyInstrument()))
+
+				// getSubsidyMeasureTitle from input parameter
+				.and(SearchUtils.checkNullOrEmptyString(searchinput.getSubsidyMeasureTitle())
+						? null : AwardSpecificationUtils.subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle().trim()))
+
+				// LegalGranting Date Range from/to input parameter
+				.and(SearchUtils.checkNullOrEmptyString(searchinput.getLegalGrantingFromDate())
+						|| SearchUtils.checkNullOrEmptyString(searchinput.getLegalGrantingToDate())
+						? null : AwardSpecificationUtils
+						.legalGrantingDateRange(
+								SearchUtils.stringToDate(searchinput.getLegalGrantingFromDate()),
+								SearchUtils.stringToDate(searchinput.getLegalGrantingToDate())
+						))
+				// getBeneficiaryName from input parameter
+				.and(SearchUtils.checkNullOrEmptyString(searchinput.getBeneficiaryName())
+						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()));
+		return awardSpecifications;
 	}
 }

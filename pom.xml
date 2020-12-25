@@ -12,7 +12,7 @@
 	<artifactId>public-search-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>public-search-service</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Transparency DB Public Search Service Api</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +25,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.1</version>
 		</dependency>
 		<dependency>
             <groupId>org.springframework.boot</groupId>
@@ -101,12 +106,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 
