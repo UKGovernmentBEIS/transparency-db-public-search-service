@@ -70,16 +70,19 @@ public class SearchUtils {
 	 * @return formatted string
 	 */
 	public static String formatedFullAmountRange(String amountRange) {
-		StringBuilder format = new StringBuilder();
-		String [] tokens = amountRange.split("-");
 		String finalAmtRange = null;
-		if (tokens.length == 2) {
-			finalAmtRange = format.append(convertDecimalValue(tokens[0]))
-					.append(" - ")
-					.append("£")
-					.append(decimalNumberFormat(new BigDecimal(tokens[1].trim()))).toString();
-		} else {
-			finalAmtRange = format.append("£").append(decimalNumberFormat(new BigDecimal(amountRange))).toString();
+		if (StringUtils.isNotBlank(amountRange) &&
+				!amountRange.contains("NA")) {
+			StringBuilder format = new StringBuilder();
+			String[] tokens = amountRange.split("-");
+			if (tokens.length == 2) {
+				finalAmtRange = format.append(convertDecimalValue(tokens[0]))
+						.append(" - ")
+						.append("£")
+						.append(decimalNumberFormat(new BigDecimal(tokens[1].trim()))).toString();
+			} else {
+				finalAmtRange = format.append("£").append(decimalNumberFormat(new BigDecimal(amountRange))).toString();
+			}
 		}
 		return  finalAmtRange;
 	}
