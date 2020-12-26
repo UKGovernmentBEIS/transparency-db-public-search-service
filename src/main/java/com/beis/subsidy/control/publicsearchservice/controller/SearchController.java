@@ -12,7 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -63,12 +70,14 @@ public class SearchController {
 	 * @param searchInput - Input as SearchInput object from front end
 	 * @return ResponseEntity - Return response status and description
 	 */
-	@CrossOrigin
-	@PostMapping("/exportAll")
-	public ResponseEntity<XSSFWorkbook> exportAllSearchResultsInExcel(@Valid @RequestBody SearchInput searchInput) {
+	@PostMapping(
+			path = "/exportAll",
+			produces = APPLICATION_JSON_VALUE
+			)
+	public ResponseEntity<Object> exportAllSearchResultsInExcel(@Valid @RequestBody SearchInput searchInput) {
 
 			XSSFWorkbook xssfWorkbook = searchService.exportMatchingAwards(searchInput);
-			return new ResponseEntity<XSSFWorkbook>(xssfWorkbook, HttpStatus.OK);
+			return new ResponseEntity<Object>(xssfWorkbook, HttpStatus.OK);
 	}
 
 
