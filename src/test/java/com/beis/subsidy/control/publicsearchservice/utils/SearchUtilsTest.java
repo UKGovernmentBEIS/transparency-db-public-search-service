@@ -67,5 +67,10 @@ public class SearchUtilsTest {
         formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp2);
         assertThat(formatAmountRange.contains("-")).isFalse();
         assertThat(formatAmountRange.contains("£")).isTrue();
+
+        String dataIp3 = null;
+        formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp3);
+        assertThat(formatAmountRange).isNotNull();
+        assertThat(formatAmountRange).isEqualTo("£NA");
     }
 }

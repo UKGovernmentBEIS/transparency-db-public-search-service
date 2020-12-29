@@ -70,7 +70,7 @@ public class SearchUtils {
 	 * @return formatted string
 	 */
 	public static String formatedFullAmountRange(String amountRange) {
-		String finalAmtRange = null;
+		String finalAmtRange = "£NA";
 		if (StringUtils.isNotBlank(amountRange) &&
 				!amountRange.contains("NA")) {
 			StringBuilder format = new StringBuilder();

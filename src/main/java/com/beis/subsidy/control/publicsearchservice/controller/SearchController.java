@@ -70,6 +70,7 @@ public class SearchController {
 	 * @param searchInput - Input as SearchInput object from front end
 	 * @return ResponseEntity - Return response status and description
 	 */
+	@CrossOrigin
 	@PostMapping(
 			path = "/exportAll",
 			produces = APPLICATION_JSON_VALUE
