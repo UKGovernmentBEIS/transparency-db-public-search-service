@@ -41,7 +41,7 @@ stages:
         mavenAuthenticateFeed: false
         effectivePomSkip: false
         sonarQubeRunAnalysis: false 
-        goals: 'package'
+        goals: 'package spring-boot:repackage'
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
       inputs:
