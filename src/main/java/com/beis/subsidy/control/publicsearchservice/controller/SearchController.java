@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
@@ -84,6 +85,7 @@ public class SearchController {
 		ByteArrayInputStream in = searchService.exportMatchingAwards(searchInput);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Disposition", "attachment; filename=publicsearchawards.xlsx");
+		responseHeaders.set("content-type","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		return ResponseEntity
 				.ok()
 				.headers(responseHeaders)
