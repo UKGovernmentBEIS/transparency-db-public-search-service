@@ -8,8 +8,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -107,7 +107,7 @@ public class SearchUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static XSSFWorkbook prepareAwardDetailsSheet(List<Award> awards) throws IOException  {
+	public static ByteArrayInputStream prepareAwardDetailsSheet(List<Award> awards) throws IOException  {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet spreadsheet = workbook.createSheet("Public User Details");
 		XSSFRow row = spreadsheet.createRow(0);
@@ -177,12 +177,15 @@ public class SearchUtils {
 			cell.setCellValue(award.getPublishedAwardDate().toString());
 			i++;
 		}
-		//Write the workbook in file system
-		FileOutputStream out = new FileOutputStream(new File("publicsearchawards.xlsx"));
-		workbook.write(out);
-		out.close();
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			workbook.write(out);
+		} catch (IOException e) {
+			log.error("Exception while writing the excel file ::{}", e);
+		}
 		log.info("publicsearchawards.xlsx written successfully");
-		return workbook;
+		return new ByteArrayInputStream(out.toByteArray());
 	}
 
 	/**

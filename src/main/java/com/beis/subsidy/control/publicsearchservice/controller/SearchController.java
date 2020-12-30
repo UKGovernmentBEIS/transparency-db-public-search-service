@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.io.ByteArrayInputStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -77,8 +81,13 @@ public class SearchController {
 			)
 	public ResponseEntity<Object> exportAllSearchResultsInExcel(@Valid @RequestBody SearchInput searchInput) {
 
-			XSSFWorkbook xssfWorkbook = searchService.exportMatchingAwards(searchInput);
-			return new ResponseEntity<Object>(xssfWorkbook, HttpStatus.OK);
+		ByteArrayInputStream in = searchService.exportMatchingAwards(searchInput);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Disposition", "attachment; filename=publicsearchawards.xlsx");
+		return ResponseEntity
+				.ok()
+				.headers(responseHeaders)
+				.body(new InputStreamResource(in));
 	}
 
 

@@ -9,7 +9,6 @@ import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,13 +76,13 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
-	public XSSFWorkbook exportMatchingAwards(SearchInput searchInput) {
+	public ByteArrayInputStream exportMatchingAwards(SearchInput searchInput) {
 		Specification<Award> awardSpecifications = getSpecificationAwardDetails(searchInput);
 		List<Award> awards = awardRepository.findAll(awardSpecifications);
 		if (awards.size() == 0) {
 			throw new SearchResultNotFoundException("No results found for the search criteria");
 		}
-		XSSFWorkbook xssfWorkbook = null;
+		ByteArrayInputStream xssfWorkbook = null;
 		try {
 			xssfWorkbook = SearchUtils.prepareAwardDetailsSheet(awards);
 		} catch (IOException e) {
