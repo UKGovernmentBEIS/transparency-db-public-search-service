@@ -61,6 +61,14 @@ public final class AwardSpecificationUtils {
 		        .map(subsidyObjective -> builder.equal(root.get("subsidyObjective"), subsidyObjective.trim()))
 				.toArray(Predicate[]::new));
 	}
+
+	public static Specification<Award> otherSubsidyObjective(List<String> subsidyObjectives) {
+
+		return (root, query, builder) -> builder.or(subsidyObjectives
+				.stream()
+				.map(subsidyObjective ->  builder.like(root.get("subsidyObjective"), "%"+subsidyObjective+"%"))
+				.toArray(Predicate[]::new));
+	}
 	
 	/**
 	 * To define specification for spending sector 
@@ -89,6 +97,13 @@ public final class AwardSpecificationUtils {
 				.toArray(Predicate[]::new));
 	}
 
+	public static Specification<Award> otherSubsidyInstrumentIn(List<String> subsidyInstruments) {
+		return (root, query, builder) -> builder.or(subsidyInstruments
+				.stream()
+				.map(subsidyInstrument -> builder.like(root.get("subsidyInstrument"), "%"+subsidyInstrument+"%"))
+				.toArray(Predicate[]::new));
+	}
+
 	/**
 	 * To define specification for beneficiary name
 	 * 
@@ -98,7 +113,7 @@ public final class AwardSpecificationUtils {
 	public static Specification<Award> beneficiaryName(String beneficiaryName) {
 	    return (root, query, builder) -> builder.like(root.get("beneficiary").get("beneficiaryName"), contains(beneficiaryName));
 	}
-	
+
 	/**
 	 * To check contains operations
 	 * @param expression - input string
