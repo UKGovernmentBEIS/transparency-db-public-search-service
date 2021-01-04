@@ -7,13 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -61,15 +57,6 @@ public class Beneficiary {
 		@Column(name = "SIZE_OF_ORG")
 		private String orgSize;
 		
-		@Column(name = "POST_CODE")
-		private String postCode;
-		
-		@Column(name = "REGION")
-		private String region;
-		
-		@Column(name = "COUNTRY")
-		private String country;
-		
 		@Column(name = "CREATED_BY")
 		private String createdBy;
 		
@@ -80,16 +67,10 @@ public class Beneficiary {
 		private String status;
 		
 		@CreationTimestamp
-		@Temporal(TemporalType.TIMESTAMP)
-		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
 		@Column(name = "CREATED_TIMESTAMP")
 		private Date createdTimestamp;
 		
 		@UpdateTimestamp
-		@Temporal(TemporalType.TIMESTAMP)
-		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
 		@Column(name = "LAST_MODIFIED_TIMESTAMP")
 		private Date lastModifiedTimestamp;
-		
-		
 }

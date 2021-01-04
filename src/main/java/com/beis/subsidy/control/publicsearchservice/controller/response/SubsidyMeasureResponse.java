@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -40,10 +41,10 @@ public class SubsidyMeasureResponse {
     private String gaSubsidyWebLink;
 
     @JsonProperty
-    private String legalBasis;
+    private LegalBasisResponse legalBasis;
 
     @JsonProperty
-    private Date publishedMeasureDate;
+    private LocalDate publishedMeasureDate;
 
     @JsonProperty
     private String createdBy;
@@ -61,7 +62,6 @@ public class SubsidyMeasureResponse {
         if (showAll) {
             this.adhoc = subsidyMeasure.isAdhoc();
             this.duration = subsidyMeasure.getDuration();
-            this.legalBasis = subsidyMeasure.getLegalBasis();
             this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
@@ -71,6 +71,7 @@ public class SubsidyMeasureResponse {
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
         }
+        this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
 
     }
 }

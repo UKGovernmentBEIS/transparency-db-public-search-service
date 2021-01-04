@@ -8,17 +8,14 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -39,7 +36,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class SubsidyMeasure {
 
-	//TODO - Implement Custom sequence generator
 	@Id
 	@Column(name="SC_NUMBER")
 	private String scNumber;
@@ -51,9 +47,11 @@ public class SubsidyMeasure {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "gaId", nullable = false)
-	@ToString.Exclude
 	@JsonIgnore
 	private GrantingAuthority grantingAuthority;
+
+	@OneToOne(mappedBy="subsidyMeasure")
+	private LegalBasis legalBases;
 	
 	@Column(name = "SUBSIDY_MEASURE_TITLE")
 	private String subsidyMeasureTitle;
@@ -76,15 +74,12 @@ public class SubsidyMeasure {
 	@Column(name = "GA_SUBSIDY_WEBLINK")
 	private String gaSubsidyWebLink;
 
-	@Column(name = "LEGAL_BASIS")
-	private String legalBasis;
-	
 	@Column(name = "PUBLISHED_MEASURE_DATE")
-	private Date publishedMeasureDate;
-	
+	private LocalDate publishedMeasureDate;
+
 	@Column(name = "CREATED_BY")
 	private String createdBy;
-	
+
 	@Column(name = "APPROVED_BY")
 	private String approvedBy;
 	
@@ -92,14 +87,10 @@ public class SubsidyMeasure {
 	private String status;
 	
 	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
 	@Column(name = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
 	@UpdateTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")  
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private Date lastModifiedTimestamp;
 }
