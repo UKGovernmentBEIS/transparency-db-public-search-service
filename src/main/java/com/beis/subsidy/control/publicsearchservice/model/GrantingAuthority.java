@@ -23,7 +23,7 @@ import lombok.ToString;
  *
  */
 @Builder
-@Entity(name = "GRANTING_AUTHORITY_READ")
+@Entity(name = "GRANTING_AUTHORITY")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -30,7 +30,7 @@ import lombok.ToString;
  *
  */
 @Builder
-@Entity(name = "SUBSIDY_MEASURE_READ")
+@Entity(name = "SUBSIDY_MEASURE")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

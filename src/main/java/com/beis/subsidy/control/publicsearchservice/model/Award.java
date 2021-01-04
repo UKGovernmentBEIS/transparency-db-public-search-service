@@ -21,7 +21,7 @@ import org.hibernate.annotations.UpdateTimestamp;
  * Award Entity class 
  */
 @Builder
-@Entity(name = "AWARD_READ")
+@Entity(name = "AWARD")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -24,7 +24,7 @@ import lombok.ToString;
  *
  */
 @Builder
-@Entity(name = "BENEFICIARY_READ")
+@Entity(name = "BENEFICIARY")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
