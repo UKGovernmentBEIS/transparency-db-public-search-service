@@ -21,8 +21,9 @@ public class BeneficiaryResponse {
     private String nationalIdType;
     @JsonProperty
     private String orgSize;
-    @JsonProperty
-    private String region;
+
+    /*@JsonProperty
+    private String region;*/
 
     public BeneficiaryResponse(Beneficiary beneficiary, boolean flag) {
 
@@ -31,7 +32,7 @@ public class BeneficiaryResponse {
             this.nationalId = beneficiary.getNationalId();
             this.nationalIdType = beneficiary.getNationalIdType();
             this.orgSize = beneficiary.getOrgSize();
-            this.region = beneficiary.getRegion();
+            //this.region = beneficiary.getRegion();
         }
     }
 }

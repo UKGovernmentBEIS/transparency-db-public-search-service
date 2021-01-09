@@ -21,10 +21,14 @@ public class SearchInput {
 	private String subsidyMeasureTitle;
 	
 	private List<String> subsidyObjective;
+
+	private List<String> otherSubsidyObjective;
 	
 	private List<String> spendingRegion;
 	
 	private List<String> subsidyInstrument;
+
+	private List<String> otherSubsidyInstrument;
 	
 	private List<String> spendingSector;
 
