@@ -18,8 +18,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,21 +105,6 @@ public class SearchServiceImpl implements SearchService {
 		return new AwardResponse(award, true);
 	}
 
-	@Override
-	public ByteArrayInputStream exportMatchingAwards(SearchInput searchInput) {
-		Specification<Award> awardSpecifications = getSpecificationAwardDetails(searchInput);
-		List<Award> awards = awardRepository.findAll(awardSpecifications);
-		if (awards.size() == 0) {
-			throw new SearchResultNotFoundException("No results found for the search criteria");
-		}
-		ByteArrayInputStream xssfWorkbook = null;
-		try {
-			xssfWorkbook = SearchUtils.prepareAwardDetailsSheet(awards);
-		} catch (IOException e) {
-
-		}
-		return xssfWorkbook;
-	}
 
 	/**
 	 * 
@@ -197,7 +180,9 @@ public class SearchServiceImpl implements SearchService {
 						))
 				// getBeneficiaryName from input parameter
 				.and(SearchUtils.checkNullOrEmptyString(searchinput.getBeneficiaryName())
-						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()));
+						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()))
+				// get by published status
+				.and(AwardSpecificationUtils.status("Published"));
 		return awardSpecifications;
 	}
 	public Specification<Award>  getSpecificationAwardDetailsWithOtherInstrument(SearchInput searchinput) {
@@ -240,7 +225,8 @@ public class SearchServiceImpl implements SearchService {
 						))
 				// getBeneficiaryName from input parameter
 				.and(SearchUtils.checkNullOrEmptyString(searchinput.getBeneficiaryName())
-						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()));
+						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()))
+				.and(AwardSpecificationUtils.status("Published"));
 		return awardSpecifications;
 	}
 }

@@ -115,6 +115,16 @@ public final class AwardSpecificationUtils {
 	}
 
 	/**
+	 * To define specification for status
+	 *
+	 * @param status -status
+	 * @return Specification<Award> - Specification for Award
+	 */
+	public static Specification<Award> status(String status) {
+		return (root, query, builder) -> builder.like(root.get("status"), status);
+	}
+
+	/**
 	 * To check contains operations
 	 * @param expression - input string
 	 * @return - message format with like expression
