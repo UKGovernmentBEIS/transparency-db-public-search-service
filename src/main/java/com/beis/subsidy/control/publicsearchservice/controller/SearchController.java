@@ -7,12 +7,8 @@ import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInp
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
 import javax.validation.Valid;
 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
@@ -23,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
-import java.io.ByteArrayInputStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -68,30 +62,6 @@ public class SearchController {
 			
 			return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
 	}
-
-	/**
-	 * To get search input from UI and return search results based on search criteria
-	 *
-	 * @param searchInput - Input as SearchInput object from front end
-	 * @return ResponseEntity - Return response status and description
-	 */
-	@CrossOrigin
-	@PostMapping(
-			path = "/exportAll",
-			produces = APPLICATION_JSON_VALUE
-			)
-	public ResponseEntity<Object> exportAllSearchResultsInExcel(@Valid @RequestBody SearchInput searchInput) {
-
-		ByteArrayInputStream in = searchService.exportMatchingAwards(searchInput);
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Content-Disposition", "attachment; filename=publicsearchawards.xlsx");
-		responseHeaders.set("content-type","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-		return ResponseEntity
-				.ok()
-				.headers(responseHeaders)
-				.body(new InputStreamResource(in));
-	}
-
 
 	/**
 	 * To get details of award based on awardNumber
