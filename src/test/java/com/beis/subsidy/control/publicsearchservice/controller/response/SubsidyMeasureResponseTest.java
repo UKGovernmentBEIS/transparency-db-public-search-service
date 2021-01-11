@@ -61,7 +61,6 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.getSubsidyMeasureTitle()).isNotNull();
         assertThat(subsidyMeasureRes1.isAdhoc());
         assertThat(subsidyMeasureRes1.getDuration()).isNotNull();
-        assertThat(subsidyMeasureRes1.getStatus()).isNotNull();
         assertThat(subsidyMeasureRes1.getGaSubsidyWebLink()).isNotNull();
         assertThat(subsidyMeasureRes1.getStartDate()).isNotNull();
         assertThat(subsidyMeasureRes1.getEndDate()).isNotNull();
