@@ -43,7 +43,7 @@ stages:
               sonarQubeRunAnalysis: false
               goals: 'package spring-boot:repackage'
           - task: CopyFiles@2
-            displayName: 'Copy Files to artifact staging directory'
+            displayName: 'Copy Filess to artifact staging directory'
             inputs:
               SourceFolder: '$(System.DefaultWorkingDirectory)'
               Contents: '**/target/*.?(war|jar)'
