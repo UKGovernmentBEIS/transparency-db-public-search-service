@@ -71,6 +71,11 @@ public class SearchUtilsTest {
         String dataIp3 = null;
         formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp3);
         assertThat(formatAmountRange).isNotNull();
-        assertThat(formatAmountRange).isEqualTo("£NA");
+        assertThat(formatAmountRange).isEqualTo("NA");
+
+        String dataIp4 = "0";
+        formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp4);
+        assertThat(formatAmountRange).isNotNull();
+        assertThat(formatAmountRange).isEqualTo("0");
     }
 }

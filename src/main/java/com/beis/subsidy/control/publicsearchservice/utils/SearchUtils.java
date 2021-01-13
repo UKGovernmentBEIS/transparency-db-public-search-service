@@ -64,7 +64,7 @@ public class SearchUtils {
 	 * @return formatted string
 	 */
 	public static String formatedFullAmountRange(String amountRange) {
-		String finalAmtRange = "£NA";
+		String finalAmtRange = "NA";
 		if (StringUtils.isNotBlank(amountRange) &&
 				!(amountRange.equalsIgnoreCase("NA") || amountRange.contains("N/A")
 						|| amountRange.contains("n/a"))) {
@@ -76,8 +76,9 @@ public class SearchUtils {
 						.append("£")
 						.append(decimalNumberFormat(new BigDecimal(tokens[1].trim()))).toString();
 			} else {
-				finalAmtRange = format.append("£").append(decimalNumberFormat(new BigDecimal(amountRange))).toString();
-			}
+				finalAmtRange = new BigDecimal(amountRange).longValue() > 0 ? format.append("£")
+						.append(decimalNumberFormat(new BigDecimal(amountRange))).toString() : "0";
+			 }
 		}
 		return finalAmtRange;
 	}
