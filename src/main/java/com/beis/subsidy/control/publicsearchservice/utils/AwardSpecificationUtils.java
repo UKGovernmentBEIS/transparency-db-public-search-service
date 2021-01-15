@@ -58,7 +58,7 @@ public final class AwardSpecificationUtils {
 		
 		return (root, query, builder) -> builder.or(subsidyObjectives
 		        .stream()
-		        .map(subsidyObjective -> builder.equal(root.get("subsidyObjective"), subsidyObjective.trim()))
+		        .map(subsidyObjective -> builder.equal(builder.lower(root.get("subsidyObjective")), subsidyObjective.toLowerCase().trim()))
 				.toArray(Predicate[]::new));
 	}
 
@@ -66,7 +66,7 @@ public final class AwardSpecificationUtils {
 
 		return (root, query, builder) -> builder.or(subsidyObjectives
 				.stream()
-				.map(subsidyObjective ->  builder.like(root.get("subsidyObjective"), "%"+subsidyObjective+"%"))
+				.map(subsidyObjective ->  builder.like(builder.lower(root.get("subsidyObjective")), "%"+subsidyObjective.toLowerCase().trim()+"%"))
 				.toArray(Predicate[]::new));
 	}
 	
@@ -93,14 +93,15 @@ public final class AwardSpecificationUtils {
 	public static Specification<Award> subsidyInstrumentIn(List<String> subsidyInstruments) {
 		return (root, query, builder) -> builder.or(subsidyInstruments
 		        .stream()
-		        .map(subsidyInstrument -> builder.equal(root.get("subsidyInstrument"), subsidyInstrument.trim()))
+		        .map(subsidyInstrument -> builder.equal(builder.lower(root.get("subsidyInstrument")), subsidyInstrument.trim().toLowerCase()))
 				.toArray(Predicate[]::new));
 	}
 
 	public static Specification<Award> otherSubsidyInstrumentIn(List<String> subsidyInstruments) {
 		return (root, query, builder) -> builder.or(subsidyInstruments
 				.stream()
-				.map(subsidyInstrument -> builder.like(root.get("subsidyInstrument"), "%"+subsidyInstrument+"%"))
+				.map(subsidyInstrument -> builder.like(builder.lower(root.get("subsidyInstrument")),
+						"%"+subsidyInstrument.toLowerCase().trim()+"%"))
 				.toArray(Predicate[]::new));
 	}
 
@@ -111,7 +112,9 @@ public final class AwardSpecificationUtils {
 	 * @return Specification<Award> - Specification for Award
 	 */
 	public static Specification<Award> beneficiaryName(String beneficiaryName) {
-	    return (root, query, builder) -> builder.like(root.get("beneficiary").get("beneficiaryName"), contains(beneficiaryName));
+
+	    return (root, query, builder) -> builder.like(builder.lower(root.get("beneficiary").get("beneficiaryName")),
+				builder.lower(builder.literal("%" + beneficiaryName.trim() + "%")));
 	}
 
 	/**
