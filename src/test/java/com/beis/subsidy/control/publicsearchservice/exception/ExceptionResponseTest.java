@@ -29,6 +29,4 @@ public class ExceptionResponseTest {
         assertThat(errorDetails.getMessage()).isEqualTo("details");
         assertThat(errorDetails.getTimestamp()).isNotNull();
     }
-
-
 }

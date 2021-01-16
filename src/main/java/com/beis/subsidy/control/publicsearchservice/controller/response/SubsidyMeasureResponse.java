@@ -5,13 +5,10 @@ import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.Date;
 
-@NoArgsConstructor
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SubsidyMeasureResponse {

@@ -28,6 +28,7 @@ public class AwardResponseTest {
         award.setLegalGrantingDate(LocalDate.now());
         award.setStatus("status");
         award.setPublishedAwardDate(LocalDate.now());
+        award.setSpendingRegion("region");
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
@@ -85,6 +86,8 @@ public class AwardResponseTest {
         assertThat(awardResponse.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse.getSubsidyMeasure()).isNotNull();
         assertThat(awardResponse.getSubsidyObjective()).isNotNull();
+        assertThat(awardResponse.getSubsidyInstrument()).isNotNull();
+        assertThat(awardResponse.getSpendingRegion()).isNotNull();
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();

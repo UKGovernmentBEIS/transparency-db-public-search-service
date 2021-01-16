@@ -2,8 +2,8 @@ package com.beis.subsidy.control.publicsearchservice.controller.request;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
  * Search Input object - represents search input criteria for public search service
  *
  */
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 public class SearchInput {
 
 	private String beneficiaryName;
