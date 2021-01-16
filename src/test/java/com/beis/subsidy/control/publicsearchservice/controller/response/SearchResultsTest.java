@@ -77,5 +77,19 @@ public class SearchResultsTest {
         assertThat(results.getCurrentPage()).isEqualTo(1l);
         assertThat(results.getTotalPages()).isEqualTo(1l);
         assertThat(results.getTotalSearchResults()).isEqualTo(1l);
+
+        SearchResults resultsDef = new SearchResults();
+        AwardResponse response = new AwardResponse(award, false);
+        List<AwardResponse> responses = new ArrayList<>();
+        responses.add(response);
+        resultsDef.setAwards(responses);
+        resultsDef.setCurrentPage(1);
+        resultsDef.setTotalPages(1);
+        resultsDef.setTotalSearchResults(1);
+
+        assertThat(resultsDef.getAwards().size()).isEqualTo(1);
+        assertThat(resultsDef.getCurrentPage()).isEqualTo(1l);
+        assertThat(resultsDef.getTotalPages()).isEqualTo(1l);
+        assertThat(resultsDef.getTotalSearchResults()).isEqualTo(1l);
     }
 }

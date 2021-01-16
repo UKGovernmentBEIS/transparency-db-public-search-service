@@ -6,17 +6,17 @@ import java.util.stream.Collectors;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 
  * Search results object - Represents search results for award search
  *
  */
-@Builder
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchResults {

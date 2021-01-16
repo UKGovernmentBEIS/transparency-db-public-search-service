@@ -108,6 +108,8 @@ public class SearchServiceImplTest {
         spendingRegion.add("spendingRegion");
         input.setSpendingRegion(spendingRegion);
         input.setSubsidyMeasureTitle("title");
+        input.setLegalGrantingFromDate("2019-11-01");
+        input.setLegalGrantingFromDate("2019-11-02");
         List<String> spendingSector = new ArrayList();
         spendingSector.add("spendingSector");
         input.setSpendingSector(spendingSector);
@@ -119,6 +121,70 @@ public class SearchServiceImplTest {
 
         List<String> subsidyObjectives= new ArrayList();
         subsidyObjectives.add("subsidyObjective");
+        input.setSubsidyObjective(subsidyObjectives);
+        input.setBeneficiaryName("bName");
+
+        when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
+        when(awardPage.getContent()).thenReturn(awards);
+        SearchResults searchResults = sut.findMatchingAwards(input);
+        assertThat(searchResults).isNotNull();
+        verify(awardRepository, times(1)).findAll(any(Specification.class),any(Pageable.class));
+    }
+
+    @Test
+    public void testFindMatchingAwardsWithOtherSubsidyObjAndInstrument() throws ParseException {
+        Specification<Award> awardSpecifications = mock(Specification.class);
+        Pageable pageableMock = mock(Pageable.class);
+        Page<Award> awardPage = (Page<Award>) mock(Page.class);
+
+        SearchInput input = new SearchInput();
+        List<String> spendingRegion = new ArrayList();
+        spendingRegion.add("spendingRegion");
+        input.setSpendingRegion(spendingRegion);
+        input.setSubsidyMeasureTitle("title");
+        List<String> spendingSector = new ArrayList();
+        spendingSector.add("spendingSector");
+        input.setSpendingSector(spendingSector);
+        input.setPageNumber(1);
+        input.setTotalRecordsPerPage(1);
+        List<String> subsidyInstruments= new ArrayList();
+        subsidyInstruments.add("Other-subsidyInstrument");
+        input.setSubsidyInstrument(subsidyInstruments);
+
+        List<String> subsidyObjectives= new ArrayList();
+        subsidyObjectives.add("Other-subsidyObjective");
+        input.setSubsidyObjective(subsidyObjectives);
+        input.setBeneficiaryName("bName");
+
+        when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
+        when(awardPage.getContent()).thenReturn(awards);
+        SearchResults searchResults = sut.findMatchingAwards(input);
+        assertThat(searchResults).isNotNull();
+        verify(awardRepository, times(1)).findAll(any(Specification.class),any(Pageable.class));
+    }
+
+    @Test
+    public void testFindMatchingAwardsWithOnlyOther() throws ParseException {
+        Specification<Award> awardSpecifications = mock(Specification.class);
+        Pageable pageableMock = mock(Pageable.class);
+        Page<Award> awardPage = (Page<Award>) mock(Page.class);
+
+        SearchInput input = new SearchInput();
+        List<String> spendingRegion = new ArrayList();
+        spendingRegion.add("spendingRegion");
+        input.setSpendingRegion(spendingRegion);
+        input.setSubsidyMeasureTitle("title");
+        List<String> spendingSector = new ArrayList();
+        spendingSector.add("spendingSector");
+        input.setSpendingSector(spendingSector);
+        input.setPageNumber(1);
+        input.setTotalRecordsPerPage(1);
+        List<String> subsidyInstruments= new ArrayList();
+        subsidyInstruments.add("Other");
+        input.setSubsidyInstrument(subsidyInstruments);
+
+        List<String> subsidyObjectives= new ArrayList();
+        subsidyObjectives.add("Other");
         input.setSubsidyObjective(subsidyObjectives);
         input.setBeneficiaryName("bName");
 

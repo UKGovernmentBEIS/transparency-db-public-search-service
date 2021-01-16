@@ -25,6 +25,7 @@ public class BeneficiaryResponseTest {
         assertThat(beneficiaryResponse.getNationalIdType()).isNull();
         assertThat(beneficiaryResponse.getNationalId()).isNull();
         assertThat(beneficiaryResponse.getNationalIdType()).isNull();
+        assertThat(beneficiaryResponse.getOrgSize()).isNull();
 
         BeneficiaryResponse beneficiaryResponse1 = new BeneficiaryResponse(award.getBeneficiary(),true);
         assertThat(beneficiaryResponse1).isNotNull();

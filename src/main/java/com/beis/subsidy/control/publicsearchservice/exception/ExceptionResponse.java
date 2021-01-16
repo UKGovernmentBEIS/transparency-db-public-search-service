@@ -2,18 +2,17 @@ package com.beis.subsidy.control.publicsearchservice.exception;
 
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 
  * Exception response object - used to define meaningful exception details
  *
  */
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 public class ExceptionResponse {
 	
 	private Date timestamp;
