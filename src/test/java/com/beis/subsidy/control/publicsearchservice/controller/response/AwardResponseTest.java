@@ -27,6 +27,7 @@ public class AwardResponseTest {
         award.setSpendingSector("spendingSector");
         award.setLegalGrantingDate(LocalDate.now());
         award.setStatus("status");
+        award.setReason("rejectReason");
         award.setPublishedAwardDate(LocalDate.now());
         award.setSpendingRegion("region");
         //beneficiary details
@@ -82,6 +83,7 @@ public class AwardResponseTest {
         assertThat(awardResponse.getPublishedAwardDate()).isNotNull();
         assertThat(awardResponse.getSpendingSector()).isNotNull();
         assertThat(awardResponse.getStatus()).isNotNull();
+        assertThat(awardResponse.getRejectReason()).isNotNull();
         assertThat(awardResponse.getSubsidyFullAmountExact()).isNotNull();
         assertThat(awardResponse.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse.getSubsidyMeasure()).isNotNull();
@@ -107,5 +109,6 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();
         assertThat(awardResponse1.getSubsidyObjective()).isNotNull();
+        assertThat(awardResponse1.getRejectReason()).isNull();
     }
 }
