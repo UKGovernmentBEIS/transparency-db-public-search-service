@@ -67,7 +67,9 @@ public class SearchUtils {
 		String finalAmtRange = "NA";
 		if (StringUtils.isNotBlank(amountRange) &&
 				!(amountRange.equalsIgnoreCase("NA") || amountRange.contains("N/A")
-						|| amountRange.contains("n/a"))) {
+						|| amountRange.contains("n/a"))
+		&& !amountRange.contains("or more")) {
+
 			StringBuilder format = new StringBuilder();
 			String[] tokens = amountRange.split("-");
 			if (tokens.length == 2) {
@@ -75,10 +77,14 @@ public class SearchUtils {
 						.append(" - ")
 						.append("£")
 						.append(decimalNumberFormat(new BigDecimal(tokens[1].trim()))).toString();
-			} else {
-				finalAmtRange = new BigDecimal(amountRange).longValue() > 0 ? format.append("£")
-						.append(decimalNumberFormat(new BigDecimal(amountRange))).toString() : "0";
-			 }
+			} else 	{
+					finalAmtRange = new BigDecimal(amountRange).longValue() > 0 ? format.append("£")
+							.append(decimalNumberFormat(new BigDecimal(amountRange))).toString() : "0";
+			}
+
+		} else if(StringUtils.isNotBlank(amountRange) && amountRange.endsWith("or more")) {
+			String removedLessThanVal = amountRange.substring(0, amountRange.length()-7).trim();
+			finalAmtRange = "£"  + decimalNumberFormat(new BigDecimal(removedLessThanVal)) + " or more";
 		}
 		return finalAmtRange;
 	}
