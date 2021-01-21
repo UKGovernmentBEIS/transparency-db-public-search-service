@@ -90,7 +90,7 @@ public class AwardResponse {
             this.createdTimestamp = award.getCreatedTimestamp();
             this.lastModifiedTimestamp = award.getLastModifiedTimestamp();
             this.publishedAwardDate = award.getPublishedAwardDate();
-            this.rejectReason = award.getReason()!= null ?  award.getReason(): null;
+            this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): null;
         }
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
         this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
