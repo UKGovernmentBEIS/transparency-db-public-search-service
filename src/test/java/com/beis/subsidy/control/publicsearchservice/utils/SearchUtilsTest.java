@@ -78,7 +78,7 @@ public class SearchUtilsTest {
         assertThat(formatAmountRange).isNotNull();
         assertThat(formatAmountRange).isEqualTo("0");
 
-        String dataIp5 ="1000000 >";
+        String dataIp5 ="1000000 or more";
         formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp5);
         assertThat(formatAmountRange).isNotNull();
         assertThat(formatAmountRange.contains("or more")).isTrue();
