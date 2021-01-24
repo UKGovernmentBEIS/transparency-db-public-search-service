@@ -50,7 +50,6 @@ public class SearchController {
 	 * @param searchInput - Input as SearchInput object from front end 
 	 * @return ResponseEntity - Return response status and description
 	 */
-	@CrossOrigin
 	@PostMapping
 	public ResponseEntity<SearchResults> findSearchResults(@Valid @RequestBody SearchInput searchInput) {
 
