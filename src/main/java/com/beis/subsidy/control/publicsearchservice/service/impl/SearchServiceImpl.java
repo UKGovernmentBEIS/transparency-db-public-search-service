@@ -25,6 +25,7 @@ import java.util.List;
  * Service class for Public Search service 
  *
  */
+@Slf4j
 @Service
 public class SearchServiceImpl implements SearchService {
 
@@ -80,16 +81,18 @@ public class SearchServiceImpl implements SearchService {
 			Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 			
 			List<Award> awardResults = pageAwards.getContent();
-			
+			log.info("inside  awardResults.size::::" +awardResults.size());
 			SearchResults searchResults = null; 
 			
 			if (!awardResults.isEmpty()) {
-				
+				log.info("SearchResult Found::::" );
 					searchResults = new SearchResults(awardResults, pageAwards.getTotalElements(),
 							pageAwards.getNumber() + 1, pageAwards.getTotalPages());
 			} else {
 
+				log.info("SearchResultNotFoundException::::" );
 				throw new SearchResultNotFoundException("AwardResults NotFound");
+				
 			}
 
 			return searchResults;
