@@ -3,7 +3,7 @@ package com.beis.subsidy.control.publicsearchservice.controller;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
-import com.beis.subsidy.ga.schemes.dbpublishingservice.controller.GrantingAuthorityController;
+
 
 import lombok.extern.slf4j.Slf4j;
 
