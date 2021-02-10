@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Slf4j
 public class AwardResponse {
     @JsonProperty
     private Long awardNumber;
@@ -74,7 +76,7 @@ public class AwardResponse {
 
     public AwardResponse(Award award, boolean flag) {
     	
-    	log.info("inside  AwardResponse"::");
+    	log.info("inside  AwardResponse::");
         this.awardNumber = award.getAwardNumber();
         this.subsidyFullAmountRange = SearchUtils.formatedFullAmountRange(award.getSubsidyFullAmountRange());
         this.subsidyFullAmountExact = SearchUtils.decimalNumberFormat(award.getSubsidyFullAmountExact());
