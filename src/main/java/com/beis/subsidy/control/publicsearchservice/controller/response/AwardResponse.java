@@ -73,7 +73,8 @@ public class AwardResponse {
 
 
     public AwardResponse(Award award, boolean flag) {
-
+    	
+    	log.info("inside  AwardResponse"::");
         this.awardNumber = award.getAwardNumber();
         this.subsidyFullAmountRange = SearchUtils.formatedFullAmountRange(award.getSubsidyFullAmountRange());
         this.subsidyFullAmountExact = SearchUtils.decimalNumberFormat(award.getSubsidyFullAmountExact());
