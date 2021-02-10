@@ -3,6 +3,10 @@ package com.beis.subsidy.control.publicsearchservice.controller;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
+import com.beis.subsidy.ga.schemes.dbpublishingservice.controller.GrantingAuthorityController;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
 import javax.validation.Valid;
@@ -29,6 +33,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(
 		path = "/searchResults"
 )
+@Slf4j
 @RestController
 public class SearchController {
 
@@ -57,6 +62,7 @@ public class SearchController {
 			if(searchInput.getTotalRecordsPerPage() == 0) {
 				searchInput.setTotalRecordsPerPage(10);
 			}
+			log.info("inside  findSearchResults::::");
 			SearchResults searchResults = searchService.findMatchingAwards(searchInput);
 			
 			return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
