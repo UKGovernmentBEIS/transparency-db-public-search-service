@@ -1,15 +1,17 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
+import java.time.LocalDate;
+
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
-import java.util.Date;
-
+@Slf4j
 @NoArgsConstructor
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -74,7 +76,7 @@ public class AwardResponse {
 
     public AwardResponse(Award award, boolean flag) {
     	
-    	log.info("inside  AwardResponse"::");
+    	log.info("inside  AwardResponse::");
         this.awardNumber = award.getAwardNumber();
         this.subsidyFullAmountRange = SearchUtils.formatedFullAmountRange(award.getSubsidyFullAmountRange());
         this.subsidyFullAmountExact = SearchUtils.decimalNumberFormat(award.getSubsidyFullAmountExact());
