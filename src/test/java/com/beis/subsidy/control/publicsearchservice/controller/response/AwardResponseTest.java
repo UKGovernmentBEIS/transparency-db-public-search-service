@@ -109,6 +109,6 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();
         assertThat(awardResponse1.getSubsidyObjective()).isNotNull();
-        assertThat(awardResponse1.getRejectReason()).isNull();
+        assertThat(awardResponse1.getRejectReason()).isNotNull();
     }
 }

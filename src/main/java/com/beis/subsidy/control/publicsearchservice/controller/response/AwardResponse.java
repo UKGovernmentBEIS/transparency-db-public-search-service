@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Slf4j
 public class AwardResponse {
     @JsonProperty
     private Long awardNumber;
@@ -94,8 +93,8 @@ public class AwardResponse {
             this.createdTimestamp = award.getCreatedTimestamp();
             this.lastModifiedTimestamp = award.getLastModifiedTimestamp();
             this.publishedAwardDate = award.getPublishedAwardDate();
-            this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): null;
         }
+        this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): null;
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
         this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
         if (flag) {

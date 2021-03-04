@@ -188,7 +188,7 @@ public class SearchServiceImpl implements SearchService {
 				.and(SearchUtils.checkNullOrEmptyString(searchinput.getBeneficiaryName())
 						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()))
 				// get by published status
-				.and(AwardSpecificationUtils.status("Published"));
+				.and(AwardSpecificationUtils.statusIn(getStatusValues()));
 		return awardSpecifications;
 	}
 	public Specification<Award>  getSpecificationAwardDetailsWithOtherInstrument(SearchInput searchinput) {
@@ -232,7 +232,15 @@ public class SearchServiceImpl implements SearchService {
 				// getBeneficiaryName from input parameter
 				.and(SearchUtils.checkNullOrEmptyString(searchinput.getBeneficiaryName())
 						? null : AwardSpecificationUtils.beneficiaryName(searchinput.getBeneficiaryName().trim()))
-				.and(AwardSpecificationUtils.status("Published"));
+				.and(AwardSpecificationUtils.statusIn(getStatusValues()));
 		return awardSpecifications;
+	}
+
+	public List<String> getStatusValues() {
+
+		List<String> statuses = new ArrayList<>();
+		statuses.add("Published");
+		statuses.add("Deleted");
+		return statuses;
 	}
 }
