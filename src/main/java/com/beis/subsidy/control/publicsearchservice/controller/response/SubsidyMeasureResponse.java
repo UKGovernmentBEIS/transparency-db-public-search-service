@@ -59,7 +59,7 @@ public class SubsidyMeasureResponse {
         if (showAll) {
             this.adhoc = subsidyMeasure.isAdhoc();
             this.duration = subsidyMeasure.getDuration();
-            // this.status = subsidyMeasure.getStatus();
+            this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
             this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
