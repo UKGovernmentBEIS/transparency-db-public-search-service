@@ -1,7 +1,8 @@
 package com.beis.subsidy.control.publicsearchservice.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -65,7 +66,7 @@ public class SearchUtils {
 	 */
 	public static String formatedFullAmountRange(String amountRange) {
 		String finalAmtRange = "NA";
-		if (StringUtils.isNotBlank(amountRange) &&
+		if (!StringUtils.isEmpty(amountRange) &&
 				!(amountRange.equalsIgnoreCase("NA") || amountRange.contains("N/A")
 						|| amountRange.contains("n/a"))
 		&& !amountRange.endsWith("or more")) {
@@ -82,7 +83,7 @@ public class SearchUtils {
 							.append(decimalNumberFormat(new BigDecimal(amountRange))).toString() : "0";
 			}
 
-		} else if(StringUtils.isNotBlank(amountRange) && amountRange.endsWith("or more")) {
+		} else if(!StringUtils.isEmpty(amountRange) && amountRange.endsWith("or more")) {
 			String removedLessThanVal = amountRange.substring(0, amountRange.length()-7).trim();
 			finalAmtRange = "£"  + decimalNumberFormat(new BigDecimal(removedLessThanVal)) + " or more";
 		}
