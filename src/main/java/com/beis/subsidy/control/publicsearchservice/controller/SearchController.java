@@ -12,6 +12,7 @@ import com.beis.subsidy.control.publicsearchservice.controller.response.SearchRe
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -39,6 +39,10 @@ public class SearchController {
 
 	@Autowired
 	private SearchService searchService;
+
+	@Value("${loggingComponentName}")
+	private String loggingComponentName;
+
 	
 	/**
 	 * To get health of app 
@@ -62,7 +66,7 @@ public class SearchController {
 			if(searchInput.getTotalRecordsPerPage() == 0) {
 				searchInput.setTotalRecordsPerPage(10);
 			}
-			log.info("inside  findSearchResults::::");
+			log.info("{}::inside  findSearchResults:", loggingComponentName);
 			SearchResults searchResults = searchService.findMatchingAwards(searchInput);
 			
 			return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
