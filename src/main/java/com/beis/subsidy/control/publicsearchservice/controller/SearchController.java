@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -81,6 +81,7 @@ public class SearchController {
 		if(StringUtils.isEmpty(awardNumber)) {
 			throw new InvalidRequestException("Invalid Request");
 		}
+		log.info("inside  getAwardDetailsByAwardNumber::::{}",awardNumber);
 		AwardResponse awardResponse = searchService.findByAwardNumber(awardNumber);
 		return new ResponseEntity<AwardResponse>(awardResponse, HttpStatus.OK);
 	}
