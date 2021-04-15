@@ -58,7 +58,6 @@ public class SubsidyMeasureResponse {
         this.subsidyMeasureTitle  = subsidyMeasure.getSubsidyMeasureTitle();
         this.adhoc = subsidyMeasure.isAdhoc();
         if (showAll) {
-
             this.duration = subsidyMeasure.getDuration();
             this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
