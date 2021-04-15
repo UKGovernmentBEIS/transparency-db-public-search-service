@@ -4,7 +4,6 @@ import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)

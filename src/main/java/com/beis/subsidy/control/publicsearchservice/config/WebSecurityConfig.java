@@ -7,9 +7,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
