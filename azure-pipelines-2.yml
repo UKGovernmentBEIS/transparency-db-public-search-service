@@ -7,9 +7,6 @@ trigger:
 - main
 
 variables:
-
-  # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: 'a257b6ec-3186-445c-bb85-ccc5fe2d91cb'
   
   # Web app name
   webAppName: 'dev-beis-tp-db-public-search-service'
