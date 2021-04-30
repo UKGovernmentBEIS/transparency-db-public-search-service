@@ -9,7 +9,7 @@ trigger:
 variables:
 
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: '26889dfc-1fb7-4884-93c4-b745a5c601db'
+  azureSubscription: '09f349d0-6cf6-418e-bb98-42fa8e8da59d'
 
   # Web app name
   webAppName: 'dev-transparency-db-public-search-service'
