@@ -9,9 +9,6 @@ trigger:
 
 variables:
 
-  # Web app name
-  webAppName: 'dev-transparency-db-public-search-service'
-
   # Agent VM image name
   vmImageName: 'ubuntu-20.04'
 
@@ -58,14 +55,17 @@ stages:
     jobs:
       - deployment: DeployLinuxWebApp
         displayName: Deploy Linux Web App
-        environment: 'development'
+        environment: 'dev'
         pool:
           vmImage: $(vmImageName)
         strategy:
           runOnce:
             deploy:
               steps:
-                - task: DownloadPipelineArtifact@1
-                  displayName: 'Download Pipeline Artifact'
+                - task: AzureRmWebAppDeployment@4
                   inputs:
-                    buildType: 'current'
+                    ConnectionType: 'AzureRM'
+                    azureSubscription: 'CGI-AzureDevOps-BEIS'
+                    appType: 'webAppLinux'
+                    WebAppName: 'dev-transparency-db-public-search-service'
+                    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
