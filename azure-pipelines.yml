@@ -39,8 +39,8 @@ stages:
           - task: CopyFiles@2
             displayName: 'Copy Filess to artifact staging directory'
             inputs:
-              SourceFolder: '$(System.DefaultWorkingDirectory)'
-              Contents: '**/target/*.?(war|jar)'
+              SourceFolder: '$(System.DefaultWorkingDirectory)/**/target'
+              Contents: '*.?(war|jar)'
               TargetFolder: $(Build.ArtifactStagingDirectory)
 
           - task: PublishPipelineArtifact@0
