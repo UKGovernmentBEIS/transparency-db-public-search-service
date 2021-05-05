@@ -67,4 +67,4 @@ stages:
                     azureSubscription: 'CGI-AzureDevOps-BEIS'
                     appType: 'webAppLinux'
                     WebAppName: 'dev-transparency-db-public-search-service'
-                    packageForLinux: '$(Pipeline.Workspace)/**.?(war|jar)'
+                    packageForLinux: '$(Pipeline.Workspace)/*'
