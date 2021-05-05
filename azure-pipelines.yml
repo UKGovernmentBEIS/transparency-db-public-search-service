@@ -64,11 +64,11 @@ stages:
                 - task: Bash@3
                   inputs:
                     targetType: 'inline'
-                    script: ls -la $(Pipeline.Workspace)
+                    script: ls -R $(Pipeline.Workspace)
                 - task: AzureRmWebAppDeployment@4
                   inputs:
                     ConnectionType: 'AzureRM'
                     azureSubscription: 'CGI-AzureDevOps-BEIS'
                     appType: 'webAppLinux'
                     WebAppName: 'dev-transparency-db-public-search-service'
-                    packageForLinux: '$(Pipeline.Workspace)/*'
+                    packageForLinux: '$(Pipeline.Workspace)/**/*.?(war|jar)'
