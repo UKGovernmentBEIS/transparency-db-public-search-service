@@ -61,6 +61,10 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: Bash@3
+                  inputs:
+                    targetType: 'inline'
+                    script: ls -la $(Pipeline.Workspace)
                 - task: AzureRmWebAppDeployment@4
                   inputs:
                     ConnectionType: 'AzureRM'
