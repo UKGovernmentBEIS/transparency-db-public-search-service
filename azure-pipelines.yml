@@ -40,7 +40,7 @@ stages:
             displayName: 'Copy Files to artifact staging directory'
             inputs:
               SourceFolder: '$(System.DefaultWorkingDirectory)'
-              Contents: '**/*?(.war|.jar)'
+              Contents: '**/target/*.?(war|jar)'
               TargetFolder: $(Build.ArtifactStagingDirectory)
           - task: PublishPipelineArtifact@1
             displayName: 'Publish pipeline artifacts'
