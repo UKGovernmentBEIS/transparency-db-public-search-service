@@ -39,11 +39,10 @@ stages:
           - task: CopyFiles@2
             displayName: 'Copy Filess to artifact staging directory'
             inputs:
-              SourceFolder: '$(System.DefaultWorkingDirectory)/**/target'
-              Contents: '*.?(war|jar)'
+              SourceFolder: '$(System.DefaultWorkingDirectory)'
+              Contents: '**.?(war|jar)'
               TargetFolder: $(Build.ArtifactStagingDirectory)
-
-          - task: PublishPipelineArtifact@0
+          - task: PublishPipelineArtifact@1
             displayName: 'Publish pipeline artifacts'
             inputs:
               targetPath: $(Build.ArtifactStagingDirectory)
@@ -68,4 +67,4 @@ stages:
                     azureSubscription: 'CGI-AzureDevOps-BEIS'
                     appType: 'webAppLinux'
                     WebAppName: 'dev-transparency-db-public-search-service'
-                    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.jar'
+                    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.jar'
