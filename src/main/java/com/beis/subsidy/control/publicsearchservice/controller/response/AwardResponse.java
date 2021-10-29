@@ -73,6 +73,9 @@ public class AwardResponse {
     @JsonProperty
     private LocalDate publishedAwardDate;
 
+    @JsonProperty
+    private String gaName;
+
 
     public AwardResponse(Award award, boolean flag) {
     	
@@ -85,6 +88,7 @@ public class AwardResponse {
         this.subsidyInstrument = award.getSubsidyInstrument();
         this.spendingRegion = award.getSpendingRegion();
         this.legalGrantingDate = SearchUtils.dateToFullMonthNameInDate(award.getLegalGrantingDate());
+        this.gaName = award.getGrantingAuthority().getGrantingAuthorityName();
         if (flag) {
             this.goodsServicesFilter = award.getGoodsServicesFilter();
             this.status = award.getStatus();
