@@ -98,7 +98,6 @@ public class AwardResponse {
         this.legalGrantingDate = SearchUtils.dateToFullMonthNameInDate(award.getLegalGrantingDate());
         this.gaName = award.getGrantingAuthority().getGrantingAuthorityName();
         if (flag) {
-            this.goodsServicesFilter = award.getGoodsServicesFilter();
             this.status = award.getStatus();
             this.createdBy = award.getCreatedBy();
             this.approvedBy = award.getApprovedBy();
@@ -111,6 +110,7 @@ public class AwardResponse {
         this.idType = award.getBeneficiary().getNationalIdType();
         this.idNumber = award.getBeneficiary().getNationalId();
         this.orgSize = award.getBeneficiary().getOrgSize();
+        this.goodsServicesFilter = award.getGoodsServicesFilter();
         this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
         if (flag) {
          this.grantingAuthorityResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
