@@ -74,6 +74,9 @@ public class AwardResponse {
     private LocalDate publishedAwardDate;
 
     @JsonProperty
+    private String publishedAwardDateFormatted; // used for excel export
+
+    @JsonProperty
     private String gaName;
 
     @JsonProperty
@@ -112,6 +115,7 @@ public class AwardResponse {
         this.orgSize = award.getBeneficiary().getOrgSize();
         this.goodsServicesFilter = award.getGoodsServicesFilter();
         this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
+        this.publishedAwardDateFormatted = SearchUtils.dateToFullMonthNameInDate(award.getPublishedAwardDate());
         if (flag) {
          this.grantingAuthorityResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
         }
