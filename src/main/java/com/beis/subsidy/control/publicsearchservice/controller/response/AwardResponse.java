@@ -82,6 +82,8 @@ public class AwardResponse {
     @JsonProperty
     private String idNumber;
 
+    @JsonProperty
+    private String orgSize;
 
     public AwardResponse(Award award, boolean flag) {
     	
@@ -108,6 +110,7 @@ public class AwardResponse {
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
         this.idType = award.getBeneficiary().getNationalIdType();
         this.idNumber = award.getBeneficiary().getNationalId();
+        this.orgSize = award.getBeneficiary().getOrgSize();
         this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
         if (flag) {
          this.grantingAuthorityResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
