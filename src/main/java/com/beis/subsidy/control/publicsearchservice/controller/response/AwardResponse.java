@@ -76,6 +76,12 @@ public class AwardResponse {
     @JsonProperty
     private String gaName;
 
+    @JsonProperty
+    private String idType;
+
+    @JsonProperty
+    private String idNumber;
+
 
     public AwardResponse(Award award, boolean flag) {
     	
@@ -100,6 +106,8 @@ public class AwardResponse {
         }
         this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): null;
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
+        this.idType = award.getBeneficiary().getNationalIdType();
+        this.idNumber = award.getBeneficiary().getNationalId();
         this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
         if (flag) {
          this.grantingAuthorityResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
