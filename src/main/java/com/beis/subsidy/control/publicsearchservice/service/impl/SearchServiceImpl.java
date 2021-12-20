@@ -3,9 +3,12 @@ package com.beis.subsidy.control.publicsearchservice.service.impl;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
@@ -21,6 +24,10 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +41,8 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	private AwardRepository awardRepository;
+	@Autowired
+	private SubsidyMeasureRepository schemeRepository;
 
 	/**
 	 * To return matching awards based on search inputs 
@@ -111,6 +120,18 @@ public class SearchServiceImpl implements SearchService {
 		return new AwardResponse(award, true);
 	}
 
+	@Override
+	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
+
+		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
+		Pageable pagingSortSchemes = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
+		Page<SubsidyMeasure> pageSchemes = schemeRepository.findAll(getSpecificationSchemeDetails(searchInput),pagingSortSchemes);
+
+		List<SubsidyMeasure> schemeResults = pageSchemes.getContent();
+		return new SubsidyMeasuresResponse(schemeResults, pageSchemes.getTotalElements(),
+				pageSchemes.getNumber() + 1, pageSchemes.getTotalPages());
+	}
+
 
 	/**
 	 * 
@@ -147,6 +168,16 @@ public class SearchServiceImpl implements SearchService {
 			sortDir = Sort.Direction.DESC;
 	    }
 	    return sortDir;
+	}
+
+	public Specification<SubsidyMeasure>  getSpecificationSchemeDetails(SearchInput searchinput) {
+		Specification<SubsidyMeasure> schemeSpecifications = new Specification<SubsidyMeasure>() {
+			@Override
+			public Predicate toPredicate(Root<SubsidyMeasure> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				return null;
+			}
+		};
+		return schemeSpecifications;
 	}
 
 	public Specification<Award>  getSpecificationAwardDetails(SearchInput searchinput) {
