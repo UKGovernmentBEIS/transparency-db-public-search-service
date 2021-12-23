@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * This is rest controller for Public Search service - which has exposed required APIs for front end to talk to backend APIs.
@@ -24,6 +24,8 @@ public class SchemeSearchController {
 
 	@Autowired
 	private SearchService searchService;
+	@Autowired
+	private HttpServletRequest request;
 	
 	/**
 	 * To get health of app 
@@ -36,16 +38,35 @@ public class SchemeSearchController {
 
 	/**
 	 *
-	 * @param searchInput - Input as SearchInput object from front end
 	 * @return response with list of schemes and HTTP status
 	 */
-	@PostMapping
-	public ResponseEntity<SubsidyMeasuresResponse> allSchemes(@Valid @RequestBody SearchInput searchInput) {
+	@GetMapping
+	public ResponseEntity<SubsidyMeasuresResponse> allSchemes() {
+		SearchInput searchInput = new SearchInput();
 
-		//Set Default Page records
-		if(searchInput.getTotalRecordsPerPage() == 0) {
-			searchInput.setTotalRecordsPerPage(10);
+		String[] sortBy = {request.getParameter("sortBy")};
+
+		int numRecords = 10;
+		int page = 1;
+
+		try{
+			if (request.getParameter("page") != null){
+				page = Integer.parseInt(request.getParameter("page"));
+			}
+			if(request.getParameter("numRecords") != null) {
+				numRecords = Integer.parseInt(request.getParameter("numRecords"));
+			}
+		}catch(NumberFormatException e){
+			e.printStackTrace();
 		}
+
+		if (sortBy[0] == null){
+			sortBy[0] = "scNumber,desc";
+		}
+
+		searchInput.setTotalRecordsPerPage(numRecords);
+		searchInput.setPageNumber(page);
+		searchInput.setSortBy(sortBy);
 		log.info("inside  allSchemes::::");
 		SubsidyMeasuresResponse allSchemes = searchService.findAllSchemes(searchInput);
 
