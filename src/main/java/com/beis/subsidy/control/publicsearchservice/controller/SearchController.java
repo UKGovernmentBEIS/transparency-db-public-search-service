@@ -1,7 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 
@@ -85,19 +84,5 @@ public class SearchController {
 		log.info("inside  getAwardDetailsByAwardNumber::::{}",awardNumber);
 		AwardResponse awardResponse = searchService.findByAwardNumber(awardNumber);
 		return new ResponseEntity<AwardResponse>(awardResponse, HttpStatus.OK);
-	}
-	@PostMapping(
-			path = "/schemes"
-	)
-	public ResponseEntity<SubsidyMeasuresResponse> allSchemes(@Valid @RequestBody SearchInput searchInput) {
-
-		//Set Default Page records
-		if(searchInput.getTotalRecordsPerPage() == 0) {
-			searchInput.setTotalRecordsPerPage(10);
-		}
-		log.info("inside  allSchemes::::");
-		SubsidyMeasuresResponse allSchemes = searchService.findAllSchemes(searchInput);
-
-		return new ResponseEntity<SubsidyMeasuresResponse>(allSchemes, HttpStatus.OK);
 	}
 }
