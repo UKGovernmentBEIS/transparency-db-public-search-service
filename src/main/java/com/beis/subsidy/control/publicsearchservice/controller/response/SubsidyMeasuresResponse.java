@@ -29,7 +29,7 @@ public class SubsidyMeasuresResponse {
     public SubsidyMeasuresResponse(List<SubsidyMeasure> schemes, long totalResults,
                                    int currentPage, int totalPages) {
         this.subsidySchemes = schemes.stream().map(scheme ->
-                new SubsidyMeasureResponse(scheme, false)).collect(Collectors.toList());
+                new SubsidyMeasureResponse(scheme, true)).collect(Collectors.toList());
         this.totalResults = totalResults;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
