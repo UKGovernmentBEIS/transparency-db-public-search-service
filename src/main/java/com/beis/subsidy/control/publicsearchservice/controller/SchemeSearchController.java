@@ -40,33 +40,44 @@ public class SchemeSearchController {
 	 *
 	 * @return response with list of schemes and HTTP status
 	 */
-	@GetMapping
+	@GetMapping(
+			params = { "sort" }
+	)
 	public ResponseEntity<SubsidyMeasuresResponse> allSchemes() {
 		SearchInput searchInput = new SearchInput();
 
-		String[] sortBy = {request.getParameter("sortBy")};
+		String[] sortParam = {request.getParameter("sort")};
+		String[] sort = new String[1];
 
-		int numRecords = 10;
+		int limit = 10;
 		int page = 1;
 
 		try{
 			if (request.getParameter("page") != null){
 				page = Integer.parseInt(request.getParameter("page"));
 			}
-			if(request.getParameter("numRecords") != null) {
-				numRecords = Integer.parseInt(request.getParameter("numRecords"));
+			if(request.getParameter("limit") != null) {
+				limit = Integer.parseInt(request.getParameter("limit"));
 			}
 		}catch(NumberFormatException e){
 			e.printStackTrace();
 		}
 
-		if (sortBy[0] == null){
-			sortBy[0] = "scNumber,desc";
+		if (sortParam[0] != null){
+			String sortOrder = "asc";
+			String sortString = sortParam[0];
+			if(sortString.startsWith("-")){
+				sortOrder="desc";
+				sortString = sortString.substring(1);
+			}
+			sort[0] = sortString + "," + sortOrder;
+		}else{
+			sort[0] = "scNumber,desc";
 		}
 
-		searchInput.setTotalRecordsPerPage(numRecords);
+		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);
-		searchInput.setSortBy(sortBy);
+		searchInput.setSortBy(sort);
 		log.info("inside  allSchemes::::");
 		SubsidyMeasuresResponse allSchemes = searchService.findAllSchemes(searchInput);
 
