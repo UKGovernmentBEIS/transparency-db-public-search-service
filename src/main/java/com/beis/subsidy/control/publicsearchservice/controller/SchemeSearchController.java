@@ -40,9 +40,7 @@ public class SchemeSearchController {
 	 *
 	 * @return response with list of schemes and HTTP status
 	 */
-	@GetMapping(
-			params = { "sort" }
-	)
+	@GetMapping()
 	public ResponseEntity<SubsidyMeasuresResponse> allSchemes() {
 		SearchInput searchInput = new SearchInput();
 
