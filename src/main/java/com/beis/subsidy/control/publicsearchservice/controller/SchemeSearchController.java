@@ -73,6 +73,10 @@ public class SchemeSearchController {
 			sort[0] = "scNumber,desc";
 		}
 
+		if(request.getParameter("filter-scnumber") != null){
+			searchInput.setScNumber(request.getParameter("filter-scnumber"));
+		}
+
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);
 		searchInput.setSortBy(sort);

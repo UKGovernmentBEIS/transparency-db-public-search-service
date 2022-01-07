@@ -43,5 +43,7 @@ public class SearchInput {
 	private int totalRecordsPerPage;
 	
 	private String[] sortBy;
+
+	private String scNumber;
 	
 }

@@ -13,6 +13,7 @@ import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 
+import com.beis.subsidy.control.publicsearchservice.utils.SubsidyMeasureSpecificationUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,10 +123,13 @@ public class SearchServiceImpl implements SearchService {
 
 	@Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
-
+		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
 		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
 		Pageable pagingSortSchemes = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
-		Page<SubsidyMeasure> pageSchemes = schemeRepository.findAll(getSpecificationSchemeDetails(searchInput),pagingSortSchemes);
+
+		subsidyMeasureSpecification = getSpecificationSchemeDetails(searchInput);
+
+		Page<SubsidyMeasure> pageSchemes = schemeRepository.findAll(subsidyMeasureSpecification,pagingSortSchemes);
 
 		List<SubsidyMeasure> schemeResults = pageSchemes.getContent();
 		return new SubsidyMeasuresResponse(schemeResults, pageSchemes.getTotalElements(),
@@ -171,12 +175,9 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	public Specification<SubsidyMeasure>  getSpecificationSchemeDetails(SearchInput searchinput) {
-		Specification<SubsidyMeasure> schemeSpecifications = new Specification<SubsidyMeasure>() {
-			@Override
-			public Predicate toPredicate(Root<SubsidyMeasure> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-				return null;
-			}
-		};
+		Specification<SubsidyMeasure> schemeSpecifications = Specification
+				.where(searchinput.getScNumber() == null || searchinput.getScNumber().isEmpty()
+				? null : SubsidyMeasureSpecificationUtils.scNumber(searchinput.getScNumber()));
 		return schemeSpecifications;
 	}
 
