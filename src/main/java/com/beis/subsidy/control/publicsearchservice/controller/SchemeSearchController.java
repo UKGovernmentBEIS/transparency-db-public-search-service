@@ -76,6 +76,9 @@ public class SchemeSearchController {
 		if(request.getParameter("filter-scnumber") != null){
 			searchInput.setScNumber(request.getParameter("filter-scnumber"));
 		}
+		if(request.getParameter("filter-name") != null){
+			searchInput.setSubsidyMeasureTitle(request.getParameter("filter-name"));
+		}
 
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);

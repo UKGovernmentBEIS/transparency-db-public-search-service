@@ -177,7 +177,10 @@ public class SearchServiceImpl implements SearchService {
 	public Specification<SubsidyMeasure>  getSpecificationSchemeDetails(SearchInput searchinput) {
 		Specification<SubsidyMeasure> schemeSpecifications = Specification
 				.where(searchinput.getScNumber() == null || searchinput.getScNumber().isEmpty()
-				? null : SubsidyMeasureSpecificationUtils.scNumber(searchinput.getScNumber()));
+				? null : SubsidyMeasureSpecificationUtils.scNumber(searchinput.getScNumber()))
+
+				.and(searchinput.getSubsidyMeasureTitle() == null || searchinput.getSubsidyMeasureTitle().isEmpty()
+						? null : SubsidyMeasureSpecificationUtils.subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle()));
 		return schemeSpecifications;
 	}
 

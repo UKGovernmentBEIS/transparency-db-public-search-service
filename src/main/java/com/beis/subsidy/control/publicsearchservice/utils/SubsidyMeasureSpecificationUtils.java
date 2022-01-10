@@ -23,6 +23,16 @@ public final class SubsidyMeasureSpecificationUtils {
 	}
 
 	/**
+	 * To define specification for subsidy measure title
+	 *
+	 * @param subsidyMeasureTitle - Add subsidy measure title
+	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
+	 */
+	public static Specification<SubsidyMeasure> subsidyMeasureTitle(String subsidyMeasureTitle) {
+		return (root, query, builder) -> builder.like(root.get("subsidyMeasureTitle"), contains(subsidyMeasureTitle));
+	}
+
+	/**
 	 * To check contains operations
 	 * @param expression - input string
 	 * @return - message format with like expression
