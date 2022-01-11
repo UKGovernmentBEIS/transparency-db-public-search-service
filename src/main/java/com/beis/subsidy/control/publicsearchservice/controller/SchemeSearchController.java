@@ -87,6 +87,9 @@ public class SchemeSearchController {
 		if(request.getParameter("filter-name") != null){
 			searchInput.setSubsidyMeasureTitle(request.getParameter("filter-name"));
 		}
+		if(request.getParameter("filter-ga") != null){
+			searchInput.setGrantingAuthorityName(request.getParameter("filter-ga"));
+		}
 
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);

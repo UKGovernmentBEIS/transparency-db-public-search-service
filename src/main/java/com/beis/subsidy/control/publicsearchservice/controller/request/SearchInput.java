@@ -45,5 +45,7 @@ public class SearchInput {
 	private String[] sortBy;
 
 	private String scNumber;
+
+	private String grantingAuthorityName;
 	
 }

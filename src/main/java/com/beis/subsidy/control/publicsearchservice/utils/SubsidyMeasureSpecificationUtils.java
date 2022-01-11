@@ -33,6 +33,16 @@ public final class SubsidyMeasureSpecificationUtils {
 	}
 
 	/**
+	 * To define specification for subsidy measure granting authority name
+	 *
+	 * @param subsidyMeasureGaName - Add subsidy measure granting authority name
+	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
+	 */
+	public static Specification<SubsidyMeasure> subsidyMeasureGaName(String subsidyMeasureGaName) {
+		return (root, query, builder) -> builder.like(root.get("grantingAuthority").get("grantingAuthorityName"), contains(subsidyMeasureGaName));
+	}
+
+	/**
 	 * To check contains operations
 	 * @param expression - input string
 	 * @return - message format with like expression
