@@ -1,7 +1,11 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
+import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * This is rest controller for Public Search service - which has exposed required APIs for front end to talk to backend APIs.
@@ -22,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class SchemeSearchController {
 
+	@Autowired
+	private GrantingAuthorityRepository grantingAuthorityRepository;
 	@Autowired
 	private SearchService searchService;
 	@Autowired
@@ -87,5 +94,15 @@ public class SchemeSearchController {
 		SubsidyMeasuresResponse allSchemes = searchService.findAllSchemes(searchInput);
 
 		return new ResponseEntity<SubsidyMeasuresResponse>(allSchemes, HttpStatus.OK);
+	}
+
+	/**
+	 *
+	 * @return response with list of granting authorities and HTTP status
+	 */
+	@GetMapping("/all_gas")
+	public ResponseEntity<GrantingAuthorityListResponse> allGas() {
+		List<GrantingAuthority> gaList = grantingAuthorityRepository.findAll();
+		return new ResponseEntity<GrantingAuthorityListResponse>(new GrantingAuthorityListResponse(gaList), HttpStatus.OK);
 	}
 }
