@@ -7,6 +7,7 @@ import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyM
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
+import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -103,6 +104,9 @@ public class SchemeSearchController {
 	@GetMapping("/all_gas")
 	public ResponseEntity<GrantingAuthorityListResponse> allGas() {
 		List<GrantingAuthority> gaList = grantingAuthorityRepository.findAll();
+
+		gaList = SearchUtils.removeRolesFromGaList(gaList);
+
 		return new ResponseEntity<GrantingAuthorityListResponse>(new GrantingAuthorityListResponse(gaList), HttpStatus.OK);
 	}
 }
