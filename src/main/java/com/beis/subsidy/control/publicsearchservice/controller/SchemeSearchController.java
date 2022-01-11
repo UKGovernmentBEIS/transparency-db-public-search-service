@@ -1,9 +1,8 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
-import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.*;
+import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
@@ -12,10 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * This is rest controller for Public Search service - which has exposed required APIs for front end to talk to backend APIs.
@@ -111,5 +113,23 @@ public class SchemeSearchController {
 		gaList = SearchUtils.removeRolesFromGaList(gaList);
 
 		return new ResponseEntity<GrantingAuthorityListResponse>(new GrantingAuthorityListResponse(gaList), HttpStatus.OK);
+	}
+
+	/**
+	 * To get details of scheme based on schemeNumber
+	 * @return ResponseEntity - Return associated scheme details in the response
+	 */
+	@GetMapping(
+			path = "/scheme/{schemeNumber}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasureResponse> getSchemeDetailsByScNumber(@PathVariable("schemeNumber") String scNumber) {
+
+		if(StringUtils.isEmpty(scNumber)) {
+			throw new InvalidRequestException("Invalid Request");
+		}
+		log.info("inside  getAwardDetailsByAwardNumber::::{}",scNumber);
+		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumber(scNumber);
+		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
 	}
 }

@@ -3,6 +3,7 @@ package com.beis.subsidy.control.publicsearchservice.service.impl;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
@@ -115,6 +116,16 @@ public class SearchServiceImpl implements SearchService {
 			throw new SearchResultNotFoundException("AwardResults NotFound");
 		}
 		return new AwardResponse(award, true);
+	}
+
+	@Override
+	public SubsidyMeasureResponse findSchemeByScNumber(String scNumber){
+		SubsidyMeasure scheme = schemeRepository.findByScNumber(scNumber);
+
+		if (scheme == null){
+			throw new SearchResultNotFoundException("Scheme NotFound");
+		}
+		return new SubsidyMeasureResponse(scheme, true);
 	}
 
 	@Override
