@@ -71,7 +71,7 @@ public class AwardResponse {
     private LocalDate lastModifiedTimestamp;
 
     @JsonProperty
-    private LocalDate publishedAwardDate;
+    private String publishedAwardDate;
 
 
     public AwardResponse(Award award, boolean flag) {
@@ -92,7 +92,11 @@ public class AwardResponse {
             this.approvedBy = award.getApprovedBy();
             this.createdTimestamp = award.getCreatedTimestamp();
             this.lastModifiedTimestamp = award.getLastModifiedTimestamp();
-            this.publishedAwardDate = award.getPublishedAwardDate();
+            if ("Awaiting Approval".equals(this.status)) {
+                this.publishedAwardDate = "Awaiting Approval";
+            } else {
+                this.publishedAwardDate = SearchUtils.dateToFullMonthNameInDate(award.getPublishedAwardDate());
+            }
         }
         this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): null;
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
