@@ -1,5 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller.request;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.Setter;
@@ -47,5 +48,13 @@ public class SearchInput {
 	private String scNumber;
 
 	private String grantingAuthorityName;
+
+	private LocalDate subsidyStartDateFrom;
+
+	private LocalDate subsidyStartDateTo;
+
+	private LocalDate subsidyEndDateFrom;
+
+	private LocalDate subsidyEndDateTo;
 	
 }

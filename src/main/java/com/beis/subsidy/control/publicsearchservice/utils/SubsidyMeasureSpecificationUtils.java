@@ -4,6 +4,7 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 
 /**
  * 
@@ -40,6 +41,17 @@ public final class SubsidyMeasureSpecificationUtils {
 	 */
 	public static Specification<SubsidyMeasure> subsidyMeasureGaName(String subsidyMeasureGaName) {
 		return (root, query, builder) -> builder.like(root.get("grantingAuthority").get("grantingAuthorityName"), contains(subsidyMeasureGaName));
+	}
+
+	/**
+	 * To define specification for start date
+	 *
+	 * @param startDateFrom - Subsidy start Date from
+	 * @param startDateTo - Subsidy start Date to
+	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
+	 */
+	public static Specification<SubsidyMeasure> subsidyStartDate(LocalDate startDateFrom, LocalDate startDateTo) {
+		return (root, query, builder) -> builder.between(root.get("startDate"), startDateFrom, startDateTo);
 	}
 
 	/**

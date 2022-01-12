@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -36,9 +37,9 @@ public class SchemeSearchController {
 	private SearchService searchService;
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	/**
-	 * To get health of app 
+	 * To get health of app
 	 * @return ResponseEntity - Return response status and description
 	 */
 	@GetMapping("/health")
@@ -59,6 +60,11 @@ public class SchemeSearchController {
 
 		int limit = 10;
 		int page = 1;
+
+		String startDateFromString = "";
+		String startDateToString = "";
+		String endDateFromString = "";
+		String endDateToString = "";
 
 		try{
 			if (request.getParameter("page") != null){
@@ -91,6 +97,42 @@ public class SchemeSearchController {
 		}
 		if(request.getParameter("filter-ga") != null){
 			searchInput.setGrantingAuthorityName(request.getParameter("filter-ga"));
+		}
+
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-day-from"))
+			&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-month-from"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-year-from"))) {
+
+				startDateFromString = request.getParameter("filter-start-year-from") + "-" +
+						request.getParameter("filter-start-month-from") + "-" +
+						request.getParameter("filter-start-day-from");
+
+
+			if(SearchUtils.isDateValid(startDateFromString)) {
+				LocalDate startDateFrom = SearchUtils.stringToDate(startDateFromString);
+				searchInput.setSubsidyStartDateFrom(startDateFrom);
+			}else{
+				log.error("Invalid date format given for Start Date (From): " + startDateFromString);
+				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-day-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-month-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-year-to"))) {
+
+			startDateToString = request.getParameter("filter-start-year-to") + "-" +
+					request.getParameter("filter-start-month-to") + "-" +
+					request.getParameter("filter-start-day-to");
+
+
+			if(SearchUtils.isDateValid(startDateToString)) {
+				LocalDate startDateTo = SearchUtils.stringToDate(startDateToString);
+				searchInput.setSubsidyStartDateTo(startDateTo);
+			}else{
+				log.error("Invalid date format given for Start Date (To): " + startDateToString);
+				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+			}
 		}
 
 		searchInput.setTotalRecordsPerPage(limit);

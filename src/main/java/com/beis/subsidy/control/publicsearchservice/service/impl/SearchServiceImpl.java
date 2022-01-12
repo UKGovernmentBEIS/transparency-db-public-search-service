@@ -190,7 +190,10 @@ public class SearchServiceImpl implements SearchService {
 						? null : SubsidyMeasureSpecificationUtils.subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle()))
 
 				.and(searchinput.getGrantingAuthorityName() == null || searchinput.getGrantingAuthorityName().isEmpty()
-						? null : SubsidyMeasureSpecificationUtils.subsidyMeasureGaName(searchinput.getGrantingAuthorityName()));
+						? null : SubsidyMeasureSpecificationUtils.subsidyMeasureGaName(searchinput.getGrantingAuthorityName()))
+
+				.and(searchinput.getSubsidyStartDateFrom() == null || searchinput.getSubsidyStartDateTo() == null
+						? null : SubsidyMeasureSpecificationUtils.subsidyStartDate(searchinput.getSubsidyStartDateFrom(), searchinput.getSubsidyStartDateTo()));
 		return schemeSpecifications;
 	}
 

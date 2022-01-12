@@ -132,7 +132,7 @@ public class SearchUtils {
 		return gaList;
 	}
 
-	final static String DATE_FORMAT = "dd/MM/yyyy";
+	final static String DATE_FORMAT = "yyyy-MM-dd";
 
 	public static boolean isDateValid(String date)
 	{
