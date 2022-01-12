@@ -4,7 +4,10 @@ import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -127,5 +130,19 @@ public class SearchUtils {
 		});
 
 		return gaList;
+	}
+
+	final static String DATE_FORMAT = "dd/MM/yyyy";
+
+	public static boolean isDateValid(String date)
+	{
+		try {
+			DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+			df.setLenient(false);
+			df.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 }
