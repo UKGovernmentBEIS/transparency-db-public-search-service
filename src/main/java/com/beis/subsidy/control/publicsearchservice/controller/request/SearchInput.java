@@ -56,5 +56,7 @@ public class SearchInput {
 	private LocalDate subsidyEndDateFrom;
 
 	private LocalDate subsidyEndDateTo;
+
+	private String subsidyStatus;
 	
 }

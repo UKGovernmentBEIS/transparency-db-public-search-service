@@ -56,6 +56,16 @@ public final class SubsidyMeasureSpecificationUtils {
 	}
 
 	/**
+	 * To define specification for status
+	 *
+	 * @param status - Subsidy status [Active/Inactive]
+	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
+	 */
+	public static Specification<SubsidyMeasure> subsidyStatus(String status) {
+		return (root, query, builder) -> builder.equal(root.get("status"), status);
+	}
+
+	/**
 	 * To check contains operations
 	 * @param expression - input string
 	 * @return - message format with like expression

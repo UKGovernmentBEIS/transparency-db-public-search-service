@@ -202,6 +202,10 @@ public class SchemeSearchController {
 
 		// end of "End Date" filter
 
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-status"))){
+			searchInput.setSubsidyStatus(request.getParameter("filter-status"));
+		}
+
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);
 		searchInput.setSortBy(sort);

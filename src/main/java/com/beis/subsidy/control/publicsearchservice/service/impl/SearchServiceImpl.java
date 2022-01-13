@@ -196,7 +196,10 @@ public class SearchServiceImpl implements SearchService {
 						? null : SubsidyMeasureSpecificationUtils.subsidyStartEndDate("startDate", searchinput.getSubsidyStartDateFrom(), searchinput.getSubsidyStartDateTo()))
 
 				.and(searchinput.getSubsidyEndDateFrom() == null || searchinput.getSubsidyEndDateTo() == null
-						? null : SubsidyMeasureSpecificationUtils.subsidyStartEndDate("endDate", searchinput.getSubsidyEndDateFrom(), searchinput.getSubsidyEndDateTo()));;
+						? null : SubsidyMeasureSpecificationUtils.subsidyStartEndDate("endDate", searchinput.getSubsidyEndDateFrom(), searchinput.getSubsidyEndDateTo()))
+
+				.and(searchinput.getSubsidyStatus() == null || searchinput.getSubsidyStatus().isEmpty()
+						? null : SubsidyMeasureSpecificationUtils.subsidyStatus(searchinput.getSubsidyStatus()));
 		return schemeSpecifications;
 	}
 
