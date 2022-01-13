@@ -67,6 +67,8 @@ public class SchemeSearchController {
 		String endDateToString = "";
 		LocalDate startDateFrom = null;
 		LocalDate startDateTo = null;
+		LocalDate endDateFrom = null;
+		LocalDate endDateTo = null;
 
 		try{
 			if (request.getParameter("page") != null){
@@ -100,6 +102,10 @@ public class SchemeSearchController {
 		if(request.getParameter("filter-ga") != null){
 			searchInput.setGrantingAuthorityName(request.getParameter("filter-ga"));
 		}
+
+		//TODO: Refactor the start and end date filters into a single function
+
+		// start of "Start Date" filter
 
 		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-day-from"))
 			&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-month-from"))
@@ -145,6 +151,56 @@ public class SchemeSearchController {
 			startDateFrom = SearchUtils.stringToDate("0000-01-01");
 			searchInput.setSubsidyStartDateFrom(startDateFrom);
 		}
+
+		// end of "Start Date" filter
+		// start of "End Date" filter
+
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-day-from"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-month-from"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-year-from"))) {
+
+			endDateFromString = request.getParameter("filter-end-year-from") + "-" +
+					request.getParameter("filter-end-month-from") + "-" +
+					request.getParameter("filter-end-day-from");
+
+
+			if(SearchUtils.isDateValid(endDateFromString)) {
+				endDateFrom = SearchUtils.stringToDate(endDateFromString);
+				searchInput.setSubsidyEndDateFrom(endDateFrom);
+			}else{
+				log.error("Invalid date format given for Start Date (From): " + endDateFromString);
+				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-day-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-month-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-year-to"))) {
+
+			endDateToString = request.getParameter("filter-end-year-to") + "-" +
+					request.getParameter("filter-end-month-to") + "-" +
+					request.getParameter("filter-end-day-to");
+
+
+			if(SearchUtils.isDateValid(endDateToString)) {
+				endDateTo = SearchUtils.stringToDate(endDateToString);
+				searchInput.setSubsidyEndDateTo(endDateTo);
+			}else{
+				log.error("Invalid date format given for Start Date (To): " + endDateToString);
+				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		// if from date provided by no to date, assume view all after this date, and vice versa
+		if(endDateFrom != null && endDateTo == null){
+			endDateTo = SearchUtils.stringToDate("9999-12-31");
+			searchInput.setSubsidyEndDateTo(endDateTo);
+		}else if(endDateFrom == null && endDateTo != null){
+			endDateFrom = SearchUtils.stringToDate("0000-01-01");
+			searchInput.setSubsidyEndDateFrom(endDateFrom);
+		}
+
+		// end of "End Date" filter
 
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);

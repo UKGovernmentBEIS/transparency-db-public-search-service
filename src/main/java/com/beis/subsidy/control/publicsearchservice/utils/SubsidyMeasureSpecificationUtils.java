@@ -46,12 +46,13 @@ public final class SubsidyMeasureSpecificationUtils {
 	/**
 	 * To define specification for start date
 	 *
-	 * @param startDateFrom - Subsidy start Date from
-	 * @param startDateTo - Subsidy start Date to
+	 * @param startOrEnd - String to define start or end date
+	 * @param dateFrom - Subsidy start Date from
+	 * @param dateTo - Subsidy start Date to
 	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
 	 */
-	public static Specification<SubsidyMeasure> subsidyStartDate(LocalDate startDateFrom, LocalDate startDateTo) {
-		return (root, query, builder) -> builder.between(root.get("startDate"), startDateFrom, startDateTo);
+	public static Specification<SubsidyMeasure> subsidyStartEndDate(String startOrEnd, LocalDate dateFrom, LocalDate dateTo) {
+		return (root, query, builder) -> builder.between(root.get(startOrEnd), dateFrom, dateTo);
 	}
 
 	/**

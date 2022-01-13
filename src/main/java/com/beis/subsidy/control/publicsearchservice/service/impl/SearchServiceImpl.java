@@ -193,7 +193,10 @@ public class SearchServiceImpl implements SearchService {
 						? null : SubsidyMeasureSpecificationUtils.subsidyMeasureGaName(searchinput.getGrantingAuthorityName()))
 
 				.and(searchinput.getSubsidyStartDateFrom() == null || searchinput.getSubsidyStartDateTo() == null
-						? null : SubsidyMeasureSpecificationUtils.subsidyStartDate(searchinput.getSubsidyStartDateFrom(), searchinput.getSubsidyStartDateTo()));
+						? null : SubsidyMeasureSpecificationUtils.subsidyStartEndDate("startDate", searchinput.getSubsidyStartDateFrom(), searchinput.getSubsidyStartDateTo()))
+
+				.and(searchinput.getSubsidyEndDateFrom() == null || searchinput.getSubsidyEndDateTo() == null
+						? null : SubsidyMeasureSpecificationUtils.subsidyStartEndDate("endDate", searchinput.getSubsidyEndDateFrom(), searchinput.getSubsidyEndDateTo()));;
 		return schemeSpecifications;
 	}
 
