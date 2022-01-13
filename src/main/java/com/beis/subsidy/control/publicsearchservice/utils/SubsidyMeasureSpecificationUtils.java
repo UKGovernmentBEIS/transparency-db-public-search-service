@@ -66,6 +66,22 @@ public final class SubsidyMeasureSpecificationUtils {
 	}
 
 	/**
+	 * To define specification for adhoc
+	 *
+	 * @param adhoc - Subsidy adhoc [yes/no]
+	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
+	 */
+	public static Specification<SubsidyMeasure> subsidyAdhoc(String adhoc) {
+		switch(adhoc){
+			case "yes":
+				return (root, query, builder) -> builder.isTrue(root.get("adhoc"));
+			case "no":
+				return (root, query, builder) -> builder.isFalse(root.get("adhoc"));
+		}
+		return null;
+	}
+
+	/**
 	 * To check contains operations
 	 * @param expression - input string
 	 * @return - message format with like expression
