@@ -203,7 +203,15 @@ public class SchemeSearchController {
 		// end of "End Date" filter
 
 		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-status"))){
-			searchInput.setSubsidyStatus(request.getParameter("filter-status"));
+			switch(request.getParameter("filter-status").toLowerCase()){
+				case "active":
+				case "inactive":
+					searchInput.setSubsidyStatus(request.getParameter("filter-status"));
+					break;
+				default:
+					log.error("Invalid value given Status: " + request.getParameter("filter-status"));
+					return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+			}
 		}
 
 		searchInput.setTotalRecordsPerPage(limit);
