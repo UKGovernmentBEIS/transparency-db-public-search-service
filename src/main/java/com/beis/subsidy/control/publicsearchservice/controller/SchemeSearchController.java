@@ -65,6 +65,8 @@ public class SchemeSearchController {
 		String startDateToString = "";
 		String endDateFromString = "";
 		String endDateToString = "";
+		LocalDate startDateFrom = null;
+		LocalDate startDateTo = null;
 
 		try{
 			if (request.getParameter("page") != null){
@@ -109,7 +111,7 @@ public class SchemeSearchController {
 
 
 			if(SearchUtils.isDateValid(startDateFromString)) {
-				LocalDate startDateFrom = SearchUtils.stringToDate(startDateFromString);
+				startDateFrom = SearchUtils.stringToDate(startDateFromString);
 				searchInput.setSubsidyStartDateFrom(startDateFrom);
 			}else{
 				log.error("Invalid date format given for Start Date (From): " + startDateFromString);
@@ -127,12 +129,21 @@ public class SchemeSearchController {
 
 
 			if(SearchUtils.isDateValid(startDateToString)) {
-				LocalDate startDateTo = SearchUtils.stringToDate(startDateToString);
+				startDateTo = SearchUtils.stringToDate(startDateToString);
 				searchInput.setSubsidyStartDateTo(startDateTo);
 			}else{
 				log.error("Invalid date format given for Start Date (To): " + startDateToString);
 				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
+		}
+
+		// if start date provided by no end date, assume view all after this date, and vice versa
+		if(startDateFrom != null && startDateTo == null){
+			startDateTo = SearchUtils.stringToDate("9999-12-31");
+			searchInput.setSubsidyStartDateTo(startDateTo);
+		}else if(startDateFrom == null && startDateTo != null){
+			startDateFrom = SearchUtils.stringToDate("0000-01-01");
+			searchInput.setSubsidyStartDateFrom(startDateFrom);
 		}
 
 		searchInput.setTotalRecordsPerPage(limit);
