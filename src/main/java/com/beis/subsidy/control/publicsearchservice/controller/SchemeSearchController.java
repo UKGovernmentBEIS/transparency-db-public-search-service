@@ -93,13 +93,13 @@ public class SchemeSearchController {
 			sort[0] = "scNumber,desc";
 		}
 
-		if(request.getParameter("filter-scnumber") != null){
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-scnumber"))){
 			searchInput.setScNumber(request.getParameter("filter-scnumber"));
 		}
-		if(request.getParameter("filter-name") != null){
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-name"))){
 			searchInput.setSubsidyMeasureTitle(request.getParameter("filter-name"));
 		}
-		if(request.getParameter("filter-ga") != null){
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-ga"))){
 			searchInput.setGrantingAuthorityName(request.getParameter("filter-ga"));
 		}
 
