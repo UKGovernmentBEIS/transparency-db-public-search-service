@@ -3,6 +3,7 @@ package com.beis.subsidy.control.publicsearchservice.utils;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 
@@ -12,7 +13,7 @@ import java.time.LocalDate;
  */
 public final class SubsidyMeasureSpecificationUtils {
 
-	
+
 	/**
 	 * To define specification for subsidy measure title
 	 * 
@@ -77,6 +78,27 @@ public final class SubsidyMeasureSpecificationUtils {
 				return (root, query, builder) -> builder.isTrue(root.get("adhoc"));
 			case "no":
 				return (root, query, builder) -> builder.isFalse(root.get("adhoc"));
+		}
+		return null;
+	}
+
+	/**
+	 * To define specification for budget
+	 *
+	 * @param budgetFrom - Subsidy budget from value
+	 * @param budgetTo - Subsidy budget to value
+	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
+	 */
+	public static Specification<SubsidyMeasure> subsidyBudget(BigDecimal budgetFrom, BigDecimal budgetTo) {
+		if(budgetFrom != null && budgetTo != null){
+			return (root, query, builder) -> builder.and(
+					builder.lessThanOrEqualTo(root.get("budget").as(BigDecimal.class), budgetTo),
+					builder.greaterThanOrEqualTo(root.get("budget").as(BigDecimal.class), budgetFrom)
+			);
+		}else if(budgetFrom == null){
+			return (root, query, builder) -> builder.lessThanOrEqualTo(root.get("budget").as(BigDecimal.class), budgetTo);
+		}else if(budgetTo == null){
+			return (root, query, builder) -> builder.greaterThanOrEqualTo(root.get("budget").as(BigDecimal.class), budgetFrom);
 		}
 		return null;
 	}

@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -76,6 +77,12 @@ public class SchemeSearchController {
 			}
 			if(request.getParameter("limit") != null) {
 				limit = Integer.parseInt(request.getParameter("limit"));
+			}
+			if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-budget-from"))){
+				searchInput.setBudgetFrom(new BigDecimal(request.getParameter("filter-budget-from")));
+			}
+			if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-budget-to"))){
+				searchInput.setBudgetTo(new BigDecimal(request.getParameter("filter-budget-to")));
 			}
 		}catch(NumberFormatException e){
 			e.printStackTrace();

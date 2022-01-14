@@ -1,5 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller.request;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -60,5 +61,8 @@ public class SearchInput {
 	private String subsidyStatus;
 
 	private String adHoc;
-	
+
+	private BigDecimal budgetFrom;
+
+	private BigDecimal budgetTo;
 }

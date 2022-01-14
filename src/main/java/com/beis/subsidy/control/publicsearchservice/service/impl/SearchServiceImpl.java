@@ -202,7 +202,10 @@ public class SearchServiceImpl implements SearchService {
 						? null : SubsidyMeasureSpecificationUtils.subsidyStatus(searchinput.getSubsidyStatus()))
 
 				.and(searchinput.getAdHoc() == null || searchinput.getAdHoc().isEmpty()
-						? null : SubsidyMeasureSpecificationUtils.subsidyAdhoc(searchinput.getAdHoc()));
+						? null : SubsidyMeasureSpecificationUtils.subsidyAdhoc(searchinput.getAdHoc()))
+
+				.and(searchinput.getBudgetFrom() != null || searchinput.getBudgetTo() != null
+						? SubsidyMeasureSpecificationUtils.subsidyBudget(searchinput.getBudgetFrom(), searchinput.getBudgetTo()) : null);
 		return schemeSpecifications;
 	}
 
