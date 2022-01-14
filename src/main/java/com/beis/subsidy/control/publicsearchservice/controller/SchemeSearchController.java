@@ -78,11 +78,11 @@ public class SchemeSearchController {
 			if(request.getParameter("limit") != null) {
 				limit = Integer.parseInt(request.getParameter("limit"));
 			}
-			if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-budget-from"))){
-				searchInput.setBudgetFrom(new BigDecimal(request.getParameter("filter-budget-from")));
+			if(!SearchUtils.checkNullOrEmptyString(request.getParameter("budget-from"))){
+				searchInput.setBudgetFrom(new BigDecimal(request.getParameter("budget-from")));
 			}
-			if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-budget-to"))){
-				searchInput.setBudgetTo(new BigDecimal(request.getParameter("filter-budget-to")));
+			if(!SearchUtils.checkNullOrEmptyString(request.getParameter("budget-to"))){
+				searchInput.setBudgetTo(new BigDecimal(request.getParameter("budget-to")));
 			}
 		}catch(NumberFormatException e){
 			e.printStackTrace();
@@ -101,27 +101,27 @@ public class SchemeSearchController {
 			sort[0] = "scNumber,desc";
 		}
 
-		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-scnumber"))){
-			searchInput.setScNumber(request.getParameter("filter-scnumber"));
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("scnumber"))){
+			searchInput.setScNumber(request.getParameter("scnumber"));
 		}
-		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-name"))){
-			searchInput.setSubsidyMeasureTitle(request.getParameter("filter-name"));
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("name"))){
+			searchInput.setSubsidyMeasureTitle(request.getParameter("name"));
 		}
-		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-ga"))){
-			searchInput.setGrantingAuthorityName(request.getParameter("filter-ga"));
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("ga"))){
+			searchInput.setGrantingAuthorityName(request.getParameter("ga"));
 		}
 
 		//TODO: Refactor the start and end date filters into a single function
 
 		// start of "Start Date" filter
 
-		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-day-from"))
-			&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-month-from"))
-				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-year-from"))) {
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("start-day-from"))
+			&& !SearchUtils.checkNullOrEmptyString(request.getParameter("start-month-from"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("start-year-from"))) {
 
-				startDateFromString = request.getParameter("filter-start-year-from") + "-" +
-						request.getParameter("filter-start-month-from") + "-" +
-						request.getParameter("filter-start-day-from");
+				startDateFromString = request.getParameter("start-year-from") + "-" +
+						request.getParameter("start-month-from") + "-" +
+						request.getParameter("start-day-from");
 
 
 			if(SearchUtils.isDateValid(startDateFromString)) {
@@ -133,13 +133,13 @@ public class SchemeSearchController {
 			}
 		}
 
-		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-day-to"))
-				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-month-to"))
-				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-start-year-to"))) {
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("start-day-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("start-month-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("start-year-to"))) {
 
-			startDateToString = request.getParameter("filter-start-year-to") + "-" +
-					request.getParameter("filter-start-month-to") + "-" +
-					request.getParameter("filter-start-day-to");
+			startDateToString = request.getParameter("start-year-to") + "-" +
+					request.getParameter("start-month-to") + "-" +
+					request.getParameter("start-day-to");
 
 
 			if(SearchUtils.isDateValid(startDateToString)) {
@@ -163,13 +163,13 @@ public class SchemeSearchController {
 		// end of "Start Date" filter
 		// start of "End Date" filter
 
-		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-day-from"))
-				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-month-from"))
-				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-year-from"))) {
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("end-day-from"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("end-month-from"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("end-year-from"))) {
 
-			endDateFromString = request.getParameter("filter-end-year-from") + "-" +
-					request.getParameter("filter-end-month-from") + "-" +
-					request.getParameter("filter-end-day-from");
+			endDateFromString = request.getParameter("end-year-from") + "-" +
+					request.getParameter("end-month-from") + "-" +
+					request.getParameter("end-day-from");
 
 
 			if(SearchUtils.isDateValid(endDateFromString)) {
@@ -181,13 +181,13 @@ public class SchemeSearchController {
 			}
 		}
 
-		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-day-to"))
-				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-month-to"))
-				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("filter-end-year-to"))) {
+		if (!SearchUtils.checkNullOrEmptyString(request.getParameter("end-day-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("end-month-to"))
+				&& !SearchUtils.checkNullOrEmptyString(request.getParameter("end-year-to"))) {
 
-			endDateToString = request.getParameter("filter-end-year-to") + "-" +
-					request.getParameter("filter-end-month-to") + "-" +
-					request.getParameter("filter-end-day-to");
+			endDateToString = request.getParameter("end-year-to") + "-" +
+					request.getParameter("end-month-to") + "-" +
+					request.getParameter("end-day-to");
 
 
 			if(SearchUtils.isDateValid(endDateToString)) {
@@ -210,26 +210,26 @@ public class SchemeSearchController {
 
 		// end of "End Date" filter
 
-		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-status"))){
-			switch(request.getParameter("filter-status").toLowerCase()){
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("status"))){
+			switch(request.getParameter("status").toLowerCase()){
 				case "active":
 				case "inactive":
-					searchInput.setSubsidyStatus(request.getParameter("filter-status"));
+					searchInput.setSubsidyStatus(request.getParameter("status"));
 					break;
 				default:
-					log.error("Invalid value given Status: " + request.getParameter("filter-status"));
+					log.error("Invalid value given Status: " + request.getParameter("status"));
 					return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
-		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("filter-adhoc"))){
-			switch(request.getParameter("filter-adhoc").toLowerCase()){
+		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("adhoc"))){
+			switch(request.getParameter("adhoc").toLowerCase()){
 				case "yes":
 				case "no":
-					searchInput.setAdHoc(request.getParameter("filter-adhoc").toLowerCase());
+					searchInput.setAdHoc(request.getParameter("adhoc").toLowerCase());
 					break;
 				default:
-					log.error("Invalid value given AdHoc: " + request.getParameter("filter-adhoc"));
+					log.error("Invalid value given AdHoc: " + request.getParameter("adhoc"));
 					return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
