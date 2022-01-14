@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 
@@ -63,7 +64,8 @@ public class SubsidyMeasureResponse {
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
             this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
-            this.budget = subsidyMeasure.getBudget();
+            BigDecimal budgetDecimal = new BigDecimal(subsidyMeasure.getBudget());
+            this.budget = SearchUtils.decimalNumberFormat(budgetDecimal);
             this.publishedMeasureDate = subsidyMeasure.getPublishedMeasureDate();
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
