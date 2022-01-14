@@ -79,6 +79,7 @@ public class SchemeSearchController {
 			}
 		}catch(NumberFormatException e){
 			e.printStackTrace();
+			return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 		}
 
 		if (sortParam[0] != null){
