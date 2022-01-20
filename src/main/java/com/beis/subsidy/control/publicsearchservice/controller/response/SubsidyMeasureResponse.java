@@ -41,7 +41,7 @@ public class SubsidyMeasureResponse {
     private LegalBasisResponse legalBasis;
 
     @JsonProperty
-    private LocalDate publishedMeasureDate;
+    private String publishedMeasureDate;
 
     @JsonProperty
     private String createdBy;
@@ -67,7 +67,7 @@ public class SubsidyMeasureResponse {
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
             this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
             this.budget = SearchUtils.convertDecimalValue(subsidyMeasure.getBudget());
-            this.publishedMeasureDate = subsidyMeasure.getPublishedMeasureDate();
+            this.publishedMeasureDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getPublishedMeasureDate());
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
         }
