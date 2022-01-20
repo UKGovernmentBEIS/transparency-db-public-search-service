@@ -1,11 +1,19 @@
 package com.beis.subsidy.control.publicsearchservice.utils;
 
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * 
  * Search Utility class 
@@ -101,5 +109,40 @@ public class SearchUtils {
 			}
 		}
 		return formatNumber;
+	}
+
+	/**
+	 * To remove role names from a list of GAs.
+	 *
+	 * @param gaList
+	 * @return reduced gaList
+	 */
+	public static List<GrantingAuthority> removeRolesFromGaList(List<GrantingAuthority> gaList){
+		List<String> roleNames = new ArrayList<String>(){{
+			add("BEIS Administrator");
+			add("Granting Authority Encoder");
+			add("Granting Authority Administrator");
+			add("Granting Authority Approver");
+		}};
+
+		roleNames.forEach(roleName -> {
+			gaList.removeIf(ga -> Objects.equals(ga.getGrantingAuthorityName(), roleName));
+		});
+
+		return gaList;
+	}
+
+	final static String DATE_FORMAT = "yyyy-MM-dd";
+
+	public static boolean isDateValid(String date)
+	{
+		try {
+			DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+			df.setLenient(false);
+			df.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 }
