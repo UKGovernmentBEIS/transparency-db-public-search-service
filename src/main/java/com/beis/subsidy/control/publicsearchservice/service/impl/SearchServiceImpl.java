@@ -3,13 +3,18 @@ package com.beis.subsidy.control.publicsearchservice.service.impl;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 
+import com.beis.subsidy.control.publicsearchservice.utils.SubsidyMeasureSpecificationUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +39,8 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	private AwardRepository awardRepository;
+	@Autowired
+	private SubsidyMeasureRepository schemeRepository;
 
 	/**
 	 * To return matching awards based on search inputs 
@@ -111,6 +118,31 @@ public class SearchServiceImpl implements SearchService {
 		return new AwardResponse(award, true);
 	}
 
+	@Override
+	public SubsidyMeasureResponse findSchemeByScNumber(String scNumber){
+		SubsidyMeasure scheme = schemeRepository.findByScNumber(scNumber);
+
+		if (scheme == null){
+			throw new SearchResultNotFoundException("Scheme NotFound");
+		}
+		return new SubsidyMeasureResponse(scheme, true);
+	}
+
+	@Override
+	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
+		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
+		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
+		Pageable pagingSortSchemes = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
+
+		subsidyMeasureSpecification = getSpecificationSchemeDetails(searchInput);
+
+		Page<SubsidyMeasure> pageSchemes = schemeRepository.findAll(subsidyMeasureSpecification,pagingSortSchemes);
+
+		List<SubsidyMeasure> schemeResults = pageSchemes.getContent();
+		return new SubsidyMeasuresResponse(schemeResults, pageSchemes.getTotalElements(),
+				pageSchemes.getNumber() + 1, pageSchemes.getTotalPages());
+	}
+
 
 	/**
 	 * 
@@ -147,6 +179,34 @@ public class SearchServiceImpl implements SearchService {
 			sortDir = Sort.Direction.DESC;
 	    }
 	    return sortDir;
+	}
+
+	public Specification<SubsidyMeasure>  getSpecificationSchemeDetails(SearchInput searchinput) {
+		Specification<SubsidyMeasure> schemeSpecifications = Specification
+				.where(searchinput.getScNumber() == null || searchinput.getScNumber().isEmpty()
+				? null : SubsidyMeasureSpecificationUtils.scNumber(searchinput.getScNumber()))
+
+				.and(searchinput.getSubsidyMeasureTitle() == null || searchinput.getSubsidyMeasureTitle().isEmpty()
+						? null : SubsidyMeasureSpecificationUtils.subsidyMeasureTitle(searchinput.getSubsidyMeasureTitle()))
+
+				.and(searchinput.getGrantingAuthorityName() == null || searchinput.getGrantingAuthorityName().isEmpty()
+						? null : SubsidyMeasureSpecificationUtils.subsidyMeasureGaName(searchinput.getGrantingAuthorityName()))
+
+				.and(searchinput.getSubsidyStartDateFrom() == null || searchinput.getSubsidyStartDateTo() == null
+						? null : SubsidyMeasureSpecificationUtils.subsidyStartEndDate("startDate", searchinput.getSubsidyStartDateFrom(), searchinput.getSubsidyStartDateTo()))
+
+				.and(searchinput.getSubsidyEndDateFrom() == null || searchinput.getSubsidyEndDateTo() == null
+						? null : SubsidyMeasureSpecificationUtils.subsidyStartEndDate("endDate", searchinput.getSubsidyEndDateFrom(), searchinput.getSubsidyEndDateTo()))
+
+				.and(searchinput.getSubsidyStatus() == null || searchinput.getSubsidyStatus().isEmpty()
+						? null : SubsidyMeasureSpecificationUtils.subsidyStatus(searchinput.getSubsidyStatus()))
+
+				.and(searchinput.getAdHoc() == null || searchinput.getAdHoc().isEmpty()
+						? null : SubsidyMeasureSpecificationUtils.subsidyAdhoc(searchinput.getAdHoc()))
+
+				.and(searchinput.getBudgetFrom() != null || searchinput.getBudgetTo() != null
+						? SubsidyMeasureSpecificationUtils.subsidyBudget(searchinput.getBudgetFrom(), searchinput.getBudgetTo()) : null);
+		return schemeSpecifications;
 	}
 
 	public Specification<Award>  getSpecificationAwardDetails(SearchInput searchinput) {
