@@ -31,7 +31,7 @@ public final class SubsidyMeasureSpecificationUtils {
 	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
 	 */
 	public static Specification<SubsidyMeasure> subsidyMeasureTitle(String subsidyMeasureTitle) {
-		return (root, query, builder) -> builder.like(root.get("subsidyMeasureTitle"), contains(subsidyMeasureTitle));
+		return (root, query, builder) -> builder.like(builder.lower(root.get("subsidyMeasureTitle")), contains(subsidyMeasureTitle).toLowerCase());
 	}
 
 	/**
