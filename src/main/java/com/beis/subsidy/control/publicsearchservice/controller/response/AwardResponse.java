@@ -85,9 +85,9 @@ public class AwardResponse {
         this.subsidyInstrument = award.getSubsidyInstrument();
         this.spendingRegion = award.getSpendingRegion();
         this.legalGrantingDate = SearchUtils.dateToFullMonthNameInDate(award.getLegalGrantingDate());
+        this.status = award.getStatus();
         if (flag) {
             this.goodsServicesFilter = award.getGoodsServicesFilter();
-            this.status = award.getStatus();
             this.createdBy = award.getCreatedBy();
             this.approvedBy = award.getApprovedBy();
             this.createdTimestamp = award.getCreatedTimestamp();
