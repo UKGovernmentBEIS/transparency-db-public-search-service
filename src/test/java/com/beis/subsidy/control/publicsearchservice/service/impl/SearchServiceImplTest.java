@@ -94,6 +94,7 @@ public class SearchServiceImplTest {
         grantingAuthority.setGrantingAuthorityName("ganame");
         award.setGrantingAuthority(grantingAuthority);
         awards.add(award);
+        subsidyMeasure.setGrantingAuthority(grantingAuthority);
         MockitoAnnotations.openMocks(this);
     }
 

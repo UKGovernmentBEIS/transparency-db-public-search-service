@@ -67,7 +67,7 @@ public class SearchResultsTest {
         GrantingAuthority grantingAuthority = new GrantingAuthority();
         grantingAuthority.setGrantingAuthorityName("ganame");
         award.setGrantingAuthority(grantingAuthority);
-
+        subsidyMeasure.setGrantingAuthority(grantingAuthority);
         awards.add(award);
 
         SearchResults results = new SearchResults(awards, 1,1,1);

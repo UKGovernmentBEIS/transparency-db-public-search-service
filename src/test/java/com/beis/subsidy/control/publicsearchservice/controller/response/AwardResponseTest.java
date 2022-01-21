@@ -65,6 +65,7 @@ public class AwardResponseTest {
         GrantingAuthority grantingAuthority = new GrantingAuthority();
         grantingAuthority.setGrantingAuthorityName("ganame");
         award.setGrantingAuthority(grantingAuthority);
+        subsidyMeasure.setGrantingAuthority(grantingAuthority);
 
         GrantingAuthorityResponse gaResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
         SubsidyMeasureResponse subsidyMeasureRes = new SubsidyMeasureResponse(award.getSubsidyMeasure(),true);
