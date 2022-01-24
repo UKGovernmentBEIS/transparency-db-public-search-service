@@ -21,7 +21,7 @@ public final class SubsidyMeasureSpecificationUtils {
 	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
 	 */
 	public static Specification<SubsidyMeasure> scNumber(String scNumber) {
-	    return (root, query, builder) -> builder.like(root.get("scNumber"), contains(scNumber));
+	    return (root, query, builder) -> builder.like(builder.lower(root.get("scNumber")), contains(scNumber).toLowerCase());
 	}
 
 	/**
@@ -31,7 +31,7 @@ public final class SubsidyMeasureSpecificationUtils {
 	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
 	 */
 	public static Specification<SubsidyMeasure> subsidyMeasureTitle(String subsidyMeasureTitle) {
-		return (root, query, builder) -> builder.like(root.get("subsidyMeasureTitle"), contains(subsidyMeasureTitle));
+		return (root, query, builder) -> builder.like(builder.lower(root.get("subsidyMeasureTitle")), contains(subsidyMeasureTitle).toLowerCase());
 	}
 
 	/**
@@ -41,7 +41,7 @@ public final class SubsidyMeasureSpecificationUtils {
 	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
 	 */
 	public static Specification<SubsidyMeasure> subsidyMeasureGaName(String subsidyMeasureGaName) {
-		return (root, query, builder) -> builder.like(root.get("grantingAuthority").get("grantingAuthorityName"), contains(subsidyMeasureGaName));
+		return (root, query, builder) -> builder.like(builder.lower(root.get("grantingAuthority").get("grantingAuthorityName")), contains(subsidyMeasureGaName).toLowerCase());
 	}
 
 	/**
@@ -63,7 +63,7 @@ public final class SubsidyMeasureSpecificationUtils {
 	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
 	 */
 	public static Specification<SubsidyMeasure> subsidyStatus(String status) {
-		return (root, query, builder) -> builder.equal(root.get("status"), status);
+		return (root, query, builder) -> builder.equal(builder.lower(root.get("status")), status.toLowerCase());
 	}
 
 	/**
@@ -73,7 +73,7 @@ public final class SubsidyMeasureSpecificationUtils {
 	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
 	 */
 	public static Specification<SubsidyMeasure> subsidyAdhoc(String adhoc) {
-		switch(adhoc){
+		switch(adhoc.toLowerCase()){
 			case "yes":
 				return (root, query, builder) -> builder.isTrue(root.get("adhoc"));
 			case "no":
