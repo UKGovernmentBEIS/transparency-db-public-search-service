@@ -105,7 +105,7 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getPublishedAwardDate()).isNull();
         assertThat(awardResponse1.getLastModifiedTimestamp()).isNull();
         assertThat(awardResponse1.getSpendingSector()).isNotNull();
-        assertThat(awardResponse1.getStatus()).isNull();
+        assertThat(awardResponse1.getStatus()).isNotNull();
         assertThat(awardResponse1.getSubsidyFullAmountExact()).isNotNull();
         assertThat(awardResponse1.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();
