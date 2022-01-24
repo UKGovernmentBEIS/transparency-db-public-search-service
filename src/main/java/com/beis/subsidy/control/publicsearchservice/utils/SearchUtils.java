@@ -8,9 +8,13 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,6 +56,14 @@ public class SearchUtils {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 		return dateFormat.format(inputStringDate);
+	}
+
+	public static String timestampToFullMonthNameAndTimeInDate(Date inputDateObj) {
+		log.info("input Date ::{}", inputDateObj);
+		Instant instant = inputDateObj.toInstant();
+		LocalDateTime ldt = instant.atOffset(ZoneOffset.UTC).toLocalDateTime();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss");
+		return ldt.format(dateFormat);
 	}
 
 	/**
