@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +48,7 @@ public class SearchServiceImplTest {
         award.setApprovedBy("system");
         award.setCreatedBy("system");
         award.setCreatedTimestamp(LocalDate.now());
+        award.setLastModifiedTimestamp(LocalDate.now());
         award.setGoodsServicesFilter("serviceFilter");
         award.setLegalGrantingDate(LocalDate.now());
         award.setSubsidyFullAmountRange("5000");
@@ -82,6 +84,8 @@ public class SearchServiceImplTest {
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
+        subsidyMeasure.setCreatedTimestamp(new Date());
+        subsidyMeasure.setLastModifiedTimestamp(new Date());
         // Legal Basis text
         LegalBasis legalBasis = new LegalBasis();
         legalBasis.setLegalBasisText("legal text");
