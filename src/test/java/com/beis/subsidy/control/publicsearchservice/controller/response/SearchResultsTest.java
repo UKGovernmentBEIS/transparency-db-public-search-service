@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +23,7 @@ public class SearchResultsTest {
         award.setApprovedBy("system");
         award.setCreatedBy("system");
         award.setCreatedTimestamp(LocalDate.now());
+        award.setLastModifiedTimestamp(LocalDate.now());
         award.setGoodsServicesFilter("serviceFilter");
         award.setLegalGrantingDate(LocalDate.now());
         award.setSubsidyFullAmountRange("5000");
@@ -53,10 +55,12 @@ public class SearchResultsTest {
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStartDate(LocalDate.now());
         subsidyMeasure.setEndDate(LocalDate.now());
-        subsidyMeasure.setBudget("budget");
+        subsidyMeasure.setBudget("1000000");
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
+        subsidyMeasure.setCreatedTimestamp(new Date());
+        subsidyMeasure.setLastModifiedTimestamp(new Date());
         award.setSubsidyMeasure(subsidyMeasure);
 
         LegalBasis legalBasis = new LegalBasis();
