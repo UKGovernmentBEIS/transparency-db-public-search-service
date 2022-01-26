@@ -63,6 +63,8 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes.getCreatedBy()).isNull();
         assertThat(subsidyMeasureRes.getApprovedBy()).isNull();
         assertThat(subsidyMeasureRes.getLegalBasis()).isNotNull();
+        assertThat(subsidyMeasureRes.getCreatedTimestamp()).isNull();
+        assertThat(subsidyMeasureRes.getLastModifiedTimestamp()).isNull();
 
         SubsidyMeasureResponse subsidyMeasureRes1 = new SubsidyMeasureResponse(award.getSubsidyMeasure(),true);
         assertThat(subsidyMeasureRes1).isNotNull();
@@ -77,6 +79,8 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.getPublishedMeasureDate()).isNotNull();
         assertThat(subsidyMeasureRes1.getCreatedBy()).isNotNull();
         assertThat(subsidyMeasureRes1.getApprovedBy()).isNotNull();
+        assertThat(subsidyMeasureRes1.getCreatedTimestamp()).isNotNull();
+        assertThat(subsidyMeasureRes1.getLastModifiedTimestamp()).isNotNull();
 
     }
 }
