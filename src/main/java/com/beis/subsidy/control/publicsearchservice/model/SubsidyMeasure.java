@@ -2,6 +2,7 @@ package com.beis.subsidy.control.publicsearchservice.model;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -93,4 +94,10 @@ public class SubsidyMeasure {
 	@UpdateTimestamp
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private Date lastModifiedTimestamp;
+
+	@Column(name = "DELETED_BY")
+	private String deletedBy;
+
+	@Column(name = "DELETED_TIMESTAMP", columnDefinition = "TIMESTAMP")
+	private LocalDateTime deletedTimestamp;
 }
