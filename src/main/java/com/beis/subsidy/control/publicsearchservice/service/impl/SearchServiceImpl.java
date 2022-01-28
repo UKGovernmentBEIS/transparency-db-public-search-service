@@ -115,6 +115,11 @@ public class SearchServiceImpl implements SearchService {
 		return awardSpecifications;
 	}
 
+	private Specification<SubsidyMeasure> excludeDeleteSchemes(Specification<SubsidyMeasure> subsidyMeasureSpecification){
+		subsidyMeasureSpecification = subsidyMeasureSpecification.and(SubsidyMeasureSpecificationUtils.subsidyMeasureIsDeleted());
+		return subsidyMeasureSpecification;
+	}
+
 	@Override
 	public AwardResponse findByAwardNumber(Long awardNumber) {
 
@@ -142,6 +147,8 @@ public class SearchServiceImpl implements SearchService {
 		Pageable pagingSortSchemes = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
 
 		subsidyMeasureSpecification = getSpecificationSchemeDetails(searchInput);
+
+		subsidyMeasureSpecification = excludeDeleteSchemes(subsidyMeasureSpecification);
 
 		Page<SubsidyMeasure> pageSchemes = schemeRepository.findAll(subsidyMeasureSpecification,pagingSortSchemes);
 

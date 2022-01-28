@@ -104,6 +104,15 @@ public final class SubsidyMeasureSpecificationUtils {
 	}
 
 	/**
+	 * Exclude any schemes where status = "Deleted"
+	 *
+	 * @return Specification<SubsidyMeasure> - Specification for Subsidy Measure
+	 */
+	public static Specification<SubsidyMeasure> subsidyMeasureIsDeleted() {
+		return (root, query, builder) -> builder.notEqual(root.get("status"), "Deleted");
+	}
+
+	/**
 	 * To check contains operations
 	 * @param expression - input string
 	 * @return - message format with like expression
