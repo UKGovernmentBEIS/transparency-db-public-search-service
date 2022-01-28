@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,18 @@ public class SearchUtils {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 		return dateFormat.format(inputStringDate);
+	}
+
+	/**
+	 * To convert Local DateTime to DD FullMONTHNAME YYYY
+	 *
+	 * @param inputDateTime - input string date
+	 * @return
+	 */
+	public static String dateTimeToFullMonthNameInDate(LocalDateTime inputDateTime) {
+		log.info("input Date ::{}", inputDateTime);
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy H:m:s");
+		return dateFormat.format(inputDateTime);
 	}
 
 	/**
