@@ -84,6 +84,8 @@ public class SearchServiceImpl implements SearchService {
 				awardSpecifications = getSpecificationAwardDetails(searchInput);
 			}
 
+			awardSpecifications = removeAwardsWithDeletedSchemes(awardSpecifications);
+
 			List<Order> orders = getOrderByCondition(searchInput.getSortBy());
 
 			Pageable pagingSortAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
@@ -106,6 +108,11 @@ public class SearchServiceImpl implements SearchService {
 			}
 
 			return searchResults;
+	}
+
+	private Specification<Award> removeAwardsWithDeletedSchemes(Specification<Award> awardSpecifications){
+		awardSpecifications = awardSpecifications.and(AwardSpecificationUtils.subsidyMeasureIsDeleted());
+		return awardSpecifications;
 	}
 
 	@Override
