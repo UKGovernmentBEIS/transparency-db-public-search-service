@@ -84,7 +84,7 @@ public class SearchServiceImpl implements SearchService {
 				awardSpecifications = getSpecificationAwardDetails(searchInput);
 			}
 
-			awardSpecifications = removeAwardsWithDeletedSchemes(awardSpecifications);
+			awardSpecifications = excludeAwardsWithDeletedSchemes(awardSpecifications);
 
 			List<Order> orders = getOrderByCondition(searchInput.getSortBy());
 
@@ -110,7 +110,7 @@ public class SearchServiceImpl implements SearchService {
 			return searchResults;
 	}
 
-	private Specification<Award> removeAwardsWithDeletedSchemes(Specification<Award> awardSpecifications){
+	private Specification<Award> excludeAwardsWithDeletedSchemes(Specification<Award> awardSpecifications){
 		awardSpecifications = awardSpecifications.and(AwardSpecificationUtils.subsidyMeasureIsDeleted());
 		return awardSpecifications;
 	}
