@@ -78,9 +78,7 @@ public class SubsidyMeasureResponse {
             this.publishedMeasureDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getPublishedMeasureDate());
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
-            if(subsidyMeasure.getDeletedBy() != null) {
-                this.deletedBy = subsidyMeasure.getDeletedBy();
-            }
+            this.deletedBy = subsidyMeasure.getDeletedBy();
             if(subsidyMeasure.getDeletedTimestamp() != null) {
                 this.deletedTimestamp = SearchUtils.dateTimeToFullMonthNameInDate(subsidyMeasure.getDeletedTimestamp());
             }
