@@ -58,12 +58,10 @@ public class SearchUtils {
 		return dateFormat.format(inputStringDate);
 	}
 
-	public static String timestampToFullMonthNameAndTimeInDate(Date inputDateObj) {
+	public static String timestampToFullMonthNameInDate(Date inputDateObj) {
 		log.info("input Date ::{}", inputDateObj);
-		Instant instant = inputDateObj.toInstant();
-		LocalDateTime ldt = instant.atOffset(ZoneOffset.UTC).toLocalDateTime();
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss");
-		return ldt.format(dateFormat);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+		return dateFormat.format(inputDateObj);
 	}
 
 	/**

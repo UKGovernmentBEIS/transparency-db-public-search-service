@@ -82,8 +82,8 @@ public class SubsidyMeasureResponse {
             this.publishedMeasureDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getPublishedMeasureDate());
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
-            this.createdTimestamp = SearchUtils.timestampToFullMonthNameAndTimeInDate(subsidyMeasure.getCreatedTimestamp());
-            this.lastModifiedTimestamp = SearchUtils.timestampToFullMonthNameAndTimeInDate(subsidyMeasure.getLastModifiedTimestamp());
+            this.createdTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getCreatedTimestamp());
+            this.lastModifiedTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getLastModifiedTimestamp());
         }
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
