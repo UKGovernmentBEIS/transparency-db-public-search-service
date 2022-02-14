@@ -31,7 +31,7 @@ public class SearchResults {
 						 int currentPage, int totalPages) {
 
 		this.awards = awards.stream().map(award ->
-				new AwardResponse(award, false)).collect(Collectors.toList());
+				new AwardResponse(award, true)).collect(Collectors.toList());
 		this.totalSearchResults = totalSearchResults;
 		this.currentPage = currentPage;
 		this.totalPages = totalPages;

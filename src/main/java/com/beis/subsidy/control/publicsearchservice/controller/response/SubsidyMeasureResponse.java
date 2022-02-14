@@ -39,6 +39,9 @@ public class SubsidyMeasureResponse {
     private String gaSubsidyWebLink;
 
     @JsonProperty
+    private String gaSubsidyWebLinkDescription;
+
+    @JsonProperty
     private LegalBasisResponse legalBasis;
 
     @JsonProperty
@@ -56,6 +59,12 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private String grantingAuthorityName;
 
+    @JsonProperty
+    private String lastModifiedTimestamp;
+
+    @JsonProperty
+    private String createdTimestamp;
+
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
 
         this.scNumber = subsidyMeasure.getScNumber();
@@ -65,6 +74,7 @@ public class SubsidyMeasureResponse {
             this.duration = subsidyMeasure.getDuration();
             this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
+            this.gaSubsidyWebLinkDescription = subsidyMeasure.getGaSubsidyWebLinkDescription();
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
             this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
             BigDecimal budgetDecimal = new BigDecimal(subsidyMeasure.getBudget());
@@ -72,6 +82,8 @@ public class SubsidyMeasureResponse {
             this.publishedMeasureDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getPublishedMeasureDate());
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
+            this.createdTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getCreatedTimestamp());
+            this.lastModifiedTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getLastModifiedTimestamp());
         }
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
