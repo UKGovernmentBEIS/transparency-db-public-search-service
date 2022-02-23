@@ -1,7 +1,10 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +35,7 @@ public class SchemeSearchControllerTest {
     SearchService searchServiceMock;
     GrantingAuthorityRepository grantingAuthorityRepositoryMock;
     List<GrantingAuthority> gaList = new ArrayList<>();
+    SubsidyMeasureResponse smResponse;
 
     @BeforeEach
     public void setUp(){
@@ -64,5 +70,42 @@ public class SchemeSearchControllerTest {
         assert gaResponse != null;
         assertThat(gaResponse.getGaList()).isNotNull();
         assertThat(gaResponse.getGaList().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testGetSchemeDetailsByScNumber(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+        String scNumber = "SC10001";
+
+        GrantingAuthority ga = new GrantingAuthority();
+        ga.setGrantingAuthorityName("Test GA");
+
+        LegalBasis lb = new LegalBasis();
+        lb.setLegalBasisText("Legal basis");
+
+        SubsidyMeasure sm = new SubsidyMeasure();
+        sm.setScNumber(scNumber);
+        sm.setStartDate(LocalDate.now());
+        sm.setEndDate(LocalDate.now());
+        sm.setPublishedMeasureDate(LocalDate.now());
+        sm.setCreatedTimestamp(new Date(System.currentTimeMillis()));
+        sm.setLastModifiedTimestamp(new Date(System.currentTimeMillis()));
+        sm.setBudget("5000000");
+        sm.setGrantingAuthority(ga);
+        sm.setLegalBases(lb);
+
+        smResponse = new SubsidyMeasureResponse(sm, true);
+
+        when(searchServiceMock.findSchemeByScNumber(scNumber)).thenReturn(smResponse);
+
+        ResponseEntity<?> actual = schemeSearchController.getSchemeDetailsByScNumber(scNumber);
+
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasureResponse actualResponse = (SubsidyMeasureResponse) actual.getBody();
+        assert actualResponse != null;
+
+        assertThat(actualResponse).isInstanceOf(SubsidyMeasureResponse.class);
+        assertThat(actualResponse.getScNumber()).isEqualTo(scNumber);
     }
 }
