@@ -232,4 +232,19 @@ public class SchemeSearchControllerTest {
         assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
         assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
     }
+
+    @Test
+    public void testAllSchemesNumberFormatException(){
+        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+        when(requestMock.getParameter("budget-from")).thenReturn("a");
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNull();
+    }
 }
