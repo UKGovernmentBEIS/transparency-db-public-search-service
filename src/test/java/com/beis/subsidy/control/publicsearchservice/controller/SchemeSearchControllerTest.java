@@ -247,4 +247,24 @@ public class SchemeSearchControllerTest {
         assert smsResponseActual != null;
         assertThat(smsResponseActual.getSubsidySchemes()).isNull();
     }
+
+    @Test
+    public void testAllSchemesReverseSort(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+
+        // start param mocks
+        when(requestMock.getParameter("sort")).thenReturn("-scNumber");
+        // end param mocks
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
+        assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
+    }
 }
