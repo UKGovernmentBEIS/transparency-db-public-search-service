@@ -159,7 +159,7 @@ public class SchemeSearchControllerTest {
         when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
 
         // start param mocks
-        when(requestMock.getParameter("sort")).thenReturn("scNumber,asc");
+        when(requestMock.getParameter("sort")).thenReturn("scNumber");
         when(requestMock.getParameter("page")).thenReturn("1");
         when(requestMock.getParameter("limit")).thenReturn("10");
         when(requestMock.getParameter("budget-from")).thenReturn("500");
