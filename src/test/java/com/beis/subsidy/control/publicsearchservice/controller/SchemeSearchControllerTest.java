@@ -74,6 +74,9 @@ public class SchemeSearchControllerTest {
 
         smResponse = new SubsidyMeasureResponse(sm, true);
 
+        smsResponse = new SubsidyMeasuresResponse();
+        smsResponse.setSubsidySchemes(new ArrayList<>(Arrays.asList(smResponse,smResponse,smResponse)));
+
         searchServiceMock = mock(SearchService.class);
         grantingAuthorityRepositoryMock = mock(GrantingAuthorityRepository.class);
         requestMock = mock(HttpServletRequest.class);
@@ -136,11 +139,49 @@ public class SchemeSearchControllerTest {
     public void testAllSchemes(){
         final HttpStatus expectedHttpStatus = HttpStatus.OK;
 
-        smsResponse = new SubsidyMeasuresResponse();
-        smsResponse.setSubsidySchemes(new ArrayList<>(Arrays.asList(smResponse,smResponse,smResponse)));
-
         when(requestMock.getParameter(Mockito.any(String.class))).thenReturn(null);
         when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
+        assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
+    }
+
+    @Test
+    public void testAllSchemesAllFilters(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+
+        // start param mocks
+        when(requestMock.getParameter("sort")).thenReturn("scNumber,asc");
+        when(requestMock.getParameter("page")).thenReturn("1");
+        when(requestMock.getParameter("limit")).thenReturn("10");
+        when(requestMock.getParameter("budget-from")).thenReturn("500");
+        when(requestMock.getParameter("budget-to")).thenReturn("1000");
+        when(requestMock.getParameter("scnumber")).thenReturn("SC10001");
+        when(requestMock.getParameter("name")).thenReturn("SC Name");
+        when(requestMock.getParameter("ga")).thenReturn("Granting Authority");
+        when(requestMock.getParameter("start-day-from")).thenReturn("01");
+        when(requestMock.getParameter("start-month-from")).thenReturn("01");
+        when(requestMock.getParameter("start-year-from")).thenReturn("2022");
+        when(requestMock.getParameter("start-day-to")).thenReturn("31");
+        when(requestMock.getParameter("start-month-to")).thenReturn("12");
+        when(requestMock.getParameter("start-year-to")).thenReturn("2022");
+        when(requestMock.getParameter("end-day-from")).thenReturn("01");
+        when(requestMock.getParameter("end-month-from")).thenReturn("01");
+        when(requestMock.getParameter("end-year-from")).thenReturn("2022");
+        when(requestMock.getParameter("end-day-to")).thenReturn("31");
+        when(requestMock.getParameter("end-month-to")).thenReturn("12");
+        when(requestMock.getParameter("end-year-to")).thenReturn("2022");
+        when(requestMock.getParameter("status")).thenReturn("active");
+        when(requestMock.getParameter("adhoc")).thenReturn("no");
+        // end param mocks
 
         ResponseEntity<?> actual = schemeSearchController.allSchemes();
         assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
