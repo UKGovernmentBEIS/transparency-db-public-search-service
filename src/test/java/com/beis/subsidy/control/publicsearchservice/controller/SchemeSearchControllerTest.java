@@ -192,4 +192,44 @@ public class SchemeSearchControllerTest {
         assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
         assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
     }
+
+    @Test
+    public void testAllSchemesBudgetFromFilter(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+
+        // start param mocks
+        when(requestMock.getParameter("budget-from")).thenReturn("500");
+        // end param mocks
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
+        assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
+    }
+
+    @Test
+    public void testAllSchemesBudgetEndFilter(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+
+        // start param mocks
+        when(requestMock.getParameter("budget-from")).thenReturn("500");
+        // end param mocks
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
+        assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
+    }
 }
