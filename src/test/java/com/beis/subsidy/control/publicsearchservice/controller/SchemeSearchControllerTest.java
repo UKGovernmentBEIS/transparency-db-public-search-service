@@ -39,9 +39,35 @@ public class SchemeSearchControllerTest {
     GrantingAuthorityRepository grantingAuthorityRepositoryMock;
     List<GrantingAuthority> gaList = new ArrayList<>();
     SubsidyMeasureResponse smResponse;
+    SubsidyMeasuresResponse smsResponse;
+    GrantingAuthority ga;
+    LegalBasis lb;
+    SubsidyMeasure sm;
+    String scNumber;
 
     @BeforeEach
     public void setUp(){
+        scNumber = "SC10001";
+
+        ga = new GrantingAuthority();
+        ga.setGrantingAuthorityName("Test GA");
+
+        lb = new LegalBasis();
+        lb.setLegalBasisText("Legal basis");
+
+        sm = new SubsidyMeasure();
+        sm.setScNumber(scNumber);
+        sm.setStartDate(LocalDate.now());
+        sm.setEndDate(LocalDate.now());
+        sm.setPublishedMeasureDate(LocalDate.now());
+        sm.setCreatedTimestamp(new Date(System.currentTimeMillis()));
+        sm.setLastModifiedTimestamp(new Date(System.currentTimeMillis()));
+        sm.setBudget("5000000");
+        sm.setGrantingAuthority(ga);
+        sm.setLegalBases(lb);
+
+        smResponse = new SubsidyMeasureResponse(sm, true);
+
         searchServiceMock = mock(SearchService.class);
         grantingAuthorityRepositoryMock = mock(GrantingAuthorityRepository.class);
         MockitoAnnotations.openMocks(this);
@@ -78,26 +104,6 @@ public class SchemeSearchControllerTest {
     @Test
     public void testGetSchemeDetailsByScNumber(){
         final HttpStatus expectedHttpStatus = HttpStatus.OK;
-        String scNumber = "SC10001";
-
-        GrantingAuthority ga = new GrantingAuthority();
-        ga.setGrantingAuthorityName("Test GA");
-
-        LegalBasis lb = new LegalBasis();
-        lb.setLegalBasisText("Legal basis");
-
-        SubsidyMeasure sm = new SubsidyMeasure();
-        sm.setScNumber(scNumber);
-        sm.setStartDate(LocalDate.now());
-        sm.setEndDate(LocalDate.now());
-        sm.setPublishedMeasureDate(LocalDate.now());
-        sm.setCreatedTimestamp(new Date(System.currentTimeMillis()));
-        sm.setLastModifiedTimestamp(new Date(System.currentTimeMillis()));
-        sm.setBudget("5000000");
-        sm.setGrantingAuthority(ga);
-        sm.setLegalBases(lb);
-
-        smResponse = new SubsidyMeasureResponse(sm, true);
 
         when(searchServiceMock.findSchemeByScNumber(scNumber)).thenReturn(smResponse);
 
