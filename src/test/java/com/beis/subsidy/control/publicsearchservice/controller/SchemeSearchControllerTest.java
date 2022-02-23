@@ -1,7 +1,9 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
+import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
@@ -12,14 +14,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +49,7 @@ public class SchemeSearchControllerTest {
     LegalBasis lb;
     SubsidyMeasure sm;
     String scNumber;
+    HttpServletRequest requestMock;
 
     @BeforeEach
     public void setUp(){
@@ -70,6 +76,7 @@ public class SchemeSearchControllerTest {
 
         searchServiceMock = mock(SearchService.class);
         grantingAuthorityRepositoryMock = mock(GrantingAuthorityRepository.class);
+        requestMock = mock(HttpServletRequest.class);
         MockitoAnnotations.openMocks(this);
     }
 
@@ -123,5 +130,25 @@ public class SchemeSearchControllerTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void testAllSchemes(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        smsResponse = new SubsidyMeasuresResponse();
+        smsResponse.setSubsidySchemes(new ArrayList<>(Arrays.asList(smResponse,smResponse,smResponse)));
+
+        when(requestMock.getParameter(Mockito.any(String.class))).thenReturn(null);
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
+        assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
     }
 }
