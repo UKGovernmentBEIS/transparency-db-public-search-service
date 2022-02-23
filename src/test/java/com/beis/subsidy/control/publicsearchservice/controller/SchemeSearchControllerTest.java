@@ -2,6 +2,7 @@ package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
@@ -23,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -107,5 +110,12 @@ public class SchemeSearchControllerTest {
 
         assertThat(actualResponse).isInstanceOf(SubsidyMeasureResponse.class);
         assertThat(actualResponse.getScNumber()).isEqualTo(scNumber);
+
+        Exception exception = assertThrows(InvalidRequestException.class, () -> schemeSearchController.getSchemeDetailsByScNumber(""));
+
+        String expectedMessage = "Invalid Request";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }
