@@ -8,6 +8,10 @@
 		<version>2.3.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<scm>
+		<developerConnection>scm:git:https://github.com/UKGovernmentBEIS/transparency-db-public-search-service/</developerConnection>
+	</scm>
 	<groupId>com.beis.subsidy.control</groupId>
 	<artifactId>public-search-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
