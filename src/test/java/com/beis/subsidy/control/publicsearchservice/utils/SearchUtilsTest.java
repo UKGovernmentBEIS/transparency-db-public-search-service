@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchUtilsTest {
@@ -94,5 +95,17 @@ public class SearchUtilsTest {
         assertThat(formatAmountRange).isNotNull();
         assertThat(formatAmountRange.contains("or more")).isTrue();
         assertThat(formatAmountRange.contains("£")).isTrue();
+    }
+
+    @Test
+    public void testIsDateValid(){
+        String validDateString = "2022-02-22";
+        String invalidDateString = "2022-13-32";
+
+        Boolean isDateValid = SearchUtils.isDateValid(validDateString);
+        assertTrue(isDateValid);
+
+        isDateValid = SearchUtils.isDateValid(invalidDateString);
+        assertFalse(isDateValid);
     }
 }
