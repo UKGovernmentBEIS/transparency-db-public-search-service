@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,6 +27,14 @@ public class SearchUtilsTest {
         String monthNameInDate = SearchUtils.dateToFullMonthNameInDate(toDayDate);
         assertThat(monthNameInDate).isNotNull();
         assertTrue(monthNameInDate.contains(" "));
+    }
+
+    @Test
+    public void testTimestampToFullMonthNameInDate(){
+        Date date = new GregorianCalendar(2022, Calendar.FEBRUARY, 22).getTime();
+        String dateString = SearchUtils.timestampToFullMonthNameInDate(date);
+        assertThat(dateString).isNotNull();
+        assertThat(dateString).isEqualTo("22 February 2022");
     }
 
     @Test
