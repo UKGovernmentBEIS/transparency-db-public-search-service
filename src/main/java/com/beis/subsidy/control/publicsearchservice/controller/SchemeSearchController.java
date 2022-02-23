@@ -176,7 +176,7 @@ public class SchemeSearchController {
 				endDateFrom = SearchUtils.stringToDate(endDateFromString);
 				searchInput.setSubsidyEndDateFrom(endDateFrom);
 			}else{
-				log.error("Invalid date format given for Start Date (From): " + endDateFromString);
+				log.error("Invalid date format given for End Date (From): " + endDateFromString);
 				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
@@ -194,7 +194,7 @@ public class SchemeSearchController {
 				endDateTo = SearchUtils.stringToDate(endDateToString);
 				searchInput.setSubsidyEndDateTo(endDateTo);
 			}else{
-				log.error("Invalid date format given for Start Date (To): " + endDateToString);
+				log.error("Invalid date format given for End Date (To): " + endDateToString);
 				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
