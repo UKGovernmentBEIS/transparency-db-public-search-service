@@ -1,12 +1,11 @@
 package com.beis.subsidy.control.publicsearchservice.utils;
 
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -107,5 +106,27 @@ public class SearchUtilsTest {
 
         isDateValid = SearchUtils.isDateValid(invalidDateString);
         assertFalse(isDateValid);
+    }
+
+    @Test
+    public void testRemoveRolesFromGaList(){
+        List<String> gaNames = Arrays.asList("Test GA", "BEIS Administrator", "Granting Authority Encoder",
+                "Granting Authority Administrator", "Granting Authority Approver", "BEIS");
+        List<GrantingAuthority> gaList = new ArrayList<>();
+
+        for (String gaName:gaNames) {
+            GrantingAuthority ga = new GrantingAuthority();
+            ga.setGrantingAuthorityName(gaName);
+            gaList.add(ga);
+        }
+
+        SearchUtils.removeRolesFromGaList(gaList);
+
+        for(GrantingAuthority ga:gaList) {
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("BEIS Administrator");
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Encoder");
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Administrator");
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Approver");
+        }
     }
 }
