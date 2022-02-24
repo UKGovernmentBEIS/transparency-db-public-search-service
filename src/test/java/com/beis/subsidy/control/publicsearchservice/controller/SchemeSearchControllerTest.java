@@ -214,13 +214,13 @@ public class SchemeSearchControllerTest {
     }
 
     @Test
-    public void testAllSchemesBudgetEndFilter(){
+    public void testAllSchemesBudgetToFilter(){
         final HttpStatus expectedHttpStatus = HttpStatus.OK;
 
         when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
 
         // start param mocks
-        when(requestMock.getParameter("budget-from")).thenReturn("500");
+        when(requestMock.getParameter("budget-to")).thenReturn("500");
         // end param mocks
 
         ResponseEntity<?> actual = schemeSearchController.allSchemes();
@@ -399,6 +399,23 @@ public class SchemeSearchControllerTest {
         when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
         // start param mocks
         when(requestMock.getParameter("adhoc")).thenReturn("none");
+        // end param mocks
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNull();
+    }
+
+    @Test
+    public void testAllSchemesInvalidStatus(){
+        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+        // start param mocks
+        when(requestMock.getParameter("status")).thenReturn("none");
         // end param mocks
 
         ResponseEntity<?> actual = schemeSearchController.allSchemes();
