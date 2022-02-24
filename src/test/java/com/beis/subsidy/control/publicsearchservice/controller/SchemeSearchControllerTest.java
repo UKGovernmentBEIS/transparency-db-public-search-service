@@ -343,4 +343,52 @@ public class SchemeSearchControllerTest {
         assert smsResponseActual != null;
         assertThat(smsResponseActual.getSubsidySchemes()).isNull();
     }
+
+    @Test
+    public void testAllSchemesStartEndFromNull(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+        // start param mocks
+        when(requestMock.getParameter("start-day-to")).thenReturn("31");
+        when(requestMock.getParameter("start-month-to")).thenReturn("12");
+        when(requestMock.getParameter("start-year-to")).thenReturn("2022");
+        when(requestMock.getParameter("end-day-to")).thenReturn("31");
+        when(requestMock.getParameter("end-month-to")).thenReturn("12");
+        when(requestMock.getParameter("end-year-to")).thenReturn("2022");
+        // end param mocks
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
+        assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
+    }
+
+    @Test
+    public void testAllSchemesStartEndToNull(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
+        // start param mocks
+        when(requestMock.getParameter("start-day-from")).thenReturn("01");
+        when(requestMock.getParameter("start-month-from")).thenReturn("01");
+        when(requestMock.getParameter("start-year-from")).thenReturn("2022");
+        when(requestMock.getParameter("end-day-from")).thenReturn("01");
+        when(requestMock.getParameter("end-month-from")).thenReturn("01");
+        when(requestMock.getParameter("end-year-from")).thenReturn("2022");
+        // end param mocks
+
+        ResponseEntity<?> actual = schemeSearchController.allSchemes();
+        assertThat(actual.getBody()).isInstanceOf(SubsidyMeasuresResponse.class);
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
+        assert smsResponseActual != null;
+        assertThat(smsResponseActual.getSubsidySchemes()).isNotNull();
+        assertThat(smsResponseActual.getSubsidySchemes().size()).isEqualTo(3);
+    }
 }
