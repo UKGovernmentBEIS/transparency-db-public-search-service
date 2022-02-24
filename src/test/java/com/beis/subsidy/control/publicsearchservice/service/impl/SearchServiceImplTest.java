@@ -3,13 +3,17 @@ package com.beis.subsidy.control.publicsearchservice.service.impl;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.*;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +28,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.mock;
@@ -33,11 +39,13 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class SearchServiceImplTest {
 
     private final AwardRepository awardRepository = mock(AwardRepository.class);
+    private final SubsidyMeasureRepository subsidyMeasureRepositoryMock = mock(SubsidyMeasureRepository.class);
 
     @InjectMocks
     private SearchServiceImpl sut;
 
     Award award;
+    SubsidyMeasure subsidyMeasure;
     List<Award> awards = new ArrayList<>();
 
     @BeforeEach
@@ -68,7 +76,7 @@ public class SearchServiceImplTest {
         award.setBeneficiary(beneficiary);
 
         //SubsidyMeasure
-        SubsidyMeasure subsidyMeasure = new  SubsidyMeasure();
+        subsidyMeasure = new SubsidyMeasure();
         subsidyMeasure.setScNumber("SC10001");
         subsidyMeasure.setSubsidyMeasureTitle("title");
         subsidyMeasure.setAdhoc(false);
@@ -254,5 +262,21 @@ public class SearchServiceImplTest {
         Assertions.assertThrows(SearchResultNotFoundException.class, () -> {
             sut.findByAwardNumber(awardNumber);
         });
+    }
+
+    @Test
+    public void testFindSchemeByScNumber(){
+        SubsidyMeasureResponse smr = new SubsidyMeasureResponse(subsidyMeasure, true);
+        when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(subsidyMeasure);
+
+        SubsidyMeasureResponse actual = sut.findSchemeByScNumber("SC10001");
+        assertThat(actual.getScNumber()).isEqualTo("SC10001");
+
+        when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(null);
+        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> sut.findSchemeByScNumber("SC99999"));
+
+        String expectedMessage = "Scheme NotFound";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }
