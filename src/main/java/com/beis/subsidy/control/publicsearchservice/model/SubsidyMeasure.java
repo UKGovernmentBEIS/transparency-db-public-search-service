@@ -75,6 +75,9 @@ public class SubsidyMeasure {
 	@Column(name = "GA_SUBSIDY_WEBLINK")
 	private String gaSubsidyWebLink;
 
+	@Column(name = "GA_SUBSIDY_WEBLINK_DESCRIPTION")
+	private String gaSubsidyWebLinkDescription;
+
 	@Column(name = "PUBLISHED_MEASURE_DATE")
 	private LocalDate publishedMeasureDate;
 

@@ -65,10 +65,10 @@ public class AwardResponse {
     private String spendingRegion;
 
     @JsonProperty
-    private LocalDate createdTimestamp;
+    private String createdTimestamp;
 
     @JsonProperty
-    private LocalDate lastModifiedTimestamp;
+    private String lastModifiedTimestamp;
 
     @JsonProperty
     private String publishedAwardDate;
@@ -90,8 +90,8 @@ public class AwardResponse {
             this.goodsServicesFilter = award.getGoodsServicesFilter();
             this.createdBy = award.getCreatedBy();
             this.approvedBy = award.getApprovedBy();
-            this.createdTimestamp = award.getCreatedTimestamp();
-            this.lastModifiedTimestamp = award.getLastModifiedTimestamp();
+            this.createdTimestamp = SearchUtils.dateToFullMonthNameInDate(award.getCreatedTimestamp());
+            this.lastModifiedTimestamp = SearchUtils.dateToFullMonthNameInDate(award.getLastModifiedTimestamp());
             if ("Awaiting Approval".equals(this.status)) {
                 this.publishedAwardDate = "Awaiting Approval";
             } else {
