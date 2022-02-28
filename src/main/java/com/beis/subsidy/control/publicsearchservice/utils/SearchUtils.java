@@ -65,6 +65,18 @@ public class SearchUtils {
 	}
 
 	/**
+	 * To convert Local DateTime to DD FullMONTHNAME YYYY
+	 *
+	 * @param inputDateTime - input string date
+	 * @return
+	 */
+	public static String dateTimeToFullMonthNameInDate(LocalDateTime inputDateTime) {
+		log.info("input Date ::{}", inputDateTime);
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy H:m:ss");
+		return dateFormat.format(inputDateTime);
+	}
+
+	/**
 	 * To convert BigDecimal to string by adding , for thousands.
 	 *
 	 * @param subsidyFullAmountExact

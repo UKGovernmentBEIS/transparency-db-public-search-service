@@ -84,6 +84,8 @@ public class SearchServiceImpl implements SearchService {
 				awardSpecifications = getSpecificationAwardDetails(searchInput);
 			}
 
+			awardSpecifications = excludeAwardsWithDeletedSchemes(awardSpecifications);
+
 			List<Order> orders = getOrderByCondition(searchInput.getSortBy());
 
 			Pageable pagingSortAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
@@ -106,6 +108,16 @@ public class SearchServiceImpl implements SearchService {
 			}
 
 			return searchResults;
+	}
+
+	private Specification<Award> excludeAwardsWithDeletedSchemes(Specification<Award> awardSpecifications){
+		awardSpecifications = awardSpecifications.and(AwardSpecificationUtils.subsidyMeasureIsDeleted());
+		return awardSpecifications;
+	}
+
+	private Specification<SubsidyMeasure> excludeDeleteSchemes(Specification<SubsidyMeasure> subsidyMeasureSpecification){
+		subsidyMeasureSpecification = subsidyMeasureSpecification.and(SubsidyMeasureSpecificationUtils.subsidyMeasureIsDeleted());
+		return subsidyMeasureSpecification;
 	}
 
 	@Override
@@ -135,6 +147,8 @@ public class SearchServiceImpl implements SearchService {
 		Pageable pagingSortSchemes = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
 
 		subsidyMeasureSpecification = getSpecificationSchemeDetails(searchInput);
+
+		subsidyMeasureSpecification = excludeDeleteSchemes(subsidyMeasureSpecification);
 
 		Page<SubsidyMeasure> pageSchemes = schemeRepository.findAll(subsidyMeasureSpecification,pagingSortSchemes);
 

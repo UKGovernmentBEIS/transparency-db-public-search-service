@@ -60,6 +60,12 @@ public class SubsidyMeasureResponse {
     private String grantingAuthorityName;
 
     @JsonProperty
+    private String deletedBy;
+
+    @JsonProperty
+    private String deletedTimestamp;
+
+    @JsonProperty
     private String lastModifiedTimestamp;
 
     @JsonProperty
@@ -82,6 +88,10 @@ public class SubsidyMeasureResponse {
             this.publishedMeasureDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getPublishedMeasureDate());
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
+            this.deletedBy = subsidyMeasure.getDeletedBy();
+            if(subsidyMeasure.getDeletedTimestamp() != null) {
+                this.deletedTimestamp = SearchUtils.dateTimeToFullMonthNameInDate(subsidyMeasure.getDeletedTimestamp());
+            }
             this.createdTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getCreatedTimestamp());
             this.lastModifiedTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getLastModifiedTimestamp());
         }
