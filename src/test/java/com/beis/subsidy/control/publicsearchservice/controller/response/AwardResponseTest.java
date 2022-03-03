@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,6 +19,7 @@ public class AwardResponseTest {
         award.setApprovedBy("system");
         award.setCreatedBy("system");
         award.setCreatedTimestamp(LocalDate.now());
+        award.setLastModifiedTimestamp(LocalDate.now());
         award.setGoodsServicesFilter("serviceFilter");
         award.setLegalGrantingDate(LocalDate.now());
         award.setSubsidyFullAmountRange("5000");
@@ -51,10 +53,12 @@ public class AwardResponseTest {
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStartDate(LocalDate.now());
         subsidyMeasure.setEndDate(LocalDate.now());
-        subsidyMeasure.setBudget("budget");
+        subsidyMeasure.setBudget("1000000");
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
+        subsidyMeasure.setCreatedTimestamp(new Date());
+        subsidyMeasure.setLastModifiedTimestamp(new Date());
 
         LegalBasis legalBasis = new LegalBasis();
         legalBasis.setLegalBasisText("legal text");
@@ -65,6 +69,7 @@ public class AwardResponseTest {
         GrantingAuthority grantingAuthority = new GrantingAuthority();
         grantingAuthority.setGrantingAuthorityName("ganame");
         award.setGrantingAuthority(grantingAuthority);
+        subsidyMeasure.setGrantingAuthority(grantingAuthority);
 
         GrantingAuthorityResponse gaResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
         SubsidyMeasureResponse subsidyMeasureRes = new SubsidyMeasureResponse(award.getSubsidyMeasure(),true);
@@ -77,6 +82,7 @@ public class AwardResponseTest {
         assertThat(awardResponse.getBeneficiary()).isNotNull();
         assertThat(awardResponse.getCreatedBy()).isNotNull();
         assertThat(awardResponse.getCreatedTimestamp()).isNotNull();
+        assertThat(awardResponse.getLastModifiedTimestamp()).isNotNull();
         assertThat(awardResponse.getGoodsServicesFilter()).isNotNull();
         assertThat(awardResponse.getGrantingAuthorityResponse()).isNotNull();
         assertThat(awardResponse.getLegalGrantingDate()).isNotNull();
@@ -98,13 +104,14 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getBeneficiary()).isNotNull();
         assertThat(awardResponse1.getCreatedBy()).isNull();
         assertThat(awardResponse1.getCreatedTimestamp()).isNull();
+        assertThat(awardResponse1.getLastModifiedTimestamp()).isNull();
         assertThat(awardResponse1.getGoodsServicesFilter()).isNull();
         assertThat(awardResponse1.getGrantingAuthorityResponse()).isNull();
         assertThat(awardResponse1.getLegalGrantingDate()).isNotNull();
         assertThat(awardResponse1.getPublishedAwardDate()).isNull();
         assertThat(awardResponse1.getLastModifiedTimestamp()).isNull();
         assertThat(awardResponse1.getSpendingSector()).isNotNull();
-        assertThat(awardResponse1.getStatus()).isNull();
+        assertThat(awardResponse1.getStatus()).isNotNull();
         assertThat(awardResponse1.getSubsidyFullAmountExact()).isNotNull();
         assertThat(awardResponse1.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();

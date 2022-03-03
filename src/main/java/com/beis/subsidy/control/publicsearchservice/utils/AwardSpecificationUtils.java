@@ -136,6 +136,15 @@ public final class AwardSpecificationUtils {
 	}
 
 	/**
+	 * Remove any awards where the subsidy measure status = "Deleted"
+	 *
+	 * @return Specification<Award> - Specification for Award
+	 */
+	public static Specification<Award> subsidyMeasureIsDeleted() {
+		return (root, query, builder) -> builder.notEqual(root.get("subsidyMeasure").get("status"), "Deleted");
+	}
+
+	/**
 	 * To check contains operations
 	 * @param expression - input string
 	 * @return - message format with like expression

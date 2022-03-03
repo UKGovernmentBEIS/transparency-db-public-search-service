@@ -65,13 +65,13 @@ public class AwardResponse {
     private String spendingRegion;
 
     @JsonProperty
-    private LocalDate createdTimestamp;
+    private String createdTimestamp;
 
     @JsonProperty
-    private LocalDate lastModifiedTimestamp;
+    private String lastModifiedTimestamp;
 
     @JsonProperty
-    private LocalDate publishedAwardDate;
+    private String publishedAwardDate;
 
 
     public AwardResponse(Award award, boolean flag) {
@@ -85,14 +85,18 @@ public class AwardResponse {
         this.subsidyInstrument = award.getSubsidyInstrument();
         this.spendingRegion = award.getSpendingRegion();
         this.legalGrantingDate = SearchUtils.dateToFullMonthNameInDate(award.getLegalGrantingDate());
+        this.status = award.getStatus();
         if (flag) {
             this.goodsServicesFilter = award.getGoodsServicesFilter();
-            this.status = award.getStatus();
             this.createdBy = award.getCreatedBy();
             this.approvedBy = award.getApprovedBy();
-            this.createdTimestamp = award.getCreatedTimestamp();
-            this.lastModifiedTimestamp = award.getLastModifiedTimestamp();
-            this.publishedAwardDate = award.getPublishedAwardDate();
+            this.createdTimestamp = SearchUtils.dateToFullMonthNameInDate(award.getCreatedTimestamp());
+            this.lastModifiedTimestamp = SearchUtils.dateToFullMonthNameInDate(award.getLastModifiedTimestamp());
+            if ("Awaiting Approval".equals(this.status)) {
+                this.publishedAwardDate = "Awaiting Approval";
+            } else {
+                this.publishedAwardDate = SearchUtils.dateToFullMonthNameInDate(award.getPublishedAwardDate());
+            }
         }
         this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): null;
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);

@@ -8,6 +8,10 @@
 		<version>2.3.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<scm>
+		<developerConnection>scm:git:https://github.com/UKGovernmentBEIS/transparency-db-public-search-service/</developerConnection>
+	</scm>
 	<groupId>com.beis.subsidy.control</groupId>
 	<artifactId>public-search-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -156,6 +160,14 @@
 		        </configuration>
 	      </plugin>-->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<configuration>
+					<tagNameFormat>release-@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.2</version>
@@ -164,6 +176,7 @@
 						<exclude>com/beis/subsidy/control/publicsearchservice/PublicSearchServiceApplication.class</exclude>
 						<exclude>com/beis/subsidy/control/publicsearchservice/model/*.class</exclude>
 						<exclude>com/beis/subsidy/control/publicsearchservice/utils/AwardSpecificationUtils.class</exclude>
+						<exclude>com/beis/subsidy/control/publicsearchservice/utils/SubsidyMeasureSpecificationUtils.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>

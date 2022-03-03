@@ -1,12 +1,14 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
 import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +31,9 @@ public class SubsidyMeasureResponseTest {
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStartDate(LocalDate.now());
         subsidyMeasure.setEndDate(LocalDate.now());
-        subsidyMeasure.setBudget("budget");
+        subsidyMeasure.setCreatedTimestamp(new Date());
+        subsidyMeasure.setLastModifiedTimestamp(new Date());
+        subsidyMeasure.setBudget("1000000");
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
@@ -38,6 +42,11 @@ public class SubsidyMeasureResponseTest {
         LegalBasis legalBasis = new LegalBasis();
         legalBasis.setLegalBasisText("legal text");
         subsidyMeasure.setLegalBases(legalBasis);
+
+        //GrantingAuthority details
+        GrantingAuthority grantingAuthority = new GrantingAuthority();
+        grantingAuthority.setGrantingAuthorityName("ganame");
+        subsidyMeasure.setGrantingAuthority(grantingAuthority);
 
         SubsidyMeasureResponse subsidyMeasureRes = new SubsidyMeasureResponse(award.getSubsidyMeasure(),false);
         assertThat(subsidyMeasureRes).isNotNull();
@@ -54,6 +63,8 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes.getCreatedBy()).isNull();
         assertThat(subsidyMeasureRes.getApprovedBy()).isNull();
         assertThat(subsidyMeasureRes.getLegalBasis()).isNotNull();
+        assertThat(subsidyMeasureRes.getCreatedTimestamp()).isNull();
+        assertThat(subsidyMeasureRes.getLastModifiedTimestamp()).isNull();
 
         SubsidyMeasureResponse subsidyMeasureRes1 = new SubsidyMeasureResponse(award.getSubsidyMeasure(),true);
         assertThat(subsidyMeasureRes1).isNotNull();
@@ -68,6 +79,8 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.getPublishedMeasureDate()).isNotNull();
         assertThat(subsidyMeasureRes1.getCreatedBy()).isNotNull();
         assertThat(subsidyMeasureRes1.getApprovedBy()).isNotNull();
+        assertThat(subsidyMeasureRes1.getCreatedTimestamp()).isNotNull();
+        assertThat(subsidyMeasureRes1.getLastModifiedTimestamp()).isNotNull();
 
     }
 }

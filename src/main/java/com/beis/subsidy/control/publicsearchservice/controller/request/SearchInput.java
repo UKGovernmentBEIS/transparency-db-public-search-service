@@ -1,5 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.controller.request;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.Setter;
@@ -43,5 +45,24 @@ public class SearchInput {
 	private int totalRecordsPerPage;
 	
 	private String[] sortBy;
-	
+
+	private String scNumber;
+
+	private String grantingAuthorityName;
+
+	private LocalDate subsidyStartDateFrom;
+
+	private LocalDate subsidyStartDateTo;
+
+	private LocalDate subsidyEndDateFrom;
+
+	private LocalDate subsidyEndDateTo;
+
+	private String subsidyStatus;
+
+	private String adHoc;
+
+	private BigDecimal budgetFrom;
+
+	private BigDecimal budgetTo;
 }

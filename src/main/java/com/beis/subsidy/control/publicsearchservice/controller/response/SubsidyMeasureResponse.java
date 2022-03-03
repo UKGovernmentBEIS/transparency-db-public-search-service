@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 
@@ -38,10 +39,13 @@ public class SubsidyMeasureResponse {
     private String gaSubsidyWebLink;
 
     @JsonProperty
+    private String gaSubsidyWebLinkDescription;
+
+    @JsonProperty
     private LegalBasisResponse legalBasis;
 
     @JsonProperty
-    private LocalDate publishedMeasureDate;
+    private String publishedMeasureDate;
 
     @JsonProperty
     private String createdBy;
@@ -52,6 +56,21 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private String status;
 
+    @JsonProperty
+    private String grantingAuthorityName;
+
+    @JsonProperty
+    private String deletedBy;
+
+    @JsonProperty
+    private String deletedTimestamp;
+
+    @JsonProperty
+    private String lastModifiedTimestamp;
+
+    @JsonProperty
+    private String createdTimestamp;
+
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
 
         this.scNumber = subsidyMeasure.getScNumber();
@@ -61,14 +80,22 @@ public class SubsidyMeasureResponse {
             this.duration = subsidyMeasure.getDuration();
             this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
+            this.gaSubsidyWebLinkDescription = subsidyMeasure.getGaSubsidyWebLinkDescription();
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
             this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
-            this.budget = subsidyMeasure.getBudget();
-            this.publishedMeasureDate = subsidyMeasure.getPublishedMeasureDate();
+            BigDecimal budgetDecimal = new BigDecimal(subsidyMeasure.getBudget());
+            this.budget = SearchUtils.decimalNumberFormat(budgetDecimal);
+            this.publishedMeasureDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getPublishedMeasureDate());
             this.createdBy = subsidyMeasure.getCreatedBy();
             this.approvedBy = subsidyMeasure.getApprovedBy();
+            this.deletedBy = subsidyMeasure.getDeletedBy();
+            if(subsidyMeasure.getDeletedTimestamp() != null) {
+                this.deletedTimestamp = SearchUtils.dateTimeToFullMonthNameInDate(subsidyMeasure.getDeletedTimestamp());
+            }
+            this.createdTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getCreatedTimestamp());
+            this.lastModifiedTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getLastModifiedTimestamp());
         }
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
-
+        this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
     }
 }

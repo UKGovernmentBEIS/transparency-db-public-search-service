@@ -1,11 +1,14 @@
 package com.beis.subsidy.control.publicsearchservice.utils;
 
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchUtilsTest {
@@ -24,6 +27,14 @@ public class SearchUtilsTest {
         String monthNameInDate = SearchUtils.dateToFullMonthNameInDate(toDayDate);
         assertThat(monthNameInDate).isNotNull();
         assertTrue(monthNameInDate.contains(" "));
+    }
+
+    @Test
+    public void testTimestampToFullMonthNameInDate(){
+        Date date = new GregorianCalendar(2022, Calendar.FEBRUARY, 22).getTime();
+        String dateString = SearchUtils.timestampToFullMonthNameInDate(date);
+        assertThat(dateString).isNotNull();
+        assertThat(dateString).isEqualTo("22 February 2022");
     }
 
     @Test
@@ -83,5 +94,39 @@ public class SearchUtilsTest {
         assertThat(formatAmountRange).isNotNull();
         assertThat(formatAmountRange.contains("or more")).isTrue();
         assertThat(formatAmountRange.contains("£")).isTrue();
+    }
+
+    @Test
+    public void testIsDateValid(){
+        String validDateString = "2022-02-22";
+        String invalidDateString = "2022-13-32";
+
+        Boolean isDateValid = SearchUtils.isDateValid(validDateString);
+        assertTrue(isDateValid);
+
+        isDateValid = SearchUtils.isDateValid(invalidDateString);
+        assertFalse(isDateValid);
+    }
+
+    @Test
+    public void testRemoveRolesFromGaList(){
+        List<String> gaNames = Arrays.asList("Test GA", "BEIS Administrator", "Granting Authority Encoder",
+                "Granting Authority Administrator", "Granting Authority Approver", "BEIS");
+        List<GrantingAuthority> gaList = new ArrayList<>();
+
+        for (String gaName:gaNames) {
+            GrantingAuthority ga = new GrantingAuthority();
+            ga.setGrantingAuthorityName(gaName);
+            gaList.add(ga);
+        }
+
+        SearchUtils.removeRolesFromGaList(gaList);
+
+        for(GrantingAuthority ga:gaList) {
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("BEIS Administrator");
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Encoder");
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Administrator");
+            assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Approver");
+        }
     }
 }
