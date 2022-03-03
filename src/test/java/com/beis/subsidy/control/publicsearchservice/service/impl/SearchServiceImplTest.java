@@ -3,15 +3,20 @@ package com.beis.subsidy.control.publicsearchservice.service.impl;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.*;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -24,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.mock;
@@ -33,12 +40,16 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class SearchServiceImplTest {
 
     private final AwardRepository awardRepository = mock(AwardRepository.class);
+    private final SubsidyMeasureRepository subsidyMeasureRepositoryMock = mock(SubsidyMeasureRepository.class);
+    private final PageRequest pageRequestMock = mock(PageRequest.class);
 
     @InjectMocks
     private SearchServiceImpl sut;
 
     Award award;
+    SubsidyMeasure subsidyMeasure;
     List<Award> awards = new ArrayList<>();
+    List<SubsidyMeasure> subsidyMeasures = new ArrayList<>();
 
     @BeforeEach
     public void setUp() {
@@ -68,7 +79,7 @@ public class SearchServiceImplTest {
         award.setBeneficiary(beneficiary);
 
         //SubsidyMeasure
-        SubsidyMeasure subsidyMeasure = new  SubsidyMeasure();
+        subsidyMeasure = new SubsidyMeasure();
         subsidyMeasure.setScNumber("SC10001");
         subsidyMeasure.setSubsidyMeasureTitle("title");
         subsidyMeasure.setAdhoc(false);
@@ -100,6 +111,8 @@ public class SearchServiceImplTest {
         awards.add(award);
         subsidyMeasure.setGrantingAuthority(grantingAuthority);
         MockitoAnnotations.openMocks(this);
+
+        subsidyMeasures.add(subsidyMeasure);
     }
 
     @Test
@@ -254,5 +267,54 @@ public class SearchServiceImplTest {
         Assertions.assertThrows(SearchResultNotFoundException.class, () -> {
             sut.findByAwardNumber(awardNumber);
         });
+    }
+
+    @Test
+    public void testFindSchemeByScNumber(){
+        SubsidyMeasureResponse smr = new SubsidyMeasureResponse(subsidyMeasure, true);
+        when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(subsidyMeasure);
+
+        SubsidyMeasureResponse actual = sut.findSchemeByScNumber("SC10001");
+        assertThat(actual.getScNumber()).isEqualTo("SC10001");
+
+        when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(null);
+        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> sut.findSchemeByScNumber("SC99999"));
+
+        String expectedMessage = "Scheme NotFound";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void testFindAllSchemes(){
+        Specification<SubsidyMeasure> smSpecifications = mock(Specification.class);
+        Pageable pageableMock = mock(Pageable.class);
+        Page<SubsidyMeasure> smPage = (Page<SubsidyMeasure>) mock(Page.class);
+
+        SearchInput searchInput = new SearchInput();
+        String[] sortBy = new String[1];
+        sortBy[0] = "scNumber,desc";
+
+        searchInput.setSortBy(sortBy);
+        searchInput.setPageNumber(1);
+        searchInput.setTotalRecordsPerPage(1);
+        searchInput.setScNumber("SC10001");
+        searchInput.setSubsidyMeasureTitle("Title");
+        searchInput.setGrantingAuthorityName("GA Name");
+        searchInput.setSubsidyStartDateFrom(LocalDate.now());
+        searchInput.setSubsidyStartDateTo(LocalDate.now());
+        searchInput.setSubsidyEndDateFrom(LocalDate.now());
+        searchInput.setSubsidyEndDateTo(LocalDate.now());
+        searchInput.setSubsidyStatus("active");
+        searchInput.setAdHoc("no");
+        searchInput.setBudgetFrom(new BigDecimal("500"));
+        searchInput.setBudgetTo(new BigDecimal("1000"));
+
+        when(subsidyMeasureRepositoryMock.findAll(any(Specification.class),any(Pageable.class))).thenReturn(smPage);
+        when(smPage.getContent()).thenReturn(subsidyMeasures);
+
+        SubsidyMeasuresResponse actual = sut.findAllSchemes(searchInput);
+        assertThat(actual).isNotNull();
+        verify(subsidyMeasureRepositoryMock, times(1)).findAll(any(Specification.class),any(Pageable.class));
     }
 }
