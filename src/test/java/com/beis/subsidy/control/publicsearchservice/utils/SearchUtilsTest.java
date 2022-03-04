@@ -129,4 +129,9 @@ public class SearchUtilsTest {
             assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Approver");
         }
     }
+
+    @Test
+    public void failTest(){
+        assertThat(true).isFalse();
+    }
 }
