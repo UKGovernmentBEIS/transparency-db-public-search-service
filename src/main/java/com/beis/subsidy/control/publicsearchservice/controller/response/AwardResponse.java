@@ -98,7 +98,7 @@ public class AwardResponse {
                 this.publishedAwardDate = SearchUtils.dateToFullMonthNameInDate(award.getPublishedAwardDate());
             }
         }
-        this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): null;
+        this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): "";
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
         this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
         if (flag) {
