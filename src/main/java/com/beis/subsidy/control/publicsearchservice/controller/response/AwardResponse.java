@@ -1,7 +1,5 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
-import java.time.LocalDate;
-
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -92,10 +90,10 @@ public class AwardResponse {
             this.approvedBy = award.getApprovedBy();
             this.createdTimestamp = SearchUtils.dateToFullMonthNameInDate(award.getCreatedTimestamp());
             this.lastModifiedTimestamp = SearchUtils.dateToFullMonthNameInDate(award.getLastModifiedTimestamp());
-            if ("Awaiting Approval".equals(this.status)) {
-                this.publishedAwardDate = "Awaiting Approval";
-            } else {
+            if("Published".equals(this.status)){
                 this.publishedAwardDate = SearchUtils.dateToFullMonthNameInDate(award.getPublishedAwardDate());
+            }else{
+                this.publishedAwardDate = this.status;
             }
         }
         this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): "";
