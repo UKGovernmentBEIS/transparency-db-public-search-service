@@ -103,4 +103,7 @@ public class SubsidyMeasure {
 
 	@Column(name = "DELETED_TIMESTAMP", columnDefinition = "TIMESTAMP")
 	private LocalDateTime deletedTimestamp;
+
+	@Column(name = "HAS_NO_END_DATE")
+	private boolean hasNoEndDate;
 }

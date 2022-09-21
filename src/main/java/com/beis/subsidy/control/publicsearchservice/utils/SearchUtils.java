@@ -8,10 +8,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,10 +50,14 @@ public class SearchUtils {
 	 * @return
 	 */
 	public static String dateToFullMonthNameInDate(LocalDate inputStringDate) {
-		log.info("input Date ::{}", inputStringDate);
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-		return dateFormat.format(inputStringDate);
+		if (!(inputStringDate == null)) {
+			log.info("input Date ::{}", inputStringDate);
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern(DATE_FORMAT);
+			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+			return dateFormat.format(inputStringDate);
+		} else {
+			return null;
+		}
 	}
 
 	public static String timestampToFullMonthNameInDate(Date inputDateObj) {

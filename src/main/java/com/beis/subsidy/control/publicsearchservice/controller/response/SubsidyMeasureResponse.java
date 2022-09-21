@@ -8,7 +8,6 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -71,11 +70,15 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private String createdTimestamp;
 
+    @JsonProperty
+    private boolean hasNoEndDate;
+
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
 
         this.scNumber = subsidyMeasure.getScNumber();
         this.subsidyMeasureTitle  = subsidyMeasure.getSubsidyMeasureTitle();
         this.adhoc = subsidyMeasure.isAdhoc();
+        this.hasNoEndDate = subsidyMeasure.isHasNoEndDate();
         if (showAll) {
             this.duration = subsidyMeasure.getDuration();
             this.status = subsidyMeasure.getStatus();
