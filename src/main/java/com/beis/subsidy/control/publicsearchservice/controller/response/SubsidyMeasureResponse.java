@@ -73,6 +73,9 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private boolean hasNoEndDate;
 
+    @JsonProperty
+    private String confirmationDate;
+
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
 
         this.scNumber = subsidyMeasure.getScNumber();
@@ -84,6 +87,7 @@ public class SubsidyMeasureResponse {
             this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
             this.gaSubsidyWebLinkDescription = subsidyMeasure.getGaSubsidyWebLinkDescription();
+            this.confirmationDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getConfirmationDate());
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
             this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
             BigDecimal budgetDecimal = new BigDecimal(subsidyMeasure.getBudget());
