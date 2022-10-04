@@ -153,4 +153,7 @@ public final class AwardSpecificationUtils {
 	    return MessageFormat.format("%{0}%", expression);
 	}
 
+	public static Specification<Award> isStandaloneAward() {
+		return (root, query, builder) -> builder.equal(root.get("standaloneAward"), "Yes");
+	}
 }
