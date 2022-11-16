@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class SearchController {
 
 	@Autowired
 	private SearchService searchService;
+
+	@Autowired
+	private HttpServletRequest request;
 	
 	/**
 	 * To get health of app 
@@ -66,6 +70,42 @@ public class SearchController {
 			SearchResults searchResults = searchService.findMatchingAwards(searchInput);
 			
 			return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
+	}
+
+	@PostMapping("/standaloneawards")
+	public ResponseEntity<SearchResults> findStandaloneAwards(@Valid @RequestBody SearchInput searchInput) {
+
+		String[] sort = new String[1];
+		String[] sortParam = {searchInput.getSortBy()[0]};
+		int limit = 10;
+		int page = 1;
+
+		if (sortParam[0] != ""){
+			String sortOrder = "asc";
+			String sortString = sortParam[0];
+			if(sortString.startsWith("-")){
+				sortOrder="desc";
+				sortString = sortString.substring(1);
+			}
+			sort[0] = sortString + "," + sortOrder;
+		}else{
+			sort[0] = "awardNumber,desc";
+		}
+
+		if(searchInput.getTotalRecordsPerPage() == 0) {
+			searchInput.setTotalRecordsPerPage(limit);
+		}
+
+		if(searchInput.getPageNumber() == 0) {
+			searchInput.setPageNumber(page);
+		}
+
+		searchInput.setSortBy(sort);
+
+		log.info("inside  findSearchResults::::");
+		SearchResults searchResults = searchService.findStandaloneAwards(searchInput);
+
+		return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
 	}
 
 	/**

@@ -15,4 +15,6 @@ public interface SearchService {
     SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput);
 
     SubsidyMeasureResponse findSchemeByScNumber(String scNumber);
+
+    SearchResults findStandaloneAwards(SearchInput searchInput);
 }
