@@ -179,6 +179,16 @@ public class SearchServiceImpl implements SearchService {
 				pageResults.getNumber() + 1, pageResults.getTotalPages());
 	}
 
+	@Override
+	public MFAAwardResponse findMfaByAwardNumber(Long mfaAwardNumber) {
+
+		MFAAward award = mfaAwardRepository.findByMfaAwardNumber(mfaAwardNumber);
+		if (award == null) {
+			throw new SearchResultNotFoundException("AwardResults NotFound");
+		}
+		return new MFAAwardResponse(award);
+	}
+
 	private Specification<MFAAward> getSpecificationMfaDetails(SearchInput searchInput) {
 		Specification<MFAAward> schemeSpecifications = Specification
 				.where(searchInput.getMfaAwardNumber() == null || searchInput.getMfaAwardNumber().isEmpty()

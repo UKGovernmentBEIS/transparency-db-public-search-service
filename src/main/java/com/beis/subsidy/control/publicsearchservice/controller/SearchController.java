@@ -1,6 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardsResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
@@ -20,12 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.math.BigDecimal;
@@ -236,5 +232,25 @@ public class SearchController {
 		MFAAwardsResponse response = searchService.findMatchingMfaAwards(searchInput);
 
 		return new ResponseEntity<MFAAwardsResponse>(response, HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/mfa/{mfaAwardNumber}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<MFAAwardResponse> findMfaAward(@PathVariable("mfaAwardNumber") String mfaAwardNumber) {
+		if (StringUtils.isEmpty(mfaAwardNumber)) {
+			throw new InvalidRequestException("Bad Request MFA Award is null");
+		}
+
+		if(!SearchUtils.isNumeric(mfaAwardNumber)){
+			return new ResponseEntity<MFAAwardResponse>(new MFAAwardResponse(), HttpStatus.BAD_REQUEST);
+		}
+
+		Long awardNumber = Long.parseLong(mfaAwardNumber);
+
+		MFAAwardResponse mfaAwardById = searchService.findMfaByAwardNumber(awardNumber);
+
+		return new ResponseEntity<MFAAwardResponse>(mfaAwardById, HttpStatus.OK);
 	}
 }
