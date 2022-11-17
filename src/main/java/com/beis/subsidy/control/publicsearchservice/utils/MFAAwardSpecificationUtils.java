@@ -67,7 +67,7 @@ public final class MFAAwardSpecificationUtils {
         }
     }
 
-    public static Specification<MFAAward> subsidyMeasureIsNotRejected() {
-        return (root, query, builder) -> builder.notEqual(root.get("status"), "Rejected");
+    public static Specification<MFAAward> mfaAwardIsNotStatus(String status) {
+        return (root, query, builder) -> builder.notEqual(builder.lower(root.get("status")), status.toLowerCase());
     }
 }
