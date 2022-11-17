@@ -127,6 +127,11 @@ public class SearchServiceImpl implements SearchService {
 		return subsidyMeasureSpecification;
 	}
 
+	private Specification<MFAAward> excludeRejectedMfaAwards(Specification<MFAAward> mfaAwardSpecification){
+		mfaAwardSpecification = mfaAwardSpecification.and(MFAAwardSpecificationUtils.subsidyMeasureIsNotRejected());
+		return mfaAwardSpecification;
+	}
+
 	@Override
 	public AwardResponse findByAwardNumber(Long awardNumber) {
 
@@ -171,6 +176,8 @@ public class SearchServiceImpl implements SearchService {
 		Pageable pagingSortMfaAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
 
 		mfaAwardSpecification = getSpecificationMfaDetails(searchInput);
+
+		mfaAwardSpecification = excludeRejectedMfaAwards(mfaAwardSpecification);
 
 		Page<MFAAward> pageResults = mfaAwardRepository.findAll(mfaAwardSpecification,pagingSortMfaAwards);
 

@@ -66,4 +66,8 @@ public final class MFAAwardSpecificationUtils {
             return (root, query, builder) -> builder.isFalse(root.get("isSPEI"));
         }
     }
+
+    public static Specification<MFAAward> subsidyMeasureIsNotRejected() {
+        return (root, query, builder) -> builder.notEqual(root.get("status"), "Rejected");
+    }
 }
