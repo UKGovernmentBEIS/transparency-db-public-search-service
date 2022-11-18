@@ -12,18 +12,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MFAAwardsResponse {
-    private long publishedMfaAwards;
-
-    private long awaitingMfaAwards;
-    private long rejectedMfaAwards;
-
-    private long deletedMfaAwards;
-    private long allMfaAwards;
     public long totalSearchResults;
     public int currentPage;
     public int totalPages;
@@ -37,11 +29,5 @@ public class MFAAwardsResponse {
         this.totalSearchResults = totalSearchResults;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
-
-//        this.publishedMfaAwards = mfaAwardCounts.get("publishedMfaAwards");
-//        this.awaitingMfaAwards = mfaAwardCounts.get("awaitingMfaAwards");
-//        this.rejectedMfaAwards = mfaAwardCounts.get("rejectedMfaAwards");
-//        this.deletedMfaAwards = mfaAwardCounts.get("deletedMfaAwards");
-//        this.allMfaAwards = mfaAwardCounts.get("allMfaAwards");
     }
 }
