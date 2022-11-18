@@ -204,8 +204,6 @@ public class SearchServiceImpl implements SearchService {
 						? null : MFAAwardSpecificationUtils.grantingAuthorityNameEqual(searchInput.getGrantingAuthorityName()))
 				.and(searchInput.getSubsidyStartDateFrom() == null || searchInput.getSubsidyStartDateTo() == null
 						? null : MFAAwardSpecificationUtils.mfaConfirmationDateBetween(searchInput.getSubsidyStartDateFrom(), searchInput.getSubsidyStartDateTo()))
-				.and(searchInput.getSubsidyEndDateFrom() == null || searchInput.getSubsidyEndDateTo() == null
-						? null : MFAAwardSpecificationUtils.mfaConfirmationDateBetween(searchInput.getSubsidyEndDateFrom(), searchInput.getSubsidyEndDateTo()))
 				.and(searchInput.getIsSpei() == null
 						? null : MFAAwardSpecificationUtils.isSpei(searchInput.getIsSpei()))
 				.and(searchInput.getBudgetFrom() != null || searchInput.getBudgetTo() != null
