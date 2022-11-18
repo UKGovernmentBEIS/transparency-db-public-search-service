@@ -152,6 +152,87 @@ public class SearchServiceImpl implements SearchService {
 		return new SubsidyMeasureResponse(scheme, true);
 	}
 
+	public Specification<Award>  getSpecificationStandaloneAwardDetails(SearchInput searchinput) {
+		Specification<Award> awardSpecifications = Specification
+				.where((AwardSpecificationUtils.isStandaloneAward()))
+
+				// Subsidy Objective
+				.and(searchinput.getSubsidyObjective() == null || searchinput.getSubsidyObjective().isEmpty()
+						? null : AwardSpecificationUtils.subsidyObjectiveIn(searchinput.getSubsidyObjective())
+						//Like search for other subsidy objective
+						.or(searchinput.getOtherSubsidyObjective() == null || searchinput.getOtherSubsidyObjective().isEmpty()
+								? null : AwardSpecificationUtils.otherSubsidyObjective(searchinput.getOtherSubsidyObjective())))
+
+				// Spending Sector
+				.and(searchinput.getSpendingSector() == null || searchinput.getSpendingSector().isEmpty()
+						? null : AwardSpecificationUtils.spendingSectorIn(searchinput.getSpendingSector()))
+
+				// Subsidy Instrument
+				.and(searchinput.getSubsidyInstrument() == null || searchinput.getSubsidyInstrument().isEmpty()
+						? null : AwardSpecificationUtils.subsidyInstrumentIn(searchinput.getSubsidyInstrument())
+						//Like search for other subsidy objective
+						.or(searchinput.getOtherSubsidyInstrument() == null || searchinput.getOtherSubsidyInstrument().isEmpty()
+								? null : AwardSpecificationUtils.otherSubsidyInstrumentIn(searchinput.getOtherSubsidyInstrument())));
+
+		return awardSpecifications;
+	}
+
+	@Override
+	public SearchResults findStandaloneAwards(SearchInput searchInput) {
+		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
+
+		List<String> otherSubsidyObjectiveList = new ArrayList<>();
+		List<String> otherSubsidyInstrumentList = new ArrayList<>();
+		if(searchInput != null && searchInput.getSubsidyObjective() != null && searchInput.getSubsidyObjective().size() > 0){
+			for(String subsidyObjective : searchInput.getSubsidyObjective()){
+				if(subsidyObjective.contains("Other")){
+					if(subsidyObjective.split("-").length > 1){
+						otherSubsidyObjectiveList.add(subsidyObjective.split("-")[1].trim());
+					} else {
+						otherSubsidyObjectiveList.add("Other");
+					}
+
+				}
+			}
+		}
+		if(searchInput != null && searchInput.getSubsidyInstrument() != null && searchInput.getSubsidyInstrument().size() > 0){
+			for(String subsidyInstrument : searchInput.getSubsidyInstrument()){
+				if(subsidyInstrument.contains("Other")){
+					if(subsidyInstrument.split("-").length > 1){
+						otherSubsidyInstrumentList.add(subsidyInstrument.split("-")[1].trim());
+					} else {
+						otherSubsidyInstrumentList.add("Other");
+					}
+				}
+			}
+		}
+		searchInput.setOtherSubsidyObjective(otherSubsidyObjectiveList);
+		searchInput.setOtherSubsidyInstrument(otherSubsidyInstrumentList);
+
+		Pageable pagingSortAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
+
+		Specification<Award> awardSpecifications = getSpecificationStandaloneAwardDetails(searchInput);
+
+		Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
+
+		List<Award> awardResults = pageAwards.getContent();
+		log.info("inside  awardResults.size::::" +awardResults.size());
+		SearchResults searchResults = null;
+
+		if (!awardResults.isEmpty()) {
+			log.info("SearchResult Found::::" );
+			searchResults = new SearchResults(awardResults, pageAwards.getTotalElements(),
+					pageAwards.getNumber() + 1, pageAwards.getTotalPages());
+		} else {
+
+			log.info("SearchResultNotFoundException::::" );
+			throw new SearchResultNotFoundException("AwardResults NotFound");
+
+		}
+
+		return searchResults;
+	}
+
 	@Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
 		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;

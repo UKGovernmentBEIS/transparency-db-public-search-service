@@ -16,4 +16,6 @@ public interface SearchService {
     MFAAwardsResponse findMatchingMfaAwards(SearchInput searchInput);
 
     MFAAwardResponse findMfaByAwardNumber(Long mfaAwardNumber);
+
+    SearchResults findStandaloneAwards(SearchInput searchInput);
 }

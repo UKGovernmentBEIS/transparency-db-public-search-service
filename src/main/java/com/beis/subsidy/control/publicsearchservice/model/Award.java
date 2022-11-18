@@ -42,7 +42,7 @@ public class Award {
 	private GrantingAuthority grantingAuthority;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "scNumber", nullable = false)
+    @JoinColumn(name = "scNumber")
 	@ToString.Exclude
 	private SubsidyMeasure subsidyMeasure;
 	
@@ -92,4 +92,10 @@ public class Award {
 	@UpdateTimestamp
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private LocalDate lastModifiedTimestamp;
+
+	@Column(name = "STANDALONE_AWARD")
+	private String standaloneAward;
+
+	@Column(name = "SUBSIDY_AWARD_DESCRIPTION")
+	private String subsidyAwardDescription;
 }
