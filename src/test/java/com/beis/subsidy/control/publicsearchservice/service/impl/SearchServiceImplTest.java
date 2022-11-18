@@ -345,6 +345,18 @@ public class SearchServiceImplTest {
         searchInput.setPageNumber(1);
         searchInput.setTotalRecordsPerPage(1);
 
+        searchInput.setMfaAwardNumber("1");
+        searchInput.setGrantingAuthorityName("TEST GA");
+        searchInput.setSubsidyStartDateFrom(LocalDate.now());
+        searchInput.setSubsidyStartDateTo(LocalDate.now());
+        searchInput.setIsSpei(false);
+        searchInput.setBudgetFrom(BigDecimal.valueOf(100000));
+        searchInput.setBudgetTo(BigDecimal.valueOf(200000));
+        searchInput.setSubsidyStatus("Published");
+        searchInput.setBeneficiaryName("Recipient");
+        searchInput.setMfaGroupingName("MFA Grouping Name");
+
+
         when(mfaAwardRepositoryMock.findAll(any(Specification.class),any(Pageable.class))).thenReturn(mfaAwardPage);
         when(mfaAwardPage.getContent()).thenReturn(mfaAwards);
 
