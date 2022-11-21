@@ -1,17 +1,18 @@
 package com.beis.subsidy.control.publicsearchservice.service.impl;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
-import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.MFAAward;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.MFAAwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.MFAGroupingRepository;
 import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
+import com.beis.subsidy.control.publicsearchservice.utils.MFAAwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 
 import com.beis.subsidy.control.publicsearchservice.utils.SubsidyMeasureSpecificationUtils;
@@ -41,6 +42,12 @@ public class SearchServiceImpl implements SearchService {
 	private AwardRepository awardRepository;
 	@Autowired
 	private SubsidyMeasureRepository schemeRepository;
+
+	@Autowired
+	private MFAGroupingRepository mfaGroupingRepository;
+
+	@Autowired
+	private MFAAwardRepository mfaAwardRepository;
 
 	/**
 	 * To return matching awards based on search inputs 
@@ -118,6 +125,11 @@ public class SearchServiceImpl implements SearchService {
 	private Specification<SubsidyMeasure> excludeDeleteSchemes(Specification<SubsidyMeasure> subsidyMeasureSpecification){
 		subsidyMeasureSpecification = subsidyMeasureSpecification.and(SubsidyMeasureSpecificationUtils.subsidyMeasureIsDeleted());
 		return subsidyMeasureSpecification;
+	}
+
+	private Specification<MFAAward> excludeMfaAwardsByStatus(Specification<MFAAward> mfaAwardSpecification, String status){
+		mfaAwardSpecification = mfaAwardSpecification.and(MFAAwardSpecificationUtils.mfaAwardIsNotStatus(status));
+		return mfaAwardSpecification;
 	}
 
 	@Override
@@ -236,6 +248,56 @@ public class SearchServiceImpl implements SearchService {
 		List<SubsidyMeasure> schemeResults = pageSchemes.getContent();
 		return new SubsidyMeasuresResponse(schemeResults, pageSchemes.getTotalElements(),
 				pageSchemes.getNumber() + 1, pageSchemes.getTotalPages());
+	}
+
+	@Override
+	public MFAAwardsResponse findMatchingMfaAwards(SearchInput searchInput) {
+		Specification<MFAAward> mfaAwardSpecification = null;
+		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
+		Pageable pagingSortMfaAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
+
+		mfaAwardSpecification = getSpecificationMfaDetails(searchInput);
+		mfaAwardSpecification = excludeMfaAwardsByStatus(mfaAwardSpecification, "Rejected");
+		mfaAwardSpecification = excludeMfaAwardsByStatus(mfaAwardSpecification, "Awaiting Approval");
+
+		Page<MFAAward> pageResults = mfaAwardRepository.findAll(mfaAwardSpecification,pagingSortMfaAwards);
+
+		List<MFAAward> results = pageResults.getContent();
+		return new MFAAwardsResponse(results, pageResults.getTotalElements(),
+				pageResults.getNumber() + 1, pageResults.getTotalPages());
+	}
+
+	@Override
+	public MFAAwardResponse findMfaByAwardNumber(Long mfaAwardNumber) {
+
+		MFAAward award = mfaAwardRepository.findByMfaAwardNumber(mfaAwardNumber);
+		if (award == null) {
+			throw new SearchResultNotFoundException("AwardResults NotFound");
+		}
+		return new MFAAwardResponse(award);
+	}
+
+	private Specification<MFAAward> getSpecificationMfaDetails(SearchInput searchInput) {
+		Specification<MFAAward> schemeSpecifications = Specification
+				.where(searchInput.getMfaAwardNumber() == null || searchInput.getMfaAwardNumber().isEmpty()
+						? null : MFAAwardSpecificationUtils.mfaAwardNumberEquals(searchInput.getMfaAwardNumber()))
+				.and(searchInput.getGrantingAuthorityName() == null || searchInput.getGrantingAuthorityName().isEmpty()
+						? null : MFAAwardSpecificationUtils.grantingAuthorityNameEqual(searchInput.getGrantingAuthorityName()))
+				.and(searchInput.getSubsidyStartDateFrom() == null || searchInput.getSubsidyStartDateTo() == null
+						? null : MFAAwardSpecificationUtils.mfaConfirmationDateBetween(searchInput.getSubsidyStartDateFrom(), searchInput.getSubsidyStartDateTo()))
+				.and(searchInput.getIsSpei() == null
+						? null : MFAAwardSpecificationUtils.isSpei(searchInput.getIsSpei()))
+				.and(searchInput.getBudgetFrom() != null || searchInput.getBudgetTo() != null
+						? MFAAwardSpecificationUtils.awardAmountBetween(searchInput.getBudgetFrom(), searchInput.getBudgetTo()) : null)
+				.and(searchInput.getSubsidyStatus() == null || searchInput.getSubsidyStatus().isEmpty()
+						? null : MFAAwardSpecificationUtils.mfaAwardStatusLike(searchInput.getSubsidyStatus()))
+				.and(searchInput.getBeneficiaryName() == null || searchInput.getBeneficiaryName().isEmpty()
+						? null : MFAAwardSpecificationUtils.mfaRecipientLike(searchInput.getBeneficiaryName()))
+				.and(searchInput.getMfaGroupingName() == null || searchInput.getMfaGroupingName().isEmpty()
+						? null : MFAAwardSpecificationUtils.mfaGroupingNameLike(searchInput.getMfaGroupingName()));
+
+
+		return schemeSpecifications;
 	}
 
 
