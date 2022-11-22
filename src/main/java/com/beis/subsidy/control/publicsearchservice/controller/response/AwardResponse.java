@@ -3,6 +3,9 @@ package com.beis.subsidy.control.publicsearchservice.controller.response;
 import java.time.LocalDate;
 
 import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -73,6 +76,12 @@ public class AwardResponse {
     @JsonProperty
     private String publishedAwardDate;
 
+    @JsonProperty
+    private String standaloneAward;
+
+    @JsonProperty
+    private String subsidyAwardDescription;
+
 
     public AwardResponse(Award award, boolean flag) {
     	
@@ -100,9 +109,29 @@ public class AwardResponse {
         }
         this.rejectReason = award.getReason()!= null ?  award.getReason().trim(): "";
         this.beneficiary = new BeneficiaryResponse(award.getBeneficiary(),flag);
-        this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
+        if(award.getSubsidyMeasure() != null){
+            this.subsidyMeasure = new SubsidyMeasureResponse(award.getSubsidyMeasure(),flag);
+        }else{
+            // mock details of a scheme this will likely be a standalone award
+            SubsidyMeasure mockedScheme = new SubsidyMeasure();
+            LegalBasis mockedLegal = new LegalBasis();
+            GrantingAuthority mockedGA = new GrantingAuthority();
+
+            mockedLegal.setLegalBasisText("Mocked");
+            mockedGA.setGrantingAuthorityName("Mocked");
+            mockedScheme.setStatus("Mocked");
+            mockedScheme.setScNumber("NA");
+            mockedScheme.setSubsidyMeasureTitle("NA");
+
+            mockedScheme.setLegalBases(mockedLegal);
+            mockedScheme.setGrantingAuthority(mockedGA);
+
+            this.subsidyMeasure = new SubsidyMeasureResponse(mockedScheme, false);
+        }
         if (flag) {
          this.grantingAuthorityResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
         }
+        this.standaloneAward = award.getStandaloneAward();
+        this.subsidyAwardDescription = award.getSubsidyAwardDescription();
     }
 }

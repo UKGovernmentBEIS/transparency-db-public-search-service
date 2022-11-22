@@ -129,4 +129,25 @@ public class SearchUtilsTest {
             assertThat(ga.getGrantingAuthorityName()).isNotEqualTo("Granting Authority Approver");
         }
     }
+
+    @Test
+    public void testisNumeric() {
+        String numberString = "100";
+        Boolean isNumeric = SearchUtils.isNumeric(numberString);
+        assertThat(isNumeric).isTrue();
+    }
+
+    @Test
+    public void testisNumericNull() {
+        String numberString = null;
+        Boolean isNumeric = SearchUtils.isNumeric(numberString);
+        assertThat(isNumeric).isFalse();
+    }
+
+    @Test
+    public void testisNumericNotNumeric() {
+        String numberString = "X";
+        Boolean isNumeric = SearchUtils.isNumeric(numberString);
+        assertThat(isNumeric).isFalse();
+    }
 }

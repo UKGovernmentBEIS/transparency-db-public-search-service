@@ -1,18 +1,17 @@
 package com.beis.subsidy.control.publicsearchservice.service.impl;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
-import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
 import com.beis.subsidy.control.publicsearchservice.model.*;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.MFAAwardRepository;
 import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
@@ -24,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +43,9 @@ public class SearchServiceImplTest {
     private final SubsidyMeasureRepository subsidyMeasureRepositoryMock = mock(SubsidyMeasureRepository.class);
     private final PageRequest pageRequestMock = mock(PageRequest.class);
 
+    @Mock
+    MFAAwardRepository mfaAwardRepositoryMock;
+
     @InjectMocks
     private SearchServiceImpl sut;
 
@@ -50,6 +53,9 @@ public class SearchServiceImplTest {
     SubsidyMeasure subsidyMeasure;
     List<Award> awards = new ArrayList<>();
     List<SubsidyMeasure> subsidyMeasures = new ArrayList<>();
+    List<MFAAward> mfaAwards = new ArrayList<>();
+
+    MFAAward mfaAward;
 
     @BeforeEach
     public void setUp() {
@@ -113,6 +119,16 @@ public class SearchServiceImplTest {
         MockitoAnnotations.openMocks(this);
 
         subsidyMeasures.add(subsidyMeasure);
+
+        // MFA Awards
+        mfaAward = new MFAAward();
+        mfaAward.setMfaAwardNumber(1L);
+        mfaAward.setAwardAmount(BigDecimal.valueOf(1000));
+        mfaAward.setGrantingAuthority(grantingAuthority);
+        mfaAward.setCreatedTimestamp(LocalDateTime.now());
+        mfaAward.setLastModifiedTimestamp(LocalDateTime.now());
+
+        mfaAwards.add(mfaAward);
     }
 
     @Test
@@ -316,5 +332,36 @@ public class SearchServiceImplTest {
         SubsidyMeasuresResponse actual = sut.findAllSchemes(searchInput);
         assertThat(actual).isNotNull();
         verify(subsidyMeasureRepositoryMock, times(1)).findAll(any(Specification.class),any(Pageable.class));
+    }
+
+    @Test
+    public void testFindAllMfaAwards(){
+        SearchInput searchInput = new SearchInput();
+        Page<MFAAward> mfaAwardPage = (Page<MFAAward>) mock(Page.class);
+        String[] sortBy = new String[1];
+        sortBy[0] = "mfaAwardNumber,desc";
+
+        searchInput.setSortBy(sortBy);
+        searchInput.setPageNumber(1);
+        searchInput.setTotalRecordsPerPage(1);
+
+        searchInput.setMfaAwardNumber("1");
+        searchInput.setGrantingAuthorityName("TEST GA");
+        searchInput.setSubsidyStartDateFrom(LocalDate.now());
+        searchInput.setSubsidyStartDateTo(LocalDate.now());
+        searchInput.setIsSpei(false);
+        searchInput.setBudgetFrom(BigDecimal.valueOf(100000));
+        searchInput.setBudgetTo(BigDecimal.valueOf(200000));
+        searchInput.setSubsidyStatus("Published");
+        searchInput.setBeneficiaryName("Recipient");
+        searchInput.setMfaGroupingName("MFA Grouping Name");
+
+
+        when(mfaAwardRepositoryMock.findAll(any(Specification.class),any(Pageable.class))).thenReturn(mfaAwardPage);
+        when(mfaAwardPage.getContent()).thenReturn(mfaAwards);
+
+        MFAAwardsResponse results = sut.findMatchingMfaAwards(searchInput);
+        assertThat(results.mfaAwards.size()).isGreaterThan(0);
+        assertThat(results.mfaAwards.get(0).getMfaAwardNumber()).isEqualTo(mfaAward.getMfaAwardNumber());
     }
 }

@@ -76,6 +76,9 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private String confirmationDate;
 
+    @JsonProperty
+    private String spendingSectors;
+
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
 
         this.scNumber = subsidyMeasure.getScNumber();
@@ -104,5 +107,6 @@ public class SubsidyMeasureResponse {
         }
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
+        this.spendingSectors = subsidyMeasure.getSpendingSectors();
     }
 }
