@@ -4,6 +4,7 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.Column;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -74,6 +75,9 @@ public class SubsidyMeasureResponse {
     private boolean hasNoEndDate;
 
     @JsonProperty
+    private String subsidySchemeDescription;
+    
+    @JsonProperty
     private String confirmationDate;
 
     @JsonProperty
@@ -107,6 +111,7 @@ public class SubsidyMeasureResponse {
         }
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
+        this.subsidySchemeDescription = subsidyMeasure.getSubsidySchemeDescription();
         this.spendingSectors = subsidyMeasure.getSpendingSectors();
     }
 }
