@@ -76,6 +76,12 @@ public class SubsidyMeasureResponse {
 
     @JsonProperty
     private String subsidySchemeDescription;
+    
+    @JsonProperty
+    private String confirmationDate;
+
+    @JsonProperty
+    private String spendingSectors;
 
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
 
@@ -88,6 +94,7 @@ public class SubsidyMeasureResponse {
             this.status = subsidyMeasure.getStatus();
             this.gaSubsidyWebLink = subsidyMeasure.getGaSubsidyWebLink();
             this.gaSubsidyWebLinkDescription = subsidyMeasure.getGaSubsidyWebLinkDescription();
+            this.confirmationDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getConfirmationDate());
             this.startDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getStartDate());
             this.endDate = SearchUtils.dateToFullMonthNameInDate(subsidyMeasure.getEndDate());
             BigDecimal budgetDecimal = new BigDecimal(subsidyMeasure.getBudget());
@@ -105,5 +112,6 @@ public class SubsidyMeasureResponse {
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
         this.subsidySchemeDescription = subsidyMeasure.getSubsidySchemeDescription();
+        this.spendingSectors = subsidyMeasure.getSpendingSectors();
     }
 }

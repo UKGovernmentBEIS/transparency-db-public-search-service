@@ -177,6 +177,7 @@
 						<exclude>com/beis/subsidy/control/publicsearchservice/model/*.class</exclude>
 						<exclude>com/beis/subsidy/control/publicsearchservice/utils/AwardSpecificationUtils.class</exclude>
 						<exclude>com/beis/subsidy/control/publicsearchservice/utils/SubsidyMeasureSpecificationUtils.class</exclude>
+						<exclude>com/beis/subsidy/control/publicsearchservice/utils/MFAAwardSpecificationUtils.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>

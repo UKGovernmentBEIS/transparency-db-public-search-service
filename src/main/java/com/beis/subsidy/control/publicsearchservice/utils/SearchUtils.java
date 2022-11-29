@@ -74,7 +74,7 @@ public class SearchUtils {
 	 */
 	public static String dateTimeToFullMonthNameInDate(LocalDateTime inputDateTime) {
 		log.info("input Date ::{}", inputDateTime);
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy H:m:ss");
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy H:mm:ss");
 		return dateFormat.format(inputDateTime);
 	}
 
@@ -168,5 +168,17 @@ public class SearchUtils {
 		} catch (ParseException e) {
 			return false;
 		}
+	}
+
+	public static boolean isNumeric(String strNum) {
+		if (strNum == null) {
+			return false;
+		}
+		try {
+			double d = Double.parseDouble(strNum);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
 	}
 }
