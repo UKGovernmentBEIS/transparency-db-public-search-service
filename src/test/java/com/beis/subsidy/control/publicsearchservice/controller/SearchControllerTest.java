@@ -367,4 +367,52 @@ public class SearchControllerTest {
         assertThat(mfaAwardsResponseActual.getMfaAwards()).isNotNull();
         assertThat(mfaAwardsResponseActual.getMfaAwards().size()).isEqualTo(3);
     }
+
+    @Test
+    public void testFindStandaloneAwards(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        String[] sortArray = {""};
+        searchInput.setSortBy(sortArray);
+
+        searchInput.setTotalRecordsPerPage(0);
+        when(searchServiceMock.findStandaloneAwards(searchInput)).thenReturn(searchResultsResponse);
+        ResponseEntity<?> actual = searchController
+                .findStandaloneAwards(searchInput);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+        verify(searchServiceMock, times(1)).findStandaloneAwards(searchInput);
+    }
+
+    @Test
+    public void testFindStandaloneAwardsSorted(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        String[] sortArray = {"awardNumber"};
+        searchInput.setSortBy(sortArray);
+
+        searchInput.setTotalRecordsPerPage(0);
+        when(searchServiceMock.findStandaloneAwards(searchInput)).thenReturn(searchResultsResponse);
+        ResponseEntity<?> actual = searchController
+                .findStandaloneAwards(searchInput);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+        verify(searchServiceMock, times(1)).findStandaloneAwards(searchInput);
+    }
+
+    @Test
+    public void testFindStandaloneAwardsSortedDesc(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        String[] sortArray = {"-awardNumber"};
+        searchInput.setSortBy(sortArray);
+
+        searchInput.setTotalRecordsPerPage(0);
+        when(searchServiceMock.findStandaloneAwards(searchInput)).thenReturn(searchResultsResponse);
+        ResponseEntity<?> actual = searchController
+                .findStandaloneAwards(searchInput);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+        verify(searchServiceMock, times(1)).findStandaloneAwards(searchInput);
+    }
 }
