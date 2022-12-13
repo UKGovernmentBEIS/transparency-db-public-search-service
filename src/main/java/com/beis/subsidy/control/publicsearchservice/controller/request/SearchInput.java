@@ -65,4 +65,10 @@ public class SearchInput {
 	private BigDecimal budgetFrom;
 
 	private BigDecimal budgetTo;
+
+	private String mfaAwardNumber;
+
+	private Boolean isSpei;
+
+	private String mfaGroupingName;
 }
