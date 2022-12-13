@@ -14,7 +14,7 @@
   </scm>
 	<groupId>com.beis.subsidy.control</groupId>
 	<artifactId>public-search-service</artifactId>
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.5.1-SNAPSHOT</version>
 	<name>public-search-service</name>
 	<description>Transparency DB Public Search Service Api</description>
 
