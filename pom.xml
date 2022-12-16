@@ -10,11 +10,11 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/UKGovernmentBEIS/transparency-db-public-search-service/</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>release-0.5.1</tag>
   </scm>
 	<groupId>com.beis.subsidy.control</groupId>
 	<artifactId>public-search-service</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>0.5.1</version>
 	<name>public-search-service</name>
 	<description>Transparency DB Public Search Service Api</description>
 
