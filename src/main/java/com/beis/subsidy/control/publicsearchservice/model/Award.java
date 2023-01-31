@@ -98,4 +98,8 @@ public class Award {
 
 	@Column(name = "SUBSIDY_AWARD_DESCRIPTION")
 	private String subsidyAwardDescription;
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "apNumber")
+	private AdminProgram adminProgram;
 }
