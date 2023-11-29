@@ -92,7 +92,7 @@ public class SearchUtilsTest {
         String dataIp5 ="1000000 or more";
         formatAmountRange = SearchUtils.formatedFullAmountRange(dataIp5);
         assertThat(formatAmountRange).isNotNull();
-        assertThat(formatAmountRange.contains("or more")).isTrue();
+        assertThat(formatAmountRange.contains("OR MORE")).isTrue();
         assertThat(formatAmountRange.contains("£")).isTrue();
     }
 

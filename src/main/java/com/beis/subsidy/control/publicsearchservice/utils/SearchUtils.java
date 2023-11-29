@@ -100,7 +100,7 @@ public class SearchUtils {
 		amountRange = (StringUtils.isNotBlank(amountRange)) ? amountRange.toUpperCase() : amountRange;
 		if (StringUtils.isNotBlank(amountRange) &&
 				!(amountRange.equalsIgnoreCase("NA") || amountRange.contains("N/A"))
-		&& !amountRange.endsWith("or more")) {
+		&& !amountRange.endsWith("OR MORE")) {
 
 			StringBuilder format = new StringBuilder();
 			String[] tokens = amountRange.split("-");
@@ -114,9 +114,9 @@ public class SearchUtils {
 							.append(decimalNumberFormat(new BigDecimal(amountRange))).toString() : "0";
 			}
 
-		} else if(StringUtils.isNotBlank(amountRange) && amountRange.endsWith("or more")) {
+		} else if(StringUtils.isNotBlank(amountRange) && amountRange.endsWith("OR MORE")) {
 			String removedLessThanVal = amountRange.substring(0, amountRange.length()-7).trim();
-			finalAmtRange = "£"  + decimalNumberFormat(new BigDecimal(removedLessThanVal)) + " or more";
+			finalAmtRange = "£"  + decimalNumberFormat(new BigDecimal(removedLessThanVal)) + " OR MORE";
 		}
 		return finalAmtRange;
 	}
