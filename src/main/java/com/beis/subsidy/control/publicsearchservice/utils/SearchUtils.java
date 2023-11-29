@@ -97,10 +97,9 @@ public class SearchUtils {
 	 */
 	public static String formatedFullAmountRange(String amountRange) {
 		String finalAmtRange = "NA";
-		amountRange = (StringUtils.isNotBlank(amountRange)) ? amountRange.toUpperCase() : null;
+		amountRange = (StringUtils.isNotBlank(amountRange)) ? amountRange.toUpperCase() : amountRange;
 		if (StringUtils.isNotBlank(amountRange) &&
-				!(amountRange.equalsIgnoreCase("NA") || amountRange.contains("N/A")
-						|| amountRange.contains("n/a"))
+				!(amountRange.equalsIgnoreCase("NA") || amountRange.contains("N/A"))
 		&& !amountRange.endsWith("or more")) {
 
 			StringBuilder format = new StringBuilder();
