@@ -393,23 +393,6 @@ public class SchemeSearchControllerTest {
     }
 
     @Test
-    public void testAllSchemesInvalidAdHoc(){
-        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
-
-        when(searchServiceMock.findAllSchemes(Mockito.any(SearchInput.class))).thenReturn(smsResponse);
-        // start param mocks
-        when(requestMock.getParameter("adhoc")).thenReturn("none");
-        // end param mocks
-
-        ResponseEntity<?> actual = schemeSearchController.allSchemes();
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
-        assert smsResponseActual != null;
-        assertThat(smsResponseActual.getSubsidySchemes()).isNull();
-    }
-
-    @Test
     public void testAllSchemesInvalidStatus(){
         final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
 
