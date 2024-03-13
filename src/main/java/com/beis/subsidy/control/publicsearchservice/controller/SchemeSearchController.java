@@ -222,18 +222,6 @@ public class SchemeSearchController {
 			}
 		}
 
-		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("adhoc"))){
-			switch(request.getParameter("adhoc").toLowerCase()){
-				case "yes":
-				case "no":
-					searchInput.setAdHoc(request.getParameter("adhoc").toLowerCase());
-					break;
-				default:
-					log.error("Invalid value given AdHoc: " + request.getParameter("adhoc"));
-					return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
-			}
-		}
-
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);
 		searchInput.setSortBy(sort);
