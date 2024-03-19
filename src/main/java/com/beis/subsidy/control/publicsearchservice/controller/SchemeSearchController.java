@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -271,6 +272,24 @@ public class SchemeSearchController {
 		}
 		log.info("inside  getAwardDetailsByAwardNumber::::{}",scNumber);
 		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumber(scNumber);
+		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
+	}
+
+	/**
+	 * To get details of scheme based on schemeNumber
+	 * @return ResponseEntity - Return associated scheme details in the response
+	 */
+	@PostMapping(
+			path = "/scheme/withawards/{schemeNumber}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasureResponse> getSchemeDetailsByScNumberWithAwards(@PathVariable("schemeNumber") String scNumber, @Valid @RequestBody SearchInput searchInput) {
+
+		if(StringUtils.isEmpty(scNumber)) {
+			throw new InvalidRequestException("Invalid Request");
+		}
+		log.info("inside  getAwardDetailsByAwardNumber::::{}",scNumber);
+		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumberWithAwards(scNumber, searchInput);
 		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
 	}
 }
