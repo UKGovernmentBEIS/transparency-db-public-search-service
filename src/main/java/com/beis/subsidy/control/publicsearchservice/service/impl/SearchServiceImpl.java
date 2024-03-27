@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for Public Search service 
@@ -145,11 +146,20 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public SubsidyMeasureResponse findSchemeByScNumber(String scNumber){
 		SubsidyMeasure scheme = schemeRepository.findByScNumber(scNumber);
-
 		if (scheme == null){
 			throw new SearchResultNotFoundException("Scheme NotFound");
 		}
 		return new SubsidyMeasureResponse(scheme, true);
+	}
+
+	@Override
+	public SubsidyMeasureResponse findSchemeByScNumberWithAwards(String scNumber, SearchInput awardsSearchInput){
+		SubsidyMeasure subsidyMeasure = schemeRepository.findByScNumber(scNumber);
+		if (subsidyMeasure == null){
+			throw new SearchResultNotFoundException("Subsidy measure NotFound");
+		}
+		SearchResults searchResults = findMatchingAwards(awardsSearchInput);
+		return new SubsidyMeasureResponse(subsidyMeasure, true, searchResults);
 	}
 
 	public Specification<Award>  getSpecificationStandaloneAwardDetails(SearchInput searchinput) {

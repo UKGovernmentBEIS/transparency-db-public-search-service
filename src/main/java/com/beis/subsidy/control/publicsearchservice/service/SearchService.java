@@ -12,6 +12,7 @@ public interface SearchService {
     SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput);
 
     SubsidyMeasureResponse findSchemeByScNumber(String scNumber);
+    SubsidyMeasureResponse findSchemeByScNumberWithAwards(String scNumber, SearchInput awardsSearchInput);
 
     MFAAwardsResponse findMatchingMfaAwards(SearchInput searchInput);
 
