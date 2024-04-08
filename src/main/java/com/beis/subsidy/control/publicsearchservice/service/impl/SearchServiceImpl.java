@@ -158,8 +158,14 @@ public class SearchServiceImpl implements SearchService {
 		if (subsidyMeasure == null){
 			throw new SearchResultNotFoundException("Subsidy measure NotFound");
 		}
-		SearchResults searchResults = findMatchingAwards(awardsSearchInput);
-		return new SubsidyMeasureResponse(subsidyMeasure, true, searchResults);
+		try {
+			SearchResults searchResults = findMatchingAwards(awardsSearchInput);
+			return new SubsidyMeasureResponse(subsidyMeasure, true, searchResults);
+		}
+		catch(SearchResultNotFoundException ex)
+		{
+			return new SubsidyMeasureResponse(subsidyMeasure, true, new SearchResults());
+		}
 	}
 
 	public Specification<Award>  getSpecificationStandaloneAwardDetails(SearchInput searchinput) {
@@ -385,7 +391,8 @@ public class SearchServiceImpl implements SearchService {
 						//Like search for other subsidy objective
 						.or(searchinput.getOtherSubsidyObjective() == null || searchinput.getOtherSubsidyObjective().isEmpty()
 								? null : AwardSpecificationUtils.otherSubsidyObjective(searchinput.getOtherSubsidyObjective())))
-
+				.and(searchinput.getScNumber() == null || searchinput.getScNumber().isEmpty()
+						? null : AwardSpecificationUtils.scNumber(searchinput.getScNumber()))
 				// getSpendingRegion from input parameter
 				.and(searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().isEmpty()
 						? null : AwardSpecificationUtils.spendingRegionIn(searchinput.getSpendingRegion()))
