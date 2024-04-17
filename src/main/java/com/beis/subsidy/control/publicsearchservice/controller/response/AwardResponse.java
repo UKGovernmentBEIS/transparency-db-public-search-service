@@ -88,6 +88,12 @@ public class AwardResponse {
     @JsonProperty
     private String adminProgramName;
 
+    @JsonProperty
+    private String authorityURL;
+
+    @JsonProperty
+    private String authorityURLDescription;
+
     public AwardResponse(Award award, boolean flag) {
     	
     	log.info("inside  AwardResponse::");
@@ -145,6 +151,19 @@ public class AwardResponse {
         }else{
             this.adminProgramNumber = "NA";
             this.adminProgramName = "NA";
+        }
+
+        if(award.getStandaloneAward() != null && award.getStandaloneAward().equalsIgnoreCase("yes")) {
+            if (award.getAuthorityURL() != null)
+                this.authorityURL = award.getAuthorityURL();
+
+            if(award.getAuthorityURLDescription() != null)
+                this.authorityURLDescription = award.getAuthorityURLDescription();
+
+        }
+        else {
+            this.authorityURL = null;
+            this.authorityURLDescription = null;
         }
     }
 }
