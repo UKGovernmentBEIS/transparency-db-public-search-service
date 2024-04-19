@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for Public Search service 
@@ -145,11 +146,26 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public SubsidyMeasureResponse findSchemeByScNumber(String scNumber){
 		SubsidyMeasure scheme = schemeRepository.findByScNumber(scNumber);
-
 		if (scheme == null){
 			throw new SearchResultNotFoundException("Scheme NotFound");
 		}
 		return new SubsidyMeasureResponse(scheme, true);
+	}
+
+	@Override
+	public SubsidyMeasureResponse findSchemeByScNumberWithAwards(String scNumber, SearchInput awardsSearchInput){
+		SubsidyMeasure subsidyMeasure = schemeRepository.findByScNumber(scNumber);
+		if (subsidyMeasure == null){
+			throw new SearchResultNotFoundException("Subsidy measure NotFound");
+		}
+		try {
+			SearchResults searchResults = findMatchingAwards(awardsSearchInput);
+			return new SubsidyMeasureResponse(subsidyMeasure, true, searchResults);
+		}
+		catch(SearchResultNotFoundException ex)
+		{
+			return new SubsidyMeasureResponse(subsidyMeasure, true, new SearchResults());
+		}
 	}
 
 	public Specification<Award>  getSpecificationStandaloneAwardDetails(SearchInput searchinput) {
@@ -375,7 +391,8 @@ public class SearchServiceImpl implements SearchService {
 						//Like search for other subsidy objective
 						.or(searchinput.getOtherSubsidyObjective() == null || searchinput.getOtherSubsidyObjective().isEmpty()
 								? null : AwardSpecificationUtils.otherSubsidyObjective(searchinput.getOtherSubsidyObjective())))
-
+				.and(searchinput.getScNumber() == null || searchinput.getScNumber().isEmpty()
+						? null : AwardSpecificationUtils.scNumber(searchinput.getScNumber()))
 				// getSpendingRegion from input parameter
 				.and(searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().isEmpty()
 						? null : AwardSpecificationUtils.spendingRegionIn(searchinput.getSpendingRegion()))
