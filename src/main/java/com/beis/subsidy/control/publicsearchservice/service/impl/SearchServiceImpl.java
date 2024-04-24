@@ -319,7 +319,7 @@ public class SearchServiceImpl implements SearchService {
 	        }
 	      } else {
 	    	//Default sort - Legal Granting Date with recent one at top	
-	        orders.add(new Order(getSortDirection("desc"), "legalGrantingDate"));
+	        orders.add(new Order(getSortDirection("desc"), "lastModifiedTimestamp"));
 	      }
 
 		return orders;
