@@ -23,9 +23,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,8 +66,8 @@ public class SchemeSearchControllerTest {
         sm.setStartDate(LocalDate.now());
         sm.setEndDate(LocalDate.now());
         sm.setPublishedMeasureDate(LocalDate.now());
-        sm.setCreatedTimestamp(new Date(System.currentTimeMillis()));
-        sm.setLastModifiedTimestamp(new Date(System.currentTimeMillis()));
+        sm.setCreatedTimestamp(LocalDateTime.now());
+        sm.setLastModifiedTimestamp(LocalDateTime.now());
         sm.setBudget("5000000");
         sm.setGrantingAuthority(ga);
         sm.setLegalBases(lb);

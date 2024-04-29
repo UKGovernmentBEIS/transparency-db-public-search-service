@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +31,8 @@ public class SubsidyMeasureResponseTest {
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStartDate(LocalDate.now());
         subsidyMeasure.setEndDate(LocalDate.now());
-        subsidyMeasure.setCreatedTimestamp(new Date());
-        subsidyMeasure.setLastModifiedTimestamp(new Date());
+        subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
         subsidyMeasure.setBudget("1000000");
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
