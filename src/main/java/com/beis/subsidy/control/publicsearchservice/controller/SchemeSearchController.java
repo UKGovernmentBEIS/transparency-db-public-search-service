@@ -9,6 +9,7 @@ import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -279,5 +280,24 @@ public class SchemeSearchController {
 		log.info("inside  getAwardDetailsByAwardNumber::::{}",scNumber);
 		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumberWithAwards(scNumber, searchInput);
 		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/scheme/{scNumber}/version/{version}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasureVersionResponse> findSubsidySchemeVersion(@RequestHeader("userPrinciple") HttpHeaders userPrinciple,
+																				  @PathVariable("scNumber") String scNumber,@PathVariable("version") String version) {
+		log.info("inside  findSubsidySchemeVersion::::{} version {}", scNumber, version);
+
+		if (StringUtils.isEmpty(scNumber)) {
+			throw new InvalidRequestException("Bad Request SC Number is null");
+		}
+		if (StringUtils.isEmpty(version)) {
+			throw new InvalidRequestException("Bad Request version is null");
+		}
+		SubsidyMeasureVersionResponse schemeVersion = searchService.findSubsidySchemeVersion(scNumber,version);
+
+		return new ResponseEntity<SubsidyMeasureVersionResponse>(schemeVersion, HttpStatus.OK);
 	}
 }
