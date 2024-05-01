@@ -1,7 +1,5 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
-import java.time.LocalDate;
-
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;

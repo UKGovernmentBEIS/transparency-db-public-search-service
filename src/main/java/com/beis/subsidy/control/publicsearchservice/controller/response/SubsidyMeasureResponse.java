@@ -4,7 +4,6 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.Column;
 import lombok.Getter;
 
 import java.math.BigDecimal;
