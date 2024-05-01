@@ -61,6 +61,7 @@ public class SearchResultsTest {
         subsidyMeasure.setApprovedBy("SYSTEM");
         subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
         subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setSchemeVersions(new ArrayList<>());
         award.setSubsidyMeasure(subsidyMeasure);
 
         LegalBasis legalBasis = new LegalBasis();

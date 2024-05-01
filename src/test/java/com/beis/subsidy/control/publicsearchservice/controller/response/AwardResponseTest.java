@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,6 +60,7 @@ public class AwardResponseTest {
         subsidyMeasure.setApprovedBy("SYSTEM");
         subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
         subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setSchemeVersions(new ArrayList<>());
 
         LegalBasis legalBasis = new LegalBasis();
         legalBasis.setLegalBasisText("legal text");
