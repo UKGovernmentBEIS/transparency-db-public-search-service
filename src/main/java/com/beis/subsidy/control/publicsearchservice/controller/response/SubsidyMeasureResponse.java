@@ -89,6 +89,9 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private SearchResults awardSearchResults;
 
+    @JsonProperty
+    private String subsidySchemeInterest;
+
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
 
         this.scNumber = subsidyMeasure.getScNumber();
@@ -120,6 +123,7 @@ public class SubsidyMeasureResponse {
         this.subsidySchemeDescription = subsidyMeasure.getSubsidySchemeDescription();
         this.spendingSectors = subsidyMeasure.getSpendingSectors();
         this.maximumAmountUnderScheme = subsidyMeasure.getMaximumAmountUnderScheme();
+        this.subsidySchemeInterest = subsidyMeasure.getSubsidySchemeInterest();
     }
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll, SearchResults awardSearchResults) {
 
@@ -153,5 +157,6 @@ public class SubsidyMeasureResponse {
         this.spendingSectors = subsidyMeasure.getSpendingSectors();
         this.maximumAmountUnderScheme = subsidyMeasure.getMaximumAmountUnderScheme();
         this.awardSearchResults = awardSearchResults;
+        this.subsidySchemeInterest = subsidyMeasure.getSubsidySchemeInterest();
     }
 }

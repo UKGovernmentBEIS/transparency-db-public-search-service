@@ -102,4 +102,7 @@ public class Award {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "apNumber")
 	private AdminProgram adminProgram;
+
+	@Column(name = "SUBSIDY_AWARD_INTEREST")
+	private String subsidyAwardInterest;
 }

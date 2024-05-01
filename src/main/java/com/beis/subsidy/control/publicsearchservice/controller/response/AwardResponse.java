@@ -88,6 +88,9 @@ public class AwardResponse {
     @JsonProperty
     private String adminProgramName;
 
+    @JsonProperty
+    private String subsidyAwardInterest;
+
     public AwardResponse(Award award, boolean flag) {
     	
     	log.info("inside  AwardResponse::");
@@ -146,5 +149,6 @@ public class AwardResponse {
             this.adminProgramNumber = "NA";
             this.adminProgramName = "NA";
         }
+        this.subsidyAwardInterest = award.getSubsidyAwardInterest();
     }
 }
