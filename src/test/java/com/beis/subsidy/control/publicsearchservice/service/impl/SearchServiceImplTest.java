@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -41,8 +42,8 @@ public class SearchServiceImplTest {
 
     private final AwardRepository awardRepository = mock(AwardRepository.class);
     private final SubsidyMeasureRepository subsidyMeasureRepositoryMock = mock(SubsidyMeasureRepository.class);
+    private final AwardRepository awardRepositoryMock = mock(AwardRepository.class);
     private final PageRequest pageRequestMock = mock(PageRequest.class);
-
     @Mock
     MFAAwardRepository mfaAwardRepositoryMock;
 
@@ -51,6 +52,7 @@ public class SearchServiceImplTest {
 
     Award award;
     SubsidyMeasure subsidyMeasure;
+    SubsidyMeasure subsidyMeasureWithoutAwards;
     List<Award> awards = new ArrayList<>();
     List<SubsidyMeasure> subsidyMeasures = new ArrayList<>();
     List<MFAAward> mfaAwards = new ArrayList<>();
@@ -74,7 +76,7 @@ public class SearchServiceImplTest {
         award.setSubsidyFullAmountExact(new BigDecimal(100000.0));
         award.setSpendingSector("spendingSector");
         award.setLegalGrantingDate(LocalDate.now());
-        award.setStatus("status");
+        award.setStatus("Active");
         award.setPublishedAwardDate(LocalDate.now());
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
@@ -85,28 +87,14 @@ public class SearchServiceImplTest {
         award.setBeneficiary(beneficiary);
 
         //SubsidyMeasure
-        subsidyMeasure = new SubsidyMeasure();
-        subsidyMeasure.setScNumber("SC10001");
-        subsidyMeasure.setSubsidyMeasureTitle("title");
-        subsidyMeasure.setAdhoc(false);
-        subsidyMeasure.setDuration(new BigInteger("200"));
-        subsidyMeasure.setStatus("DEFAULT");
-        subsidyMeasure.setGaSubsidyWebLink("www.BEIS.com");
-        subsidyMeasure.setStatus("DEFAULT");
-        subsidyMeasure.setStatus("DEFAULT");
-        subsidyMeasure.setStatus("DEFAULT");
-        subsidyMeasure.setStartDate(LocalDate.now());
-        subsidyMeasure.setEndDate(LocalDate.now());
-        subsidyMeasure.setBudget("1000000");
-        subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
-        subsidyMeasure.setCreatedBy("SYSTEM");
-        subsidyMeasure.setApprovedBy("SYSTEM");
-        subsidyMeasure.setCreatedTimestamp(new Date());
-        subsidyMeasure.setLastModifiedTimestamp(new Date());
+        subsidyMeasure = getSubsidyMeasure();
+
+        subsidyMeasureWithoutAwards = getSubsidyMeasure();
         // Legal Basis text
         LegalBasis legalBasis = new LegalBasis();
         legalBasis.setLegalBasisText("legal text");
         subsidyMeasure.setLegalBases(legalBasis);
+        subsidyMeasureWithoutAwards.setLegalBases(legalBasis);
 
         award.setSubsidyMeasure(subsidyMeasure);
 
@@ -116,6 +104,7 @@ public class SearchServiceImplTest {
         award.setGrantingAuthority(grantingAuthority);
         awards.add(award);
         subsidyMeasure.setGrantingAuthority(grantingAuthority);
+        subsidyMeasureWithoutAwards.setGrantingAuthority(grantingAuthority);
         MockitoAnnotations.openMocks(this);
 
         subsidyMeasures.add(subsidyMeasure);
@@ -137,26 +126,7 @@ public class SearchServiceImplTest {
         Pageable pageableMock = mock(Pageable.class);
         Page<Award> awardPage = (Page<Award>) mock(Page.class);
 
-        SearchInput input = new SearchInput();
-        List<String> spendingRegion = new ArrayList();
-        spendingRegion.add("spendingRegion");
-        input.setSpendingRegion(spendingRegion);
-        input.setSubsidyMeasureTitle("title");
-        input.setLegalGrantingFromDate("2019-11-01");
-        input.setLegalGrantingFromDate("2019-11-02");
-        List<String> spendingSector = new ArrayList();
-        spendingSector.add("spendingSector");
-        input.setSpendingSector(spendingSector);
-        input.setPageNumber(1);
-        input.setTotalRecordsPerPage(1);
-        List<String> subsidyInstruments= new ArrayList();
-        subsidyInstruments.add("subsidyInstrument");
-        input.setSubsidyInstrument(subsidyInstruments);
-
-        List<String> subsidyObjectives= new ArrayList();
-        subsidyObjectives.add("subsidyObjective");
-        input.setSubsidyObjective(subsidyObjectives);
-        input.setBeneficiaryName("bName");
+        SearchInput input = getSearchInput();
 
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);
@@ -302,6 +272,81 @@ public class SearchServiceImplTest {
     }
 
     @Test
+    public void testFindSchemeByScNumberWithAwards(){
+        when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(subsidyMeasure);
+        Page<Award> awardPage = (Page<Award>) mock(Page.class);
+        SearchInput input = getSearchInput();
+
+        when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
+        when(awardPage.getContent()).thenReturn(awards);
+        SubsidyMeasureResponse subsidyMeasureResponse = sut.findSchemeByScNumberWithAwards(subsidyMeasure.getScNumber(),input);
+        assertThat(subsidyMeasureResponse).isNotNull();
+        assertThat(subsidyMeasureResponse.getAwardSearchResults()).isNotNull();
+        assertThat(subsidyMeasureResponse.getAwardSearchResults()).isInstanceOf(SearchResults.class);
+        assertThat(subsidyMeasureResponse.getAwardSearchResults().getAwards() == Arrays.asList(new AwardResponse(award,true)));
+
+        when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(null);
+        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> sut.findSchemeByScNumberWithAwards("SC99999", input));
+        String expectedMessage = "Scheme NotFound";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+
+        when(awardPage.getContent()).thenReturn(new ArrayList<Award>());
+        when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(subsidyMeasureWithoutAwards);
+        assertThat(sut.findSchemeByScNumberWithAwards("SC10001", input).getAwardSearchResults()).isNull();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    private static SearchInput getSearchInput() {
+        SearchInput input = new SearchInput();
+        List<String> spendingRegion = new ArrayList();
+        spendingRegion.add("spendingRegion");
+        input.setSpendingRegion(spendingRegion);
+        input.setSubsidyMeasureTitle("title");
+        input.setLegalGrantingFromDate("2019-11-01");
+        input.setLegalGrantingFromDate("2019-11-02");
+        List<String> spendingSector = new ArrayList();
+        spendingSector.add("spendingSector");
+        input.setSpendingSector(spendingSector);
+        input.setPageNumber(1);
+        input.setTotalRecordsPerPage(1);
+        List<String> subsidyInstruments= new ArrayList();
+        subsidyInstruments.add("subsidyInstrument");
+        input.setSubsidyInstrument(subsidyInstruments);
+
+        List<String> subsidyObjectives= new ArrayList();
+        subsidyObjectives.add("subsidyObjective");
+        input.setSubsidyObjective(subsidyObjectives);
+        input.setBeneficiaryName("bName");
+        return input;
+    }
+
+    private static SubsidyMeasure getSubsidyMeasure()
+    {
+        SubsidyMeasure subsidyMeasure = new SubsidyMeasure();
+        subsidyMeasure.setScNumber(String.format("SC10001"));
+        subsidyMeasure.setSubsidyMeasureTitle("title");
+        subsidyMeasure.setAdhoc(false);
+        subsidyMeasure.setDuration(new BigInteger("200"));
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setGaSubsidyWebLink("www.BEIS.com");
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setStartDate(LocalDate.now());
+        subsidyMeasure.setEndDate(LocalDate.now());
+        subsidyMeasure.setBudget("1000000");
+        subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
+        subsidyMeasure.setCreatedBy("SYSTEM");
+        subsidyMeasure.setApprovedBy("SYSTEM");
+        subsidyMeasure.setCreatedTimestamp(new Date());
+        subsidyMeasure.setLastModifiedTimestamp(new Date());
+
+        return subsidyMeasure;
+    }
+
+    @Test
     public void testFindAllSchemes(){
         Specification<SubsidyMeasure> smSpecifications = mock(Specification.class);
         Pageable pageableMock = mock(Pageable.class);
@@ -371,26 +416,7 @@ public class SearchServiceImplTest {
         Pageable pageableMock = mock(Pageable.class);
         Page<Award> awardPage = (Page<Award>) mock(Page.class);
 
-        SearchInput input = new SearchInput();
-        List<String> spendingRegion = new ArrayList();
-        spendingRegion.add("spendingRegion");
-        input.setSpendingRegion(spendingRegion);
-        input.setSubsidyMeasureTitle("title");
-        input.setLegalGrantingFromDate("2019-11-01");
-        input.setLegalGrantingFromDate("2019-11-02");
-        List<String> spendingSector = new ArrayList();
-        spendingSector.add("spendingSector");
-        input.setSpendingSector(spendingSector);
-        input.setPageNumber(1);
-        input.setTotalRecordsPerPage(1);
-        List<String> subsidyInstruments= new ArrayList();
-        subsidyInstruments.add("subsidyInstrument");
-        input.setSubsidyInstrument(subsidyInstruments);
-
-        List<String> subsidyObjectives= new ArrayList();
-        subsidyObjectives.add("subsidyObjective");
-        input.setSubsidyObjective(subsidyObjectives);
-        input.setBeneficiaryName("bName");
+        SearchInput input = getSearchInput();
 
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);

@@ -1,15 +1,20 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
-import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
-import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
-import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
+import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.model.Beneficiary;
+import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
 import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +51,8 @@ public class SchemeSearchControllerTest {
     List<GrantingAuthority> gaList = new ArrayList<>();
     SubsidyMeasureResponse smResponse;
     SubsidyMeasuresResponse smsResponse;
+    SearchResults smAwardSearchResults;
+    Award smAssociatedAward;
     GrantingAuthority ga;
     LegalBasis lb;
     SubsidyMeasure sm;
@@ -61,6 +69,12 @@ public class SchemeSearchControllerTest {
         lb = new LegalBasis();
         lb.setLegalBasisText("Legal basis");
 
+        Beneficiary beneficiary = new Beneficiary();
+        beneficiary.setBeneficiaryId(1l);
+        beneficiary.setNationalId("nationalId");
+        beneficiary.setBeneficiaryName("bName");
+        beneficiary.setOrgSize("1");
+
         sm = new SubsidyMeasure();
         sm.setScNumber(scNumber);
         sm.setStartDate(LocalDate.now());
@@ -71,8 +85,29 @@ public class SchemeSearchControllerTest {
         sm.setBudget("5000000");
         sm.setGrantingAuthority(ga);
         sm.setLegalBases(lb);
-
+        smAssociatedAward = new Award();
+        smAssociatedAward.setAwardNumber(1L);
+        smAssociatedAward.setSubsidyMeasure(sm);
+        smAssociatedAward.setApprovedBy("system");
+        smAssociatedAward.setCreatedBy("system");
+        smAssociatedAward.setCreatedTimestamp(LocalDate.now());
+        smAssociatedAward.setLastModifiedTimestamp(LocalDate.now());
+        smAssociatedAward.setGoodsServicesFilter("serviceFilter");
+        smAssociatedAward.setLegalGrantingDate(LocalDate.now());
+        smAssociatedAward.setSubsidyFullAmountRange("5000");
+        smAssociatedAward.setSubsidyInstrument("subsidyInstrument");
+        smAssociatedAward.setSubsidyObjective("subsidyObj");
+        smAssociatedAward.setSubsidyFullAmountExact(new BigDecimal(100000.0));
+        smAssociatedAward.setSpendingSector("spendingSector");
+        smAssociatedAward.setLegalGrantingDate(LocalDate.now());
+        smAssociatedAward.setStatus("status");
+        smAssociatedAward.setPublishedAwardDate(LocalDate.now());
+        smAssociatedAward.setBeneficiary(beneficiary);
+        smAssociatedAward.setGrantingAuthority(ga);
         smResponse = new SubsidyMeasureResponse(sm, true);
+        smAwardSearchResults = new SearchResults();
+        smAwardSearchResults.setAwards(Arrays.asList(new AwardResponse(smAssociatedAward,true)));
+        smResponse.setAwardSearchResults(smAwardSearchResults);
 
         smsResponse = new SubsidyMeasuresResponse();
         smsResponse.setSubsidySchemes(new ArrayList<>(Arrays.asList(smResponse,smResponse,smResponse)));
@@ -128,6 +163,36 @@ public class SchemeSearchControllerTest {
         assertThat(actualResponse.getScNumber()).isEqualTo(scNumber);
 
         Exception exception = assertThrows(InvalidRequestException.class, () -> schemeSearchController.getSchemeDetailsByScNumber(""));
+
+        String expectedMessage = "Invalid Request";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void testGetSchemeDetailsByScNumberWithAwards()
+    {
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        SearchInput searchInput = new SearchInput();
+        searchInput.setScNumber(scNumber);
+        searchInput.setTotalRecordsPerPage(10);
+        searchInput.setPageNumber(1);
+        when(searchServiceMock.findSchemeByScNumberWithAwards(scNumber, searchInput)).thenReturn(smResponse);
+
+        ResponseEntity<?> actual = schemeSearchController.getSchemeDetailsByScNumberWithAwards(scNumber,searchInput);
+        Assertions.assertSame(smResponse.getAwardSearchResults(), smAwardSearchResults);
+
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasureResponse actualResponse = (SubsidyMeasureResponse) actual.getBody();
+        assert actualResponse != null;
+
+        assertThat(actualResponse).isInstanceOf(SubsidyMeasureResponse.class);
+        assertThat(actualResponse.getScNumber()).isEqualTo(scNumber);
+
+        Exception exception = assertThrows(InvalidRequestException.class, () -> schemeSearchController.getSchemeDetailsByScNumberWithAwards("", searchInput));
 
         String expectedMessage = "Invalid Request";
         String actualMessage = exception.getMessage();

@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class SubsidyMeasureResponseTest {
 
@@ -65,8 +67,12 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes.getLegalBasis()).isNotNull();
         assertThat(subsidyMeasureRes.getCreatedTimestamp()).isNull();
         assertThat(subsidyMeasureRes.getLastModifiedTimestamp()).isNull();
+        assertThat(subsidyMeasureRes.getAwardSearchResults()).isNull();
 
         SubsidyMeasureResponse subsidyMeasureRes1 = new SubsidyMeasureResponse(award.getSubsidyMeasure(),true);
+        SearchResults searchResults = new SearchResults();
+        searchResults.setAwards(Arrays.asList(mock(AwardResponse.class)));
+        subsidyMeasureRes1.setAwardSearchResults(searchResults);
         assertThat(subsidyMeasureRes1).isNotNull();
         assertThat(subsidyMeasureRes1.getScNumber()).isNotNull();
         assertThat(subsidyMeasureRes1.getSubsidyMeasureTitle()).isNotNull();
@@ -81,6 +87,7 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.getApprovedBy()).isNotNull();
         assertThat(subsidyMeasureRes1.getCreatedTimestamp()).isNotNull();
         assertThat(subsidyMeasureRes1.getLastModifiedTimestamp()).isNotNull();
+        assertThat(subsidyMeasureRes1.getAwardSearchResults()).isNotNull();
 
     }
 }
