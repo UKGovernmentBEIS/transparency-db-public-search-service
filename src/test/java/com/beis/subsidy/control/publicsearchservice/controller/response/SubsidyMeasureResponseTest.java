@@ -28,6 +28,7 @@ public class SubsidyMeasureResponseTest {
         subsidyMeasure.setDuration(new BigInteger("200"));
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setGaSubsidyWebLink("www.BEIS.com");
+        subsidyMeasure.setGaSubsidyWebLinkDescription("www.BEIS.com description");
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStatus("DEFAULT");
@@ -58,6 +59,7 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes.getDuration()).isNull();
         assertThat(subsidyMeasureRes.getStatus()).isNull();
         assertThat(subsidyMeasureRes.getGaSubsidyWebLink()).isNull();
+        assertThat(subsidyMeasureRes.getGaSubsidyWebLinkDescription()).isNull();
         assertThat(subsidyMeasureRes.getStartDate()).isNull();
         assertThat(subsidyMeasureRes.getEndDate()).isNull();
         assertThat(subsidyMeasureRes.getBudget()).isNull();
@@ -79,6 +81,7 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.isAdhoc());
         assertThat(subsidyMeasureRes1.getDuration()).isNotNull();
         assertThat(subsidyMeasureRes1.getGaSubsidyWebLink()).isNotNull();
+        assertThat(subsidyMeasureRes1.getGaSubsidyWebLinkDescription()).isNotNull();
         assertThat(subsidyMeasureRes1.getStartDate()).isNotNull();
         assertThat(subsidyMeasureRes1.getEndDate()).isNotNull();
         assertThat(subsidyMeasureRes1.getBudget()).isNotNull();

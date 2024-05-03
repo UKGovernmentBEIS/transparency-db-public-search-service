@@ -161,6 +161,12 @@ public class AwardResponseTest {
         grantingAuthority.setGrantingAuthorityName("ganame");
         award.setGrantingAuthority(grantingAuthority);
 
+        //AdminProgram details
+        AdminProgram adminProgram = new AdminProgram();
+        adminProgram.setApNumber("10");
+        adminProgram.setAdminProgramName("Admin Program");
+        award.setAdminProgram(adminProgram);
+
         GrantingAuthorityResponse gaResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
         BeneficiaryResponse beneficiaryResponse = new BeneficiaryResponse(award.getBeneficiary(),false);
 

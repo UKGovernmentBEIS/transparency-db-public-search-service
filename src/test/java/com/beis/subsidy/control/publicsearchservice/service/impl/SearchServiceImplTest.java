@@ -472,8 +472,12 @@ public class SearchServiceImplTest {
         input.setOtherSubsidyObjective(Arrays.asList("ObjectiveOther"));
         input.setSubsidyInstrument(Arrays.asList("Other-Instrument"));
         input.setOtherSubsidyInstrument(Arrays.asList("InstrumentOther"));
-
         searchResults = sut.findStandaloneAwards(input);
         assertThat(searchResults).isNotNull();
+
+        when(awardPage.getContent()).thenReturn(new ArrayList<>());
+        Assertions.assertThrows(SearchResultNotFoundException.class, () -> {
+            sut.findStandaloneAwards(input);
+        });
     }
 }
