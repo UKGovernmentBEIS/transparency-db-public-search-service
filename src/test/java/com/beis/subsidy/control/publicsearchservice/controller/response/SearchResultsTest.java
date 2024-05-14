@@ -34,6 +34,9 @@ public class SearchResultsTest {
         award.setLegalGrantingDate(LocalDate.now());
         award.setStatus("status");
         award.setPublishedAwardDate(LocalDate.now());
+        award.setStandaloneAward("No");
+        award.setSubsidyAwardDescription("Description");
+        award.setAdminProgram(null);
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
