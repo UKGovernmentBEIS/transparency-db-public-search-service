@@ -76,6 +76,9 @@ public class SubsidyMeasureResponse {
 
     @JsonProperty
     private String subsidySchemeDescription;
+
+    @JsonProperty
+    private String specificPolicyObjective;
     
     @JsonProperty
     private String confirmationDate;
@@ -118,6 +121,7 @@ public class SubsidyMeasureResponse {
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
         this.subsidySchemeDescription = subsidyMeasure.getSubsidySchemeDescription();
+        this.specificPolicyObjective = subsidyMeasure.getSpecificPolicyObjective();
         this.spendingSectors = subsidyMeasure.getSpendingSectors();
         this.maximumAmountUnderScheme = subsidyMeasure.getMaximumAmountUnderScheme();
     }
@@ -150,6 +154,7 @@ public class SubsidyMeasureResponse {
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
         this.subsidySchemeDescription = subsidyMeasure.getSubsidySchemeDescription();
+        this.specificPolicyObjective = subsidyMeasure.getSpecificPolicyObjective();
         this.spendingSectors = subsidyMeasure.getSpendingSectors();
         this.maximumAmountUnderScheme = subsidyMeasure.getMaximumAmountUnderScheme();
         this.awardSearchResults = awardSearchResults;
