@@ -3,11 +3,13 @@ package com.beis.subsidy.control.publicsearchservice.controller;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureVersionResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasuresResponse;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasureVersion;
 import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,14 +25,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -45,15 +47,19 @@ public class SchemeSearchControllerTest {
     List<GrantingAuthority> gaList = new ArrayList<>();
     SubsidyMeasureResponse smResponse;
     SubsidyMeasuresResponse smsResponse;
+    SubsidyMeasureVersionResponse smvResponse;
     GrantingAuthority ga;
     LegalBasis lb;
     SubsidyMeasure sm;
+    SubsidyMeasureVersion smv;
     String scNumber;
+    UUID versionUuid;
     HttpServletRequest requestMock;
 
     @BeforeEach
     public void setUp(){
         scNumber = "SC10001";
+        versionUuid = UUID.randomUUID();
 
         ga = new GrantingAuthority();
         ga.setGrantingAuthorityName("Test GA");
@@ -61,21 +67,37 @@ public class SchemeSearchControllerTest {
         lb = new LegalBasis();
         lb.setLegalBasisText("Legal basis");
 
+        smv = new SubsidyMeasureVersion();
+        smv.setVersion(versionUuid);
+        smv.setScNumber(scNumber);
+        smv.setScNumber(scNumber);
+        smv.setStartDate(LocalDate.now());
+        smv.setEndDate(LocalDate.now());
+        smv.setPublishedMeasureDate(LocalDate.now());
+        smv.setCreatedTimestamp(LocalDateTime.now());
+        smv.setLastModifiedTimestamp(LocalDateTime.now());
+        smv.setBudget("500");
+        smv.setGrantingAuthority(ga);
+        smv.setLegalBasisText(lb.getLegalBasisText());
+
         sm = new SubsidyMeasure();
         sm.setScNumber(scNumber);
         sm.setStartDate(LocalDate.now());
         sm.setEndDate(LocalDate.now());
         sm.setPublishedMeasureDate(LocalDate.now());
-        sm.setCreatedTimestamp(new Date(System.currentTimeMillis()));
-        sm.setLastModifiedTimestamp(new Date(System.currentTimeMillis()));
+        sm.setCreatedTimestamp(LocalDateTime.now());
+        sm.setLastModifiedTimestamp(LocalDateTime.now());
         sm.setBudget("5000000");
         sm.setGrantingAuthority(ga);
         sm.setLegalBases(lb);
+        sm.setSchemeVersions(new ArrayList<>());
 
         smResponse = new SubsidyMeasureResponse(sm, true);
 
         smsResponse = new SubsidyMeasuresResponse();
         smsResponse.setSubsidySchemes(new ArrayList<>(Arrays.asList(smResponse,smResponse,smResponse)));
+
+        smvResponse = new SubsidyMeasureVersionResponse(smv);
 
         searchServiceMock = mock(SearchService.class);
         grantingAuthorityRepositoryMock = mock(GrantingAuthorityRepository.class);
@@ -407,5 +429,32 @@ public class SchemeSearchControllerTest {
         SubsidyMeasuresResponse smsResponseActual = (SubsidyMeasuresResponse) actual.getBody();
         assert smsResponseActual != null;
         assertThat(smsResponseActual.getSubsidySchemes()).isNull();
+    }
+
+    @Test
+    public void testFindSubsidySchemeVersion(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+
+        when(searchServiceMock.findSubsidySchemeVersion(scNumber, versionUuid.toString())).thenReturn(smvResponse);
+
+        ResponseEntity<?> actual = schemeSearchController.findSubsidySchemeVersion(scNumber, versionUuid.toString());
+
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+
+        SubsidyMeasureVersionResponse actualResponse = (SubsidyMeasureVersionResponse) actual.getBody();
+        assert actualResponse != null;
+
+        assertThat(actualResponse).isInstanceOf(SubsidyMeasureVersionResponse.class);
+        assertThat(actualResponse.getScNumber()).isEqualTo(scNumber);
+        assertThat(actualResponse.getVersion()).isEqualTo(versionUuid.toString());
+
+        Exception scException = assertThrows(InvalidRequestException.class, () -> schemeSearchController.findSubsidySchemeVersion("", versionUuid.toString()));
+        Exception versionException = assertThrows(InvalidRequestException.class, () -> schemeSearchController.findSubsidySchemeVersion(scNumber, ""));
+
+        String expectedScMessage = "Bad Request SC Number is null";
+        String expectedVersionMessage = "Bad Request version is null";
+
+        assertEquals(scException.getMessage(), expectedScMessage);
+        assertEquals(versionException.getMessage(), expectedVersionMessage);
     }
 }
