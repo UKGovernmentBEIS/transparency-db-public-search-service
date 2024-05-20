@@ -103,6 +103,9 @@ public class Award {
 	@JoinColumn(name = "apNumber")
 	private AdminProgram adminProgram;
 
+	@Column(name = "SUBSIDY_AWARD_INTEREST")
+	private String subsidyAwardInterest;
+
 	@Column(name = "AUTHORITY_URL")
 	private String authorityURL;
 

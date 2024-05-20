@@ -8,16 +8,23 @@ import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyM
 import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
 import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureResponse;
 import com.beis.subsidy.control.publicsearchservice.controller.response.GrantingAuthorityListResponse;
+
+
+import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
+
+import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
+
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.Beneficiary;
 import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
-import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasureVersion;
 
 import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
+
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,13 +85,12 @@ public class SchemeSearchControllerTest {
         lb = new LegalBasis();
         lb.setLegalBasisText("Legal basis");
 
-
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
         beneficiary.setNationalId("nationalId");
         beneficiary.setBeneficiaryName("bName");
         beneficiary.setOrgSize("1");
-      
+
         smv = new SubsidyMeasureVersion();
         smv.setVersion(versionUuid);
         smv.setScNumber(scNumber);

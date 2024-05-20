@@ -94,6 +94,7 @@ public class SearchServiceImplTest {
         subsidyMeasure = getSubsidyMeasure();
 
         subsidyMeasureWithoutAwards = getSubsidyMeasure();
+      
         subsidyMeasure = new SubsidyMeasure();
         subsidyMeasure.setScNumber("SC10001");
         subsidyMeasure.setSubsidyMeasureTitle("title");

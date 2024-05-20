@@ -150,6 +150,8 @@ public class AwardResponseTest {
         award.setSpendingRegion("region");
         award.setAuthorityURL("test.com");
         award.setAuthorityURLDescription("test.com description");
+        award.setSubsidyAwardInterest("Neither");
+
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
@@ -195,6 +197,8 @@ public class AwardResponseTest {
         assertThat(awardResponse.getSpendingRegion()).isNotNull();
         assertThat(awardResponse.getAuthorityURL()).isNotNull();
         assertThat(awardResponse.getAuthorityURLDescription()).isNotNull();
+        assertThat(awardResponse.getSubsidyAwardInterest()).isNotNull();
+
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();

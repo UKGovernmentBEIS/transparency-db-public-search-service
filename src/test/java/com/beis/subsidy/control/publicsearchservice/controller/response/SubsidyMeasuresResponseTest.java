@@ -33,6 +33,7 @@ public class SubsidyMeasuresResponseTest {
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
+        subsidyMeasure.setSubsidySchemeInterest("Neither");
         subsidyMeasure.setSchemeVersions(new ArrayList<>());
 
         LegalBasis legalBasis = new LegalBasis();
