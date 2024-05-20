@@ -158,15 +158,19 @@ public class SearchServiceImpl implements SearchService {
 	public SubsidyMeasureResponse findSchemeByScNumberWithAwards(String scNumber, SearchInput awardsSearchInput){
 		SubsidyMeasure subsidyMeasure = schemeRepository.findByScNumber(scNumber);
 		if (subsidyMeasure == null){
-			throw new SearchResultNotFoundException("Subsidy measure NotFound");
+			throw new SearchResultNotFoundException("Scheme NotFound");
 		}
+
 		try {
 			SearchResults searchResults = findMatchingAwards(awardsSearchInput);
-			return new SubsidyMeasureResponse(subsidyMeasure, true, searchResults);
+			SubsidyMeasureResponse response = new SubsidyMeasureResponse(subsidyMeasure, true);
+			response.setAwardSearchResults(searchResults);
+			return response;
 		}
 		catch(SearchResultNotFoundException ex)
 		{
-			return new SubsidyMeasureResponse(subsidyMeasure, true, new SearchResults());
+			log.info("SearchResultNotFoundException: No matching awards found");
+			return new SubsidyMeasureResponse(subsidyMeasure, true);
 		}
 	}
 
