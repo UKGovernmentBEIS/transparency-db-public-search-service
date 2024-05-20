@@ -6,10 +6,8 @@ import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFou
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.MFAAward;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
-import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.MFAAwardRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.MFAGroupingRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasureVersion;
+import com.beis.subsidy.control.publicsearchservice.repository.*;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.MFAAwardSpecificationUtils;
@@ -29,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +45,9 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	private MFAGroupingRepository mfaGroupingRepository;
+
+	@Autowired
+	private SubsidyMeasureVersionRepository subsidyMeasureVersionRepository;
 
 	@Autowired
 	private MFAAwardRepository mfaAwardRepository;
@@ -254,6 +256,13 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
+	public SubsidyMeasureVersionResponse findSubsidySchemeVersion(String scNumber, String version) {
+		SubsidyMeasureVersion schemeVersion = subsidyMeasureVersionRepository.findByScNumberAndVersion(scNumber, UUID.fromString(version));
+
+		return new SubsidyMeasureVersionResponse(schemeVersion);
+	}
+
+	@Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
 		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
 		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
@@ -339,7 +348,7 @@ public class SearchServiceImpl implements SearchService {
 	        }
 	      } else {
 	    	//Default sort - Legal Granting Date with recent one at top	
-	        orders.add(new Order(getSortDirection("desc"), "legalGrantingDate"));
+	        orders.add(new Order(getSortDirection("desc"), "lastModifiedTimestamp"));
 	      }
 
 		return orders;

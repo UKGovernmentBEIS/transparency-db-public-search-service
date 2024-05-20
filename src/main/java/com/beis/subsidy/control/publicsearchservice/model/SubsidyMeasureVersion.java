@@ -1,75 +1,69 @@
 package com.beis.subsidy.control.publicsearchservice.model;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.util.UUID;
 
 /**
  * 
- * Subsidy Measure entity class
+ * Subsidy Measure Version entity class
  *
  */
-@Builder
-@Entity(name = "SUBSIDY_MEASURE")
-@Data
+@Entity(name = "SUBSIDY_MEASURE_VERSION")
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubsidyMeasure {
+@Setter
+@Getter
+public class SubsidyMeasureVersion {
 
 	@Id
+	@Column(name="VERSION")
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	private UUID version;
+
 	@Column(name="SC_NUMBER")
 	private String scNumber;
-	
-	@OneToMany(mappedBy="subsidyMeasure")
-	@ToString.Exclude
-	@JsonIgnore
-	private List<Award> awards;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "gaId", nullable = false)
-	@JsonIgnore
+
+	@ManyToOne(fetch=FetchType.EAGER , cascade = CascadeType.ALL)
+	@JoinColumn(name = "ga_id", nullable = false, insertable = false, updatable = false)
 	private GrantingAuthority grantingAuthority;
 
-	@OneToOne(mappedBy="subsidyMeasure")
-	private LegalBasis legalBases;
-	
+	@Column(name = "GA_ID")
+	private Long gaId;
+
+	@Column(name = "LEGAL_BASIS_TEXT")
+	private String legalBasisText;
+
 	@Column(name = "SUBSIDY_MEASURE_TITLE")
 	private String subsidyMeasureTitle;
-	
+
 	@Column(name = "START_DATE")
 	private LocalDate startDate;
-	
+
 	@Column(name = "END_DATE")
 	private LocalDate endDate;
-	
+
 	@Column(name = "DURATION")
 	private BigInteger duration;
-	
+
 	@Column(name = "BUDGET")
 	private String budget;
-	
+
 	@Column(name = "ADHOC")
 	private boolean adhoc;
-			
+
 	@Column(name = "GA_SUBSIDY_WEBLINK")
 	private String gaSubsidyWebLink;
-
-	@Column(name = "GA_SUBSIDY_WEBLINK_DESCRIPTION")
-	private String gaSubsidyWebLinkDescription;
 
 	@Column(name = "PUBLISHED_MEASURE_DATE")
 	private LocalDate publishedMeasureDate;
@@ -79,15 +73,16 @@ public class SubsidyMeasure {
 
 	@Column(name = "APPROVED_BY")
 	private String approvedBy;
-	
+
 	@Column(name = "STATUS")
 	private String status;
-	
-	@CreationTimestamp
+
+	@Column(name = "GA_SUBSIDY_WEBLINK_DESCRIPTION")
+	private String gaSubsidyWebLinkDescription;
+
 	@Column(name = "CREATED_TIMESTAMP")
 	private LocalDateTime createdTimestamp;
-	
-	@UpdateTimestamp
+
 	@Column(name = "LAST_MODIFIED_TIMESTAMP")
 	private LocalDateTime lastModifiedTimestamp;
 
@@ -100,7 +95,7 @@ public class SubsidyMeasure {
 	@Column(name = "HAS_NO_END_DATE")
 	private boolean hasNoEndDate;
 
-	@Column (name = "SUBSIDY_SCHEME_DESCRIPTION")
+	@Column(name = "SUBSIDY_SCHEME_DESCRIPTION")
 	private String subsidySchemeDescription;
 
 	@Column(name = "CONFIRMATION_DATE")
@@ -111,9 +106,4 @@ public class SubsidyMeasure {
 
 	@Column(name = "MAXIMUM_AMOUNT_UNDER_SCHEME")
 	private String maximumAmountUnderScheme;
-
-	@OneToMany
-	@JoinColumn(name = "sc_number")
-	@OrderBy("lastModifiedTimestamp DESC")
-	private List<SubsidyMeasureVersion> schemeVersions;
 }
