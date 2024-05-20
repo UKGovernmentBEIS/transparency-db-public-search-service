@@ -90,12 +90,16 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private List<SubsidyMeasureVersionResponse> schemeVersions;
 
-    @JsonProperty
-    @Setter  
+    @JsonProperty 
     private SearchResults awardSearchResults;
 
     @JsonProperty
     private String subsidySchemeInterest;
+
+    @JsonProperty
+    @Setter
+    private SearchResults awardSearchResults;
+
 
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
         this.scNumber = subsidyMeasure.getScNumber();

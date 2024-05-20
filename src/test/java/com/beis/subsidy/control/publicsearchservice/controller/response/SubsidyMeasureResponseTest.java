@@ -79,7 +79,6 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes.getAwardSearchResults()).isNull();
         assertThat(subsidyMeasureRes.getSubsidySchemeInterest()).isNotNull();
 
-
         SubsidyMeasureResponse subsidyMeasureRes1 = new SubsidyMeasureResponse(award.getSubsidyMeasure(),true);
         SearchResults searchResults = new SearchResults();
         searchResults.setAwards(Arrays.asList(mock(AwardResponse.class)));
@@ -101,6 +100,5 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.getLastModifiedTimestamp()).isNotNull();
         assertThat(subsidyMeasureRes1.getAwardSearchResults()).isNotNull();
         assertThat(subsidyMeasureRes.getSubsidySchemeInterest()).isNotNull();
-
     }
 }
