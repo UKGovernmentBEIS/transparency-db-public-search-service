@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,8 +62,9 @@ public class SearchResultsTest {
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
-        subsidyMeasure.setCreatedTimestamp(new Date());
-        subsidyMeasure.setLastModifiedTimestamp(new Date());
+        subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setSchemeVersions(new ArrayList<>());
         award.setSubsidyMeasure(subsidyMeasure);
 
         LegalBasis legalBasis = new LegalBasis();

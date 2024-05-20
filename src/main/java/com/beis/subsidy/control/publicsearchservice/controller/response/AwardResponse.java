@@ -1,5 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
+import java.util.ArrayList;
+
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.LegalBasis;
@@ -134,6 +136,7 @@ public class AwardResponse {
             mockedScheme.setStatus("Mocked");
             mockedScheme.setScNumber("NA");
             mockedScheme.setSubsidyMeasureTitle("NA");
+            mockedScheme.setSchemeVersions(new ArrayList<>());
 
             mockedScheme.setLegalBases(mockedLegal);
             mockedScheme.setGrantingAuthority(mockedGA);

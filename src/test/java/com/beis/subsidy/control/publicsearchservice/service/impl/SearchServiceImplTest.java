@@ -7,6 +7,8 @@ import com.beis.subsidy.control.publicsearchservice.model.*;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
 import com.beis.subsidy.control.publicsearchservice.repository.MFAAwardRepository;
 import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureVersionRepository;
+import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,11 +29,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.mock;
@@ -43,6 +46,7 @@ public class SearchServiceImplTest {
     private final AwardRepository awardRepository = mock(AwardRepository.class);
     private final SubsidyMeasureRepository subsidyMeasureRepositoryMock = mock(SubsidyMeasureRepository.class);
     private final AwardRepository awardRepositoryMock = mock(AwardRepository.class);
+    private final SubsidyMeasureVersionRepository subsidyMeasureVersionRepositoryMock = mock(SubsidyMeasureVersionRepository.class);
     private final PageRequest pageRequestMock = mock(PageRequest.class);
     @Mock
     MFAAwardRepository mfaAwardRepositoryMock;
@@ -56,8 +60,9 @@ public class SearchServiceImplTest {
     List<Award> awards = new ArrayList<>();
     List<SubsidyMeasure> subsidyMeasures = new ArrayList<>();
     List<MFAAward> mfaAwards = new ArrayList<>();
-
+    SubsidyMeasureVersion subsidyMeasureVersion;
     MFAAward mfaAward;
+    UUID versionNumber;
 
     @BeforeEach
     public void setUp() {
@@ -90,6 +95,27 @@ public class SearchServiceImplTest {
         subsidyMeasure = getSubsidyMeasure();
 
         subsidyMeasureWithoutAwards = getSubsidyMeasure();
+
+        subsidyMeasure = new SubsidyMeasure();
+        subsidyMeasure.setScNumber("SC10001");
+        subsidyMeasure.setSubsidyMeasureTitle("title");
+        subsidyMeasure.setAdhoc(false);
+        subsidyMeasure.setDuration(new BigInteger("200"));
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setGaSubsidyWebLink("www.BEIS.com");
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setStatus("DEFAULT");
+        subsidyMeasure.setStartDate(LocalDate.now());
+        subsidyMeasure.setEndDate(LocalDate.now());
+        subsidyMeasure.setBudget("1000000");
+        subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
+        subsidyMeasure.setCreatedBy("SYSTEM");
+        subsidyMeasure.setApprovedBy("SYSTEM");
+        subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setSchemeVersions(new ArrayList<>());
+
         // Legal Basis text
         LegalBasis legalBasis = new LegalBasis();
         legalBasis.setLegalBasisText("legal text");
@@ -118,6 +144,30 @@ public class SearchServiceImplTest {
         mfaAward.setLastModifiedTimestamp(LocalDateTime.now());
 
         mfaAwards.add(mfaAward);
+
+        versionNumber = UUID.randomUUID();
+
+        // Subsidy Measure Version
+        subsidyMeasureVersion = new SubsidyMeasureVersion();
+        subsidyMeasureVersion.setVersion(versionNumber);
+        subsidyMeasureVersion.setScNumber("SC10001");
+        subsidyMeasureVersion.setSubsidyMeasureTitle("title");
+        subsidyMeasureVersion.setAdhoc(false);
+        subsidyMeasureVersion.setDuration(new BigInteger("200"));
+        subsidyMeasureVersion.setStatus("DEFAULT");
+        subsidyMeasureVersion.setGaSubsidyWebLink("www.BEIS.com");
+        subsidyMeasureVersion.setStatus("DEFAULT");
+        subsidyMeasureVersion.setStatus("DEFAULT");
+        subsidyMeasureVersion.setStatus("DEFAULT");
+        subsidyMeasureVersion.setStartDate(LocalDate.now());
+        subsidyMeasureVersion.setEndDate(LocalDate.now());
+        subsidyMeasureVersion.setBudget("1000000");
+        subsidyMeasureVersion.setPublishedMeasureDate(LocalDate.now());
+        subsidyMeasureVersion.setCreatedBy("SYSTEM");
+        subsidyMeasureVersion.setApprovedBy("SYSTEM");
+        subsidyMeasureVersion.setCreatedTimestamp(LocalDateTime.now());
+        subsidyMeasureVersion.setLastModifiedTimestamp(LocalDateTime.now());
+        subsidyMeasureVersion.setGrantingAuthority(grantingAuthority);
     }
 
     @Test
@@ -479,5 +529,80 @@ public class SearchServiceImplTest {
         Assertions.assertThrows(SearchResultNotFoundException.class, () -> {
             sut.findStandaloneAwards(input);
         });
+    }
+
+    @Test
+    public void testFindSubsidySchemeVersion(){
+        when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
+
+        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+
+        assertThat(actual).isNotNull();
+        verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
+        assertEquals(actual.getVersion(),subsidyMeasureVersion.getVersion().toString());
+        assertEquals(actual.getScNumber(),subsidyMeasureVersion.getScNumber());
+        assertNotNull(actual.getVersion());
+    }
+
+    @Test
+    public void testFindSubsidySchemeVersionNoEndDate(){
+        subsidyMeasureVersion.setEndDate(null);
+        when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
+
+        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+
+        assertThat(actual).isNotNull();
+        verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
+        assertEquals(actual.getVersion(),subsidyMeasureVersion.getVersion().toString());
+        assertEquals(actual.getEndDate(),"");
+    }
+
+    @Test
+    public void testFindSubsidySchemeVersionNonNumericBudget(){
+        subsidyMeasureVersion.setBudget("£123");
+        when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
+
+        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+
+        assertThat(actual).isNotNull();
+        verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
+        assertEquals(actual.getVersion(),subsidyMeasureVersion.getVersion().toString());
+        assertEquals(actual.getBudget(),"£123");
+    }
+
+    @Test
+    public void testFindSubsidySchemeVersionDeleted(){
+        subsidyMeasureVersion.setDeletedBy("USER123");
+        LocalDateTime deleteDateTime = LocalDateTime.now();
+        String dateTimeString = SearchUtils.dateTimeToFullMonthNameInDate(deleteDateTime);
+        subsidyMeasureVersion.setDeletedTimestamp(deleteDateTime);
+        when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
+
+        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+
+        assertThat(actual).isNotNull();
+        verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
+        assertEquals(actual.getVersion(),subsidyMeasureVersion.getVersion().toString());
+        assertEquals(actual.getDeletedTimestamp(),dateTimeString);
+        assertEquals(actual.getDeletedBy(),"USER123");
+
+    }
+
+    @Test
+    public void testFindSubsidySchemeVersionConfirmationDateSet(){
+        LocalDate confirmationDate = LocalDate.now();
+        subsidyMeasureVersion.setConfirmationDate(confirmationDate);
+        String confirmationDateString = SearchUtils.dateToFullMonthNameInDate(confirmationDate);
+
+
+        when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
+
+        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+
+        assertThat(actual).isNotNull();
+        verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
+        assertEquals(actual.getVersion(),subsidyMeasureVersion.getVersion().toString());
+        assertEquals(actual.getConfirmationDate(),confirmationDateString);
+
     }
 }
