@@ -167,6 +167,11 @@ public class SearchServiceImplTest {
         subsidyMeasureVersion.setCreatedTimestamp(LocalDateTime.now());
         subsidyMeasureVersion.setLastModifiedTimestamp(LocalDateTime.now());
         subsidyMeasureVersion.setGrantingAuthority(grantingAuthority);
+
+        ArrayList<SubsidyMeasureVersion> smvList = new ArrayList<>();
+        smvList.add(subsidyMeasureVersion);
+
+        subsidyMeasureWithoutAwards.setSchemeVersions(smvList);
     }
 
     @Test
@@ -330,7 +335,7 @@ public class SearchServiceImplTest {
     }
 
     @Test
-    public void testFindSchemeByScNumberWithAwards(){
+    public void     testFindSchemeByScNumberWithAwards(){
         when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(subsidyMeasure);
         Page<Award> awardPage = (Page<Award>) mock(Page.class);
         SearchInput input = getAwardSearchInput();
@@ -438,8 +443,8 @@ public class SearchServiceImplTest {
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
-        subsidyMeasure.setCreatedTimestamp(new Date());
-        subsidyMeasure.setLastModifiedTimestamp(new Date());
+        subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
 
         return subsidyMeasure;
     }

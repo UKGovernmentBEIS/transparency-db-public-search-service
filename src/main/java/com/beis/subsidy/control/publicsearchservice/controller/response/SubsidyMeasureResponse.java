@@ -90,15 +90,12 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private List<SubsidyMeasureVersionResponse> schemeVersions;
 
-    @JsonProperty 
+    @JsonProperty
+    @Setter
     private SearchResults awardSearchResults;
 
     @JsonProperty
     private String subsidySchemeInterest;
-
-    @JsonProperty
-    @Setter
-    private SearchResults awardSearchResults;
 
 
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
