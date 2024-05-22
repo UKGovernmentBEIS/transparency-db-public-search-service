@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,6 +33,8 @@ public class AwardResponseTest {
         award.setReason("rejectReason");
         award.setPublishedAwardDate(LocalDate.now());
         award.setSpendingRegion("region");
+        award.setAuthorityURL("test.com");
+        award.setAuthorityURLDescription("test.com description");
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
@@ -57,8 +60,9 @@ public class AwardResponseTest {
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
-        subsidyMeasure.setCreatedTimestamp(new Date());
-        subsidyMeasure.setLastModifiedTimestamp(new Date());
+        subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setSchemeVersions(new ArrayList<>());
 
         LegalBasis legalBasis = new LegalBasis();
         legalBasis.setLegalBasisText("legal text");
@@ -96,6 +100,8 @@ public class AwardResponseTest {
         assertThat(awardResponse.getSubsidyObjective()).isNotNull();
         assertThat(awardResponse.getSubsidyInstrument()).isNotNull();
         assertThat(awardResponse.getSpendingRegion()).isNotNull();
+        assertThat(awardResponse.getAuthorityURL()).isNull();
+        assertThat(awardResponse.getAuthorityURLDescription()).isNull();
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();
@@ -117,6 +123,8 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();
         assertThat(awardResponse1.getSubsidyObjective()).isNotNull();
         assertThat(awardResponse1.getRejectReason()).isNotNull();
+        assertThat(awardResponse1.getAuthorityURL()).isNull();
+        assertThat(awardResponse1.getAuthorityURLDescription()).isNull();
     }
 
     @Test
@@ -124,6 +132,7 @@ public class AwardResponseTest {
         Award award = new Award();
         award.setAwardNumber(1l);
         award.setApprovedBy("system");
+        award.setStandaloneAward("Yes");
         award.setCreatedBy("system");
         award.setCreatedTimestamp(LocalDate.now());
         award.setLastModifiedTimestamp(LocalDate.now());
@@ -139,6 +148,10 @@ public class AwardResponseTest {
         award.setReason("rejectReason");
         award.setPublishedAwardDate(LocalDate.now());
         award.setSpendingRegion("region");
+        award.setAuthorityURL("test.com");
+        award.setAuthorityURLDescription("test.com description");
+        award.setSubsidyAwardInterest("Neither");
+
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
@@ -151,6 +164,12 @@ public class AwardResponseTest {
         GrantingAuthority grantingAuthority = new GrantingAuthority();
         grantingAuthority.setGrantingAuthorityName("ganame");
         award.setGrantingAuthority(grantingAuthority);
+
+        //AdminProgram details
+        AdminProgram adminProgram = new AdminProgram();
+        adminProgram.setApNumber("10");
+        adminProgram.setAdminProgramName("Admin Program");
+        award.setAdminProgram(adminProgram);
 
         GrantingAuthorityResponse gaResponse = new GrantingAuthorityResponse(award.getGrantingAuthority());
         BeneficiaryResponse beneficiaryResponse = new BeneficiaryResponse(award.getBeneficiary(),false);
@@ -176,6 +195,10 @@ public class AwardResponseTest {
         assertThat(awardResponse.getSubsidyObjective()).isNotNull();
         assertThat(awardResponse.getSubsidyInstrument()).isNotNull();
         assertThat(awardResponse.getSpendingRegion()).isNotNull();
+        assertThat(awardResponse.getAuthorityURL()).isNotNull();
+        assertThat(awardResponse.getAuthorityURLDescription()).isNotNull();
+        assertThat(awardResponse.getSubsidyAwardInterest()).isNotNull();
+
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();
@@ -197,5 +220,7 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();
         assertThat(awardResponse1.getSubsidyObjective()).isNotNull();
         assertThat(awardResponse1.getRejectReason()).isNotNull();
+        assertThat(awardResponse1.getAuthorityURL()).isNotNull();
+        assertThat(awardResponse1.getAuthorityURLDescription()).isNotNull();
     }
 }
