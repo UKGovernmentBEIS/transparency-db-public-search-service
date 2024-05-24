@@ -8,9 +8,16 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+
+import java.util.Arrays;
 import java.util.Date;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class SubsidyMeasureResponseTest {
 
@@ -26,17 +33,20 @@ public class SubsidyMeasureResponseTest {
         subsidyMeasure.setDuration(new BigInteger("200"));
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setGaSubsidyWebLink("www.BEIS.com");
+        subsidyMeasure.setGaSubsidyWebLinkDescription("www.BEIS.com description");
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStartDate(LocalDate.now());
         subsidyMeasure.setEndDate(LocalDate.now());
-        subsidyMeasure.setCreatedTimestamp(new Date());
-        subsidyMeasure.setLastModifiedTimestamp(new Date());
+        subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
         subsidyMeasure.setBudget("1000000");
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
         subsidyMeasure.setApprovedBy("SYSTEM");
+        subsidyMeasure.setSubsidySchemeInterest("Neither");
+        subsidyMeasure.setSchemeVersions(new ArrayList<>());
         subsidyMeasure.setSpecificPolicyObjective("Policy objective");
         award.setSubsidyMeasure(subsidyMeasure);
 
@@ -57,6 +67,7 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes.getDuration()).isNull();
         assertThat(subsidyMeasureRes.getStatus()).isNull();
         assertThat(subsidyMeasureRes.getGaSubsidyWebLink()).isNull();
+        assertThat(subsidyMeasureRes.getGaSubsidyWebLinkDescription()).isNull();
         assertThat(subsidyMeasureRes.getStartDate()).isNull();
         assertThat(subsidyMeasureRes.getEndDate()).isNull();
         assertThat(subsidyMeasureRes.getBudget()).isNull();
@@ -66,15 +77,21 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes.getLegalBasis()).isNotNull();
         assertThat(subsidyMeasureRes.getCreatedTimestamp()).isNull();
         assertThat(subsidyMeasureRes.getLastModifiedTimestamp()).isNull();
+        assertThat(subsidyMeasureRes.getAwardSearchResults()).isNull();
+        assertThat(subsidyMeasureRes.getSubsidySchemeInterest()).isNotNull();
         assertThat(subsidyMeasureRes.getSpecificPolicyObjective()).isNotNull();
 
         SubsidyMeasureResponse subsidyMeasureRes1 = new SubsidyMeasureResponse(award.getSubsidyMeasure(),true);
+        SearchResults searchResults = new SearchResults();
+        searchResults.setAwards(Arrays.asList(mock(AwardResponse.class)));
+        subsidyMeasureRes1.setAwardSearchResults(searchResults);
         assertThat(subsidyMeasureRes1).isNotNull();
         assertThat(subsidyMeasureRes1.getScNumber()).isNotNull();
         assertThat(subsidyMeasureRes1.getSubsidyMeasureTitle()).isNotNull();
         assertThat(subsidyMeasureRes1.isAdhoc());
         assertThat(subsidyMeasureRes1.getDuration()).isNotNull();
         assertThat(subsidyMeasureRes1.getGaSubsidyWebLink()).isNotNull();
+        assertThat(subsidyMeasureRes1.getGaSubsidyWebLinkDescription()).isNotNull();
         assertThat(subsidyMeasureRes1.getStartDate()).isNotNull();
         assertThat(subsidyMeasureRes1.getEndDate()).isNotNull();
         assertThat(subsidyMeasureRes1.getBudget()).isNotNull();
@@ -85,5 +102,7 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.getLastModifiedTimestamp()).isNotNull();
         assertThat(subsidyMeasureRes1.getSpecificPolicyObjective()).isNotNull();
 
+        assertThat(subsidyMeasureRes1.getAwardSearchResults()).isNotNull();
+        assertThat(subsidyMeasureRes.getSubsidySchemeInterest()).isNotNull();
     }
 }

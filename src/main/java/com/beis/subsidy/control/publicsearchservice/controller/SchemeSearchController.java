@@ -280,4 +280,22 @@ public class SchemeSearchController {
 		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumberWithAwards(scNumber, searchInput);
 		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
 	}
+
+	@GetMapping(
+			value = "/scheme/{scNumber}/version/{version}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasureVersionResponse> findSubsidySchemeVersion(@PathVariable("scNumber") String scNumber,@PathVariable("version") String version) {
+		log.info("inside  findSubsidySchemeVersion::::{} version {}", scNumber, version);
+
+		if (StringUtils.isEmpty(scNumber)) {
+			throw new InvalidRequestException("Bad Request SC Number is null");
+		}
+		if (StringUtils.isEmpty(version)) {
+			throw new InvalidRequestException("Bad Request version is null");
+		}
+		SubsidyMeasureVersionResponse schemeVersion = searchService.findSubsidySchemeVersion(scNumber,version);
+
+		return new ResponseEntity<SubsidyMeasureVersionResponse>(schemeVersion, HttpStatus.OK);
+	}
 }

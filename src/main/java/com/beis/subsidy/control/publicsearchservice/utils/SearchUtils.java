@@ -1,6 +1,8 @@
 package com.beis.subsidy.control.publicsearchservice.utils;
 
+import com.beis.subsidy.control.publicsearchservice.controller.response.SubsidyMeasureVersionResponse;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -74,7 +77,7 @@ public class SearchUtils {
 	 */
 	public static String dateTimeToFullMonthNameInDate(LocalDateTime inputDateTime) {
 		log.info("input Date ::{}", inputDateTime);
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy H:mm:ss");
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss");
 		return dateFormat.format(inputDateTime);
 	}
 
@@ -180,5 +183,9 @@ public class SearchUtils {
 			return false;
 		}
 		return true;
+	}
+
+	public static List<SubsidyMeasureVersionResponse> getSchemeVersionResponseList(SubsidyMeasure scheme){
+		return scheme.getSchemeVersions().stream().map(SubsidyMeasureVersionResponse::new).collect(Collectors.toList());
 	}
 }
