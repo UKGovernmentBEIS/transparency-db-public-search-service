@@ -276,7 +276,7 @@ public class SchemeSearchController {
 		if(StringUtils.isEmpty(scNumber)) {
 			throw new InvalidRequestException("Invalid Request");
 		}
-		log.info("inside  getAwardDetailsByAwardNumber::::{}",scNumber);
+		log.info("inside getSchemeDetailsByScNumberWithAwards::::{}",scNumber);
 		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumberWithAwards(scNumber, searchInput);
 		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
 	}

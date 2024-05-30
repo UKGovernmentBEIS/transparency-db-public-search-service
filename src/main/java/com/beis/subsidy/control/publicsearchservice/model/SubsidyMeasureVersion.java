@@ -109,4 +109,7 @@ public class SubsidyMeasureVersion {
 
 	@Column(name = "SUBSIDY_SCHEME_INTEREST")
 	private String subsidySchemeInterest;
+
+	@Column(name = "REASON")
+	private String reason;
 }

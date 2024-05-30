@@ -120,4 +120,7 @@ public class SubsidyMeasure {
 	@OrderBy("lastModifiedTimestamp DESC")
 	private List<SubsidyMeasureVersion> schemeVersions;
 
+	@Column(name = "REASON")
+	private String reason;
+
 }
