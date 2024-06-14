@@ -95,6 +95,8 @@ public class SearchServiceImpl implements SearchService {
 			}
 
 			awardSpecifications = excludeAwardsWithDeletedSchemes(awardSpecifications);
+			awardSpecifications = excludeAwardByStatus(awardSpecifications, "Rejected");
+			awardSpecifications = excludeAwardByStatus(awardSpecifications, "Deleted");
 
 			List<Order> orders = getOrderByCondition(searchInput.getSortBy());
 
@@ -122,6 +124,11 @@ public class SearchServiceImpl implements SearchService {
 
 	private Specification<Award> excludeAwardsWithDeletedSchemes(Specification<Award> awardSpecifications){
 		awardSpecifications = awardSpecifications.and(AwardSpecificationUtils.subsidyMeasureIsDeleted());
+		return awardSpecifications;
+	}
+
+	private Specification<Award> excludeAwardByStatus(Specification<Award> awardSpecifications, String status){
+		awardSpecifications = awardSpecifications.and(AwardSpecificationUtils.notStatus(status));
 		return awardSpecifications;
 	}
 
@@ -234,6 +241,8 @@ public class SearchServiceImpl implements SearchService {
 		Pageable pagingSortAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
 
 		Specification<Award> awardSpecifications = getSpecificationStandaloneAwardDetails(searchInput);
+		awardSpecifications = excludeAwardByStatus(awardSpecifications, "Rejected");
+		awardSpecifications = excludeAwardByStatus(awardSpecifications, "Deleted");
 
 		Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 
