@@ -60,10 +60,10 @@ public final class AwardSpecificationUtils {
 	 * @return Specification<Award> - Specification for Award
 	 */
 	public static Specification<Award> subsidyObjectiveIn(List<String> subsidyObjectives) {
-		
+
 		return (root, query, builder) -> builder.or(subsidyObjectives
 		        .stream()
-		        .map(subsidyObjective -> builder.equal(builder.lower(root.get("subsidyObjective")), subsidyObjective.toLowerCase().trim()))
+		        .map(subsidyObjective -> builder.like(builder.lower(root.get("subsidyObjective")), "%" + subsidyObjective.toLowerCase().trim() + "%"))
 				.toArray(Predicate[]::new));
 	}
 
