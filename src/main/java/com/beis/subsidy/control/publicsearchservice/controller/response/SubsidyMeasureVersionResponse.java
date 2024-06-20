@@ -86,6 +86,9 @@ public class SubsidyMeasureVersionResponse {
     private String subsidySchemeInterest;
 
     @JsonProperty
+    private String purpose;
+
+    @JsonProperty
     private String reason;
 
     public SubsidyMeasureVersionResponse(SubsidyMeasureVersion subsidyMeasureVersion) {
@@ -132,6 +135,7 @@ public class SubsidyMeasureVersionResponse {
         }
         this.maximumAmountUnderScheme = subsidyMeasureVersion.getMaximumAmountUnderScheme();
         this.subsidySchemeInterest = subsidyMeasureVersion.getSubsidySchemeInterest() == null ? "" : subsidyMeasureVersion.getSubsidySchemeInterest();
+        this.purpose = subsidyMeasureVersion.getPurpose();
         this.reason = subsidyMeasureVersion.getReason();
     }
 }

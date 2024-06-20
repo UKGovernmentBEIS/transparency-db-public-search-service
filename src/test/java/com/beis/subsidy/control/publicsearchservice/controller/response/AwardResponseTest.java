@@ -35,6 +35,7 @@ public class AwardResponseTest {
         award.setSpendingRegion("region");
         award.setAuthorityURL("test.com");
         award.setAuthorityURLDescription("test.com description");
+        award.setSpecificPolicyObjective("policy objective");
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
@@ -56,6 +57,7 @@ public class AwardResponseTest {
         subsidyMeasure.setStatus("DEFAULT");
         subsidyMeasure.setStartDate(LocalDate.now());
         subsidyMeasure.setEndDate(LocalDate.now());
+        subsidyMeasure.setSpecificPolicyObjective("policy objective for a scheme");
         subsidyMeasure.setBudget("1000000");
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
@@ -102,6 +104,7 @@ public class AwardResponseTest {
         assertThat(awardResponse.getSpendingRegion()).isNotNull();
         assertThat(awardResponse.getAuthorityURL()).isNull();
         assertThat(awardResponse.getAuthorityURLDescription()).isNull();
+        assertThat(awardResponse.getSpecificPolicyObjective()).isNotNull();
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();
@@ -118,6 +121,7 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getLastModifiedTimestamp()).isNull();
         assertThat(awardResponse1.getSpendingSector()).isNotNull();
         assertThat(awardResponse1.getStatus()).isNotNull();
+        assertThat(awardResponse1.getSpecificPolicyObjective()).isNotNull();
         assertThat(awardResponse1.getSubsidyFullAmountExact()).isNotNull();
         assertThat(awardResponse1.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();
@@ -148,6 +152,7 @@ public class AwardResponseTest {
         award.setReason("rejectReason");
         award.setPublishedAwardDate(LocalDate.now());
         award.setSpendingRegion("region");
+        award.setSpecificPolicyObjective("policy objective");
         award.setAuthorityURL("test.com");
         award.setAuthorityURLDescription("test.com description");
         award.setSubsidyAwardInterest("Neither");
@@ -199,6 +204,7 @@ public class AwardResponseTest {
         assertThat(awardResponse.getAuthorityURLDescription()).isNotNull();
         assertThat(awardResponse.getSubsidyAwardInterest()).isNotNull();
 
+        assertThat(awardResponse.getSpecificPolicyObjective()).isNotNull();
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();
@@ -219,6 +225,7 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getSubsidyFullAmountRange()).isNotNull();
         assertThat(awardResponse1.getSubsidyMeasure()).isNotNull();
         assertThat(awardResponse1.getSubsidyObjective()).isNotNull();
+        assertThat(awardResponse1.getSpecificPolicyObjective()).isNotNull();
         assertThat(awardResponse1.getRejectReason()).isNotNull();
         assertThat(awardResponse1.getAuthorityURL()).isNotNull();
         assertThat(awardResponse1.getAuthorityURLDescription()).isNotNull();
