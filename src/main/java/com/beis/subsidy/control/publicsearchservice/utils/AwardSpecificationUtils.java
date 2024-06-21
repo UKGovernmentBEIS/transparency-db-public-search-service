@@ -132,6 +132,9 @@ public final class AwardSpecificationUtils {
 		return (root, query, builder) -> builder.like(root.get("status"), status);
 	}
 
+	public static Specification<Award> notStatus(String status){
+		return (root, query, builder) -> builder.notLike(root.get("status"), status);
+	}
 
 	public static Specification<Award> statusIn(List<String> statuses) {
 		return (root, query, builder) -> builder.or(statuses

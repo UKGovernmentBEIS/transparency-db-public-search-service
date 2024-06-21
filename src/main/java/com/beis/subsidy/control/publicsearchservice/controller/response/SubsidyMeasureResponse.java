@@ -77,7 +77,10 @@ public class SubsidyMeasureResponse {
 
     @JsonProperty
     private String subsidySchemeDescription;
-    
+
+    @JsonProperty
+    private String specificPolicyObjective;
+
     @JsonProperty
     private String confirmationDate;
 
@@ -88,6 +91,9 @@ public class SubsidyMeasureResponse {
     private String maximumAmountUnderScheme;
 
     @JsonProperty
+    private String purpose;
+
+    @JsonProperty
     private List<SubsidyMeasureVersionResponse> schemeVersions;
 
     @JsonProperty
@@ -96,6 +102,9 @@ public class SubsidyMeasureResponse {
 
     @JsonProperty
     private String subsidySchemeInterest;
+
+    @JsonProperty
+    private String reason;
 
 
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
@@ -126,9 +135,12 @@ public class SubsidyMeasureResponse {
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
         this.subsidySchemeDescription = subsidyMeasure.getSubsidySchemeDescription();
+        this.specificPolicyObjective = subsidyMeasure.getSpecificPolicyObjective();
         this.spendingSectors = subsidyMeasure.getSpendingSectors();
         this.maximumAmountUnderScheme = subsidyMeasure.getMaximumAmountUnderScheme();
         this.subsidySchemeInterest = subsidyMeasure.getSubsidySchemeInterest();
         this.schemeVersions = SearchUtils.getSchemeVersionResponseList(subsidyMeasure);
+        this.purpose = subsidyMeasure.getPurpose();
+        this.reason = subsidyMeasure.getReason();
     }
 }

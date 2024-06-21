@@ -83,6 +83,10 @@ public class AwardResponse {
     private String subsidyAwardDescription;
 
     @JsonProperty
+    private String specificPolicyObjective;
+
+
+    @JsonProperty
     private String adminProgramNumber;
 
     @JsonProperty
@@ -148,6 +152,8 @@ public class AwardResponse {
         }
         this.standaloneAward = award.getStandaloneAward();
         this.subsidyAwardDescription = award.getSubsidyAwardDescription();
+
+        this.specificPolicyObjective = award.getSpecificPolicyObjective();
 
         if(award.getAdminProgram() != null){
             this.adminProgramNumber = award.getAdminProgram().getApNumber();

@@ -103,6 +103,9 @@ public class SubsidyMeasure {
 	@Column (name = "SUBSIDY_SCHEME_DESCRIPTION")
 	private String subsidySchemeDescription;
 
+	@Column (name = "SPECIFIC_POLICY_OBJECTIVE")
+	private String specificPolicyObjective;
+
 	@Column(name = "CONFIRMATION_DATE")
 	private LocalDate confirmationDate;
 
@@ -112,6 +115,9 @@ public class SubsidyMeasure {
 	@Column(name = "MAXIMUM_AMOUNT_UNDER_SCHEME")
 	private String maximumAmountUnderScheme;
 
+	@Column(name = "PURPOSE")
+	private String purpose;
+
 	@Column(name = "SUBSIDY_SCHEME_INTEREST")
 	private String subsidySchemeInterest;
 
@@ -119,5 +125,8 @@ public class SubsidyMeasure {
 	@JoinColumn(name = "sc_number")
 	@OrderBy("lastModifiedTimestamp DESC")
 	private List<SubsidyMeasureVersion> schemeVersions;
+
+	@Column(name = "REASON")
+	private String reason;
 
 }
