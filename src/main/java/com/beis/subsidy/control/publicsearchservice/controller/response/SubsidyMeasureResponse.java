@@ -103,9 +103,11 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private String subsidySchemeInterest;
 
+    @JsonProperty
+    private String reason;
+
 
     public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
-
         this.scNumber = subsidyMeasure.getScNumber();
         this.subsidyMeasureTitle  = subsidyMeasure.getSubsidyMeasureTitle();
         this.adhoc = subsidyMeasure.isAdhoc();
@@ -139,6 +141,6 @@ public class SubsidyMeasureResponse {
         this.subsidySchemeInterest = subsidyMeasure.getSubsidySchemeInterest();
         this.schemeVersions = SearchUtils.getSchemeVersionResponseList(subsidyMeasure);
         this.purpose = subsidyMeasure.getPurpose();
+        this.reason = subsidyMeasure.getReason();
     }
-
 }
