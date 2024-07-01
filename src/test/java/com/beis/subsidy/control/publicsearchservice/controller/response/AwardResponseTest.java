@@ -156,6 +156,7 @@ public class AwardResponseTest {
         award.setAuthorityURL("test.com");
         award.setAuthorityURLDescription("test.com description");
         award.setSubsidyAwardInterest("Neither");
+        award.setSPEI("Yes");
 
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
@@ -203,8 +204,8 @@ public class AwardResponseTest {
         assertThat(awardResponse.getAuthorityURL()).isNotNull();
         assertThat(awardResponse.getAuthorityURLDescription()).isNotNull();
         assertThat(awardResponse.getSubsidyAwardInterest()).isNotNull();
-
         assertThat(awardResponse.getSpecificPolicyObjective()).isNotNull();
+        assertThat(awardResponse.getSPEI()).isNotNull();
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();

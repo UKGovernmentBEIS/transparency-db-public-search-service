@@ -114,4 +114,7 @@ public class Award {
 
 	@Column(name = "AUTHORITY_URL_DESCRIPTION")
 	private String authorityURLDescription;
+
+	@Column(name = "SPEI")
+	private String spei;
 }
