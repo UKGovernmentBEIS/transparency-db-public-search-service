@@ -101,6 +101,9 @@ public class AwardResponse {
     @JsonProperty
     private String authorityURLDescription;
 
+    @JsonProperty
+    private String spei;
+
     public AwardResponse(Award award, boolean flag) {
     	
     	log.info("inside  AwardResponse::");
@@ -177,5 +180,7 @@ public class AwardResponse {
             this.authorityURL = null;
             this.authorityURLDescription = null;
         }
+
+        this.spei = award.getSpei();
     }
 }

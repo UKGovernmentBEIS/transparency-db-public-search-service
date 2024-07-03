@@ -37,6 +37,7 @@ public class SearchResultsTest {
         award.setStandaloneAward("No");
         award.setSubsidyAwardDescription("Description");
         award.setAdminProgram(null);
+        award.setSpei("Yes");
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setBeneficiaryId(1l);
