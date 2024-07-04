@@ -130,7 +130,7 @@ public class SchemeSearchController {
 				searchInput.setSubsidyStartDateFrom(startDateFrom);
 			}else{
 				log.error("Invalid date format given for Start Date (From): " + startDateFromString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+//				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -148,7 +148,7 @@ public class SchemeSearchController {
 				searchInput.setSubsidyStartDateTo(startDateTo);
 			}else{
 				log.error("Invalid date format given for Start Date (To): " + startDateToString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+//				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -178,7 +178,7 @@ public class SchemeSearchController {
 				searchInput.setSubsidyEndDateFrom(endDateFrom);
 			}else{
 				log.error("Invalid date format given for End Date (From): " + endDateFromString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+//				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -196,7 +196,7 @@ public class SchemeSearchController {
 				searchInput.setSubsidyEndDateTo(endDateTo);
 			}else{
 				log.error("Invalid date format given for End Date (To): " + endDateToString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+//				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
