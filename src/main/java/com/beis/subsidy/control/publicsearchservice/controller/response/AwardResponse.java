@@ -1,6 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
@@ -83,10 +83,26 @@ public class AwardResponse {
     private String subsidyAwardDescription;
 
     @JsonProperty
+    private String specificPolicyObjective;
+
+
+    @JsonProperty
     private String adminProgramNumber;
 
     @JsonProperty
     private String adminProgramName;
+
+    @JsonProperty
+    private String subsidyAwardInterest;
+
+    @JsonProperty
+    private String authorityURL;
+
+    @JsonProperty
+    private String authorityURLDescription;
+
+    @JsonProperty
+    private String spei;
 
     public AwardResponse(Award award, boolean flag) {
     	
@@ -127,6 +143,7 @@ public class AwardResponse {
             mockedScheme.setStatus("Mocked");
             mockedScheme.setScNumber("NA");
             mockedScheme.setSubsidyMeasureTitle("NA");
+            mockedScheme.setSchemeVersions(new ArrayList<>());
 
             mockedScheme.setLegalBases(mockedLegal);
             mockedScheme.setGrantingAuthority(mockedGA);
@@ -139,6 +156,8 @@ public class AwardResponse {
         this.standaloneAward = award.getStandaloneAward();
         this.subsidyAwardDescription = award.getSubsidyAwardDescription();
 
+        this.specificPolicyObjective = award.getSpecificPolicyObjective();
+
         if(award.getAdminProgram() != null){
             this.adminProgramNumber = award.getAdminProgram().getApNumber();
             this.adminProgramName = award.getAdminProgram().getAdminProgramName();
@@ -146,5 +165,22 @@ public class AwardResponse {
             this.adminProgramNumber = "NA";
             this.adminProgramName = "NA";
         }
+      
+        this.subsidyAwardInterest = award.getSubsidyAwardInterest();
+
+        if(award.getStandaloneAward() != null && award.getStandaloneAward().equalsIgnoreCase("yes")) {
+            if (award.getAuthorityURL() != null)
+                this.authorityURL = award.getAuthorityURL();
+
+            if(award.getAuthorityURLDescription() != null)
+                this.authorityURLDescription = award.getAuthorityURLDescription();
+
+        }
+        else {
+            this.authorityURL = null;
+            this.authorityURLDescription = null;
+        }
+
+        this.spei = award.getSpei();
     }
 }

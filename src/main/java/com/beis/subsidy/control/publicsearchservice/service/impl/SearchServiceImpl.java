@@ -6,10 +6,8 @@ import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFou
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.MFAAward;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
-import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.MFAAwardRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.MFAGroupingRepository;
-import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
+import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasureVersion;
+import com.beis.subsidy.control.publicsearchservice.repository.*;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
 import com.beis.subsidy.control.publicsearchservice.utils.MFAAwardSpecificationUtils;
@@ -29,6 +27,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Service class for Public Search service 
@@ -45,6 +45,9 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	private MFAGroupingRepository mfaGroupingRepository;
+
+	@Autowired
+	private SubsidyMeasureVersionRepository subsidyMeasureVersionRepository;
 
 	@Autowired
 	private MFAAwardRepository mfaAwardRepository;
@@ -92,6 +95,8 @@ public class SearchServiceImpl implements SearchService {
 			}
 
 			awardSpecifications = excludeAwardsWithDeletedSchemes(awardSpecifications);
+			awardSpecifications = excludeAwardByStatus(awardSpecifications, "Rejected");
+			awardSpecifications = excludeAwardByStatus(awardSpecifications, "Deleted");
 
 			List<Order> orders = getOrderByCondition(searchInput.getSortBy());
 
@@ -122,6 +127,11 @@ public class SearchServiceImpl implements SearchService {
 		return awardSpecifications;
 	}
 
+	private Specification<Award> excludeAwardByStatus(Specification<Award> awardSpecifications, String status){
+		awardSpecifications = awardSpecifications.and(AwardSpecificationUtils.notStatus(status));
+		return awardSpecifications;
+	}
+
 	private Specification<SubsidyMeasure> excludeDeleteSchemes(Specification<SubsidyMeasure> subsidyMeasureSpecification){
 		subsidyMeasureSpecification = subsidyMeasureSpecification.and(SubsidyMeasureSpecificationUtils.subsidyMeasureIsDeleted());
 		return subsidyMeasureSpecification;
@@ -145,11 +155,30 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public SubsidyMeasureResponse findSchemeByScNumber(String scNumber){
 		SubsidyMeasure scheme = schemeRepository.findByScNumber(scNumber);
-
 		if (scheme == null){
 			throw new SearchResultNotFoundException("Scheme NotFound");
 		}
 		return new SubsidyMeasureResponse(scheme, true);
+	}
+
+	@Override
+	public SubsidyMeasureResponse findSchemeByScNumberWithAwards(String scNumber, SearchInput awardsSearchInput){
+		SubsidyMeasure subsidyMeasure = schemeRepository.findByScNumber(scNumber);
+		if (subsidyMeasure == null){
+			throw new SearchResultNotFoundException("Scheme NotFound");
+		}
+
+		try {
+			SearchResults searchResults = findMatchingAwards(awardsSearchInput);
+			SubsidyMeasureResponse response = new SubsidyMeasureResponse(subsidyMeasure, true);
+			response.setAwardSearchResults(searchResults);
+			return response;
+		}
+		catch(SearchResultNotFoundException ex)
+		{
+			log.info("SearchResultNotFoundException: No matching awards found");
+			return new SubsidyMeasureResponse(subsidyMeasure, true);
+		}
 	}
 
 	public Specification<Award>  getSpecificationStandaloneAwardDetails(SearchInput searchinput) {
@@ -212,6 +241,8 @@ public class SearchServiceImpl implements SearchService {
 		Pageable pagingSortAwards = PageRequest.of(searchInput.getPageNumber() - 1, searchInput.getTotalRecordsPerPage(), Sort.by(orders));
 
 		Specification<Award> awardSpecifications = getSpecificationStandaloneAwardDetails(searchInput);
+		awardSpecifications = excludeAwardByStatus(awardSpecifications, "Rejected");
+		awardSpecifications = excludeAwardByStatus(awardSpecifications, "Deleted");
 
 		Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 
@@ -231,6 +262,13 @@ public class SearchServiceImpl implements SearchService {
 		}
 
 		return searchResults;
+	}
+
+	@Override
+	public SubsidyMeasureVersionResponse findSubsidySchemeVersion(String scNumber, String version) {
+		SubsidyMeasureVersion schemeVersion = subsidyMeasureVersionRepository.findByScNumberAndVersion(scNumber, UUID.fromString(version));
+
+		return new SubsidyMeasureVersionResponse(schemeVersion);
 	}
 
 	@Override
@@ -319,7 +357,7 @@ public class SearchServiceImpl implements SearchService {
 	        }
 	      } else {
 	    	//Default sort - Legal Granting Date with recent one at top	
-	        orders.add(new Order(getSortDirection("desc"), "legalGrantingDate"));
+	        orders.add(new Order(getSortDirection("desc"), "publishedAwardDate"));
 	      }
 
 		return orders;
@@ -375,7 +413,8 @@ public class SearchServiceImpl implements SearchService {
 						//Like search for other subsidy objective
 						.or(searchinput.getOtherSubsidyObjective() == null || searchinput.getOtherSubsidyObjective().isEmpty()
 								? null : AwardSpecificationUtils.otherSubsidyObjective(searchinput.getOtherSubsidyObjective())))
-
+				.and(searchinput.getScNumber() == null || searchinput.getScNumber().isEmpty()
+						? null : AwardSpecificationUtils.scNumber(searchinput.getScNumber()))
 				// getSpendingRegion from input parameter
 				.and(searchinput.getSpendingRegion() == null || searchinput.getSpendingRegion().isEmpty()
 						? null : AwardSpecificationUtils.spendingRegionIn(searchinput.getSpendingRegion()))

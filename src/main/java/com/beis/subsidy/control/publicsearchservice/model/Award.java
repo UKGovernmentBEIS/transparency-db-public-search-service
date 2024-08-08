@@ -99,7 +99,22 @@ public class Award {
 	@Column(name = "SUBSIDY_AWARD_DESCRIPTION")
 	private String subsidyAwardDescription;
 
+	@Column(name = "SPECIFIC_POLICY_OBJECTIVE")
+	private String specificPolicyObjective;
+
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "apNumber")
 	private AdminProgram adminProgram;
+
+	@Column(name = "SUBSIDY_AWARD_INTEREST")
+	private String subsidyAwardInterest;
+
+	@Column(name = "AUTHORITY_URL")
+	private String authorityURL;
+
+	@Column(name = "AUTHORITY_URL_DESCRIPTION")
+	private String authorityURLDescription;
+
+	@Column(name = "SPEI")
+	private String spei;
 }

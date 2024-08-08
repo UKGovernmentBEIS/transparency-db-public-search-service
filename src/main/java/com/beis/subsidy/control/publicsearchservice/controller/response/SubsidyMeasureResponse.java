@@ -4,11 +4,12 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.Column;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -76,7 +77,10 @@ public class SubsidyMeasureResponse {
 
     @JsonProperty
     private String subsidySchemeDescription;
-    
+
+    @JsonProperty
+    private String specificPolicyObjective;
+
     @JsonProperty
     private String confirmationDate;
 
@@ -86,8 +90,24 @@ public class SubsidyMeasureResponse {
     @JsonProperty
     private String maximumAmountUnderScheme;
 
-    public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
+    @JsonProperty
+    private String purpose;
 
+    @JsonProperty
+    private List<SubsidyMeasureVersionResponse> schemeVersions;
+
+    @JsonProperty
+    @Setter
+    private SearchResults awardSearchResults;
+
+    @JsonProperty
+    private String subsidySchemeInterest;
+
+    @JsonProperty
+    private String reason;
+
+
+    public SubsidyMeasureResponse(SubsidyMeasure subsidyMeasure, boolean showAll) {
         this.scNumber = subsidyMeasure.getScNumber();
         this.subsidyMeasureTitle  = subsidyMeasure.getSubsidyMeasureTitle();
         this.adhoc = subsidyMeasure.isAdhoc();
@@ -109,13 +129,18 @@ public class SubsidyMeasureResponse {
             if(subsidyMeasure.getDeletedTimestamp() != null) {
                 this.deletedTimestamp = SearchUtils.dateTimeToFullMonthNameInDate(subsidyMeasure.getDeletedTimestamp());
             }
-            this.createdTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getCreatedTimestamp());
-            this.lastModifiedTimestamp = SearchUtils.timestampToFullMonthNameInDate(subsidyMeasure.getLastModifiedTimestamp());
+            this.createdTimestamp = SearchUtils.dateTimeToFullMonthNameInDate(subsidyMeasure.getCreatedTimestamp()).replaceAll(" 00:00:00", "");
+            this.lastModifiedTimestamp = SearchUtils.dateTimeToFullMonthNameInDate(subsidyMeasure.getLastModifiedTimestamp()).replaceAll(" 00:00:00", "");
         }
         this.legalBasis = new LegalBasisResponse(subsidyMeasure.getLegalBases());
         this.grantingAuthorityName = subsidyMeasure.getGrantingAuthority().getGrantingAuthorityName();
         this.subsidySchemeDescription = subsidyMeasure.getSubsidySchemeDescription();
+        this.specificPolicyObjective = subsidyMeasure.getSpecificPolicyObjective();
         this.spendingSectors = subsidyMeasure.getSpendingSectors();
         this.maximumAmountUnderScheme = subsidyMeasure.getMaximumAmountUnderScheme();
+        this.subsidySchemeInterest = subsidyMeasure.getSubsidySchemeInterest();
+        this.schemeVersions = SearchUtils.getSchemeVersionResponseList(subsidyMeasure);
+        this.purpose = subsidyMeasure.getPurpose();
+        this.reason = subsidyMeasure.getReason();
     }
 }

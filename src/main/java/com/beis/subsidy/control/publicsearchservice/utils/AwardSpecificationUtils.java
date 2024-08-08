@@ -23,6 +23,11 @@ public final class AwardSpecificationUtils {
 	public static Specification<Award> subsidyMeasureTitle(String subsidyMeasureTitle) {
 	    return (root, query, builder) -> builder.like(root.get("subsidyMeasure").get("subsidyMeasureTitle"), contains(subsidyMeasureTitle));
 	}
+
+	public static Specification<Award> scNumber(String scNumber)
+	{
+		return (root, query, builder) -> builder.like(root.get("subsidyMeasure").get("scNumber"), contains(scNumber));
+	}
 	
 	/**
 	 * To define specification for legal granting date range
@@ -55,10 +60,10 @@ public final class AwardSpecificationUtils {
 	 * @return Specification<Award> - Specification for Award
 	 */
 	public static Specification<Award> subsidyObjectiveIn(List<String> subsidyObjectives) {
-		
+
 		return (root, query, builder) -> builder.or(subsidyObjectives
 		        .stream()
-		        .map(subsidyObjective -> builder.equal(builder.lower(root.get("subsidyObjective")), subsidyObjective.toLowerCase().trim()))
+		        .map(subsidyObjective -> builder.like(builder.lower(root.get("subsidyObjective")), "%" + subsidyObjective.toLowerCase().trim() + "%"))
 				.toArray(Predicate[]::new));
 	}
 
@@ -127,6 +132,9 @@ public final class AwardSpecificationUtils {
 		return (root, query, builder) -> builder.like(root.get("status"), status);
 	}
 
+	public static Specification<Award> notStatus(String status){
+		return (root, query, builder) -> builder.notLike(root.get("status"), status);
+	}
 
 	public static Specification<Award> statusIn(List<String> statuses) {
 		return (root, query, builder) -> builder.or(statuses

@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -129,7 +130,6 @@ public class SchemeSearchController {
 				searchInput.setSubsidyStartDateFrom(startDateFrom);
 			}else{
 				log.error("Invalid date format given for Start Date (From): " + startDateFromString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -147,7 +147,6 @@ public class SchemeSearchController {
 				searchInput.setSubsidyStartDateTo(startDateTo);
 			}else{
 				log.error("Invalid date format given for Start Date (To): " + startDateToString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -177,7 +176,6 @@ public class SchemeSearchController {
 				searchInput.setSubsidyEndDateFrom(endDateFrom);
 			}else{
 				log.error("Invalid date format given for End Date (From): " + endDateFromString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -195,7 +193,6 @@ public class SchemeSearchController {
 				searchInput.setSubsidyEndDateTo(endDateTo);
 			}else{
 				log.error("Invalid date format given for End Date (To): " + endDateToString);
-				return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -218,19 +215,7 @@ public class SchemeSearchController {
 					break;
 				default:
 					log.error("Invalid value given Status: " + request.getParameter("status"));
-					return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
-			}
-		}
-
-		if(!SearchUtils.checkNullOrEmptyString(request.getParameter("adhoc"))){
-			switch(request.getParameter("adhoc").toLowerCase()){
-				case "yes":
-				case "no":
-					searchInput.setAdHoc(request.getParameter("adhoc").toLowerCase());
-					break;
-				default:
-					log.error("Invalid value given AdHoc: " + request.getParameter("adhoc"));
-					return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<SubsidyMeasuresResponse>(new SubsidyMeasuresResponse(), HttpStatus.OK);
 			}
 		}
 
@@ -272,5 +257,41 @@ public class SchemeSearchController {
 		log.info("inside  getAwardDetailsByAwardNumber::::{}",scNumber);
 		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumber(scNumber);
 		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
+	}
+
+	/**
+	 * To get details of scheme based on schemeNumber
+	 * @return ResponseEntity - Return associated scheme details in the response
+	 */
+	@PostMapping(
+			path = "/scheme/withawards/{schemeNumber}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasureResponse> getSchemeDetailsByScNumberWithAwards(@PathVariable("schemeNumber") String scNumber, @Valid @RequestBody SearchInput searchInput) {
+
+		if(StringUtils.isEmpty(scNumber)) {
+			throw new InvalidRequestException("Invalid Request");
+		}
+		log.info("inside getSchemeDetailsByScNumberWithAwards::::{}",scNumber);
+		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumberWithAwards(scNumber, searchInput);
+		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/scheme/{scNumber}/version/{version}",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasureVersionResponse> findSubsidySchemeVersion(@PathVariable("scNumber") String scNumber,@PathVariable("version") String version) {
+		log.info("inside  findSubsidySchemeVersion::::{} version {}", scNumber, version);
+
+		if (StringUtils.isEmpty(scNumber)) {
+			throw new InvalidRequestException("Bad Request SC Number is null");
+		}
+		if (StringUtils.isEmpty(version)) {
+			throw new InvalidRequestException("Bad Request version is null");
+		}
+		SubsidyMeasureVersionResponse schemeVersion = searchService.findSubsidySchemeVersion(scNumber,version);
+
+		return new ResponseEntity<SubsidyMeasureVersionResponse>(schemeVersion, HttpStatus.OK);
 	}
 }
