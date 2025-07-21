@@ -43,6 +43,7 @@ public class AwardResponseTest {
         beneficiary.setBeneficiaryName("bName");
         beneficiary.setOrgSize("1");
         award.setBeneficiary(beneficiary);
+        award.setLegalBasis("legal basis");
 
         //SubsidyMeasure
         SubsidyMeasure subsidyMeasure = new  SubsidyMeasure();
@@ -105,6 +106,7 @@ public class AwardResponseTest {
         assertThat(awardResponse.getAuthorityURL()).isNull();
         assertThat(awardResponse.getAuthorityURLDescription()).isNull();
         assertThat(awardResponse.getSpecificPolicyObjective()).isNotNull();
+        assertThat(awardResponse.getLegalBasis()).isNotNull();
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();
@@ -157,6 +159,7 @@ public class AwardResponseTest {
         award.setAuthorityURLDescription("test.com description");
         award.setSubsidyAwardInterest("Neither");
         award.setSpei("Yes");
+        award.setLegalBasis("legal basis");
 
         //beneficiary details
         Beneficiary beneficiary = new Beneficiary();
@@ -206,6 +209,7 @@ public class AwardResponseTest {
         assertThat(awardResponse.getSubsidyAwardInterest()).isNotNull();
         assertThat(awardResponse.getSpecificPolicyObjective()).isNotNull();
         assertThat(awardResponse.getSpei()).isNotNull();
+        assertThat(awardResponse.getLegalBasis()).isNotNull();
 
         AwardResponse awardResponse1 = new AwardResponse(award, false);
         assertThat(awardResponse1).isNotNull();
@@ -230,5 +234,6 @@ public class AwardResponseTest {
         assertThat(awardResponse1.getRejectReason()).isNotNull();
         assertThat(awardResponse1.getAuthorityURL()).isNotNull();
         assertThat(awardResponse1.getAuthorityURLDescription()).isNotNull();
+        assertThat(awardResponse1.getLegalBasis()).isNotNull();
     }
 }

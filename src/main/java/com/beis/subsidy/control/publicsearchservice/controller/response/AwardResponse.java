@@ -104,6 +104,9 @@ public class AwardResponse {
     @JsonProperty
     private String spei;
 
+    @JsonProperty
+    private String legalBasis;
+
     public AwardResponse(Award award, boolean flag) {
     	
     	log.info("inside  AwardResponse::");
@@ -182,5 +185,7 @@ public class AwardResponse {
         }
 
         this.spei = award.getSpei();
+
+        this.legalBasis = award.getLegalBasis();
     }
 }

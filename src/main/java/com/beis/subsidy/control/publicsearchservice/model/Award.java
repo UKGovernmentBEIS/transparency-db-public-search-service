@@ -117,4 +117,7 @@ public class Award {
 
 	@Column(name = "SPEI")
 	private String spei;
+
+	@Column(name="LEGAL_BASIS")
+	private String legalBasis;
 }
