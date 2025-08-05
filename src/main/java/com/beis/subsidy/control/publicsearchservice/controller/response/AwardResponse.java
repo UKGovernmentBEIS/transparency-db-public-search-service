@@ -107,6 +107,9 @@ public class AwardResponse {
     @JsonProperty
     private String legalBasis;
 
+    @JsonProperty
+    private String standaloneAwardTitle;
+
     public AwardResponse(Award award, boolean flag) {
     	
     	log.info("inside  AwardResponse::");
@@ -178,10 +181,14 @@ public class AwardResponse {
             if(award.getAuthorityURLDescription() != null)
                 this.authorityURLDescription = award.getAuthorityURLDescription();
 
+            if(award.getStandaloneAwardTitle() != null){
+                this.standaloneAwardTitle = award.getStandaloneAwardTitle();
+            }
         }
         else {
             this.authorityURL = null;
             this.authorityURLDescription = null;
+            this.standaloneAwardTitle = "NA";
         }
 
         this.spei = award.getSpei();
