@@ -71,4 +71,6 @@ public class SearchInput {
 	private Boolean isSpei;
 
 	private String mfaGroupingName;
+
+	private String searchTerm;
 }

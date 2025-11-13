@@ -21,4 +21,8 @@ public interface SearchService {
     SearchResults findStandaloneAwards(SearchInput searchInput);
 
     SubsidyMeasureVersionResponse findSubsidySchemeVersion(String scNumber, String version);
+
+    SubsidyMeasuresResponse searchSchemes(SearchInput searchInput);
+
+    SearchResults searchAwards(SearchInput searchInput);
 }

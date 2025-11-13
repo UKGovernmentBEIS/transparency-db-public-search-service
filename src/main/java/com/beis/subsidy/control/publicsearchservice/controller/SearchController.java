@@ -1,8 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
-import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardsResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 
@@ -11,7 +9,7 @@ import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -52,6 +50,34 @@ public class SearchController {
 	@GetMapping("/health")
 	public ResponseEntity<String> getHealth() {
 		return new ResponseEntity<>("Successful health check - Public Search API", HttpStatus.OK);
+	}
+
+	/**
+	 * Wildcard search of all entities
+	 * @return ResponseEntity - Return response status and description
+	 */
+	@GetMapping("/search")
+	public ResponseEntity<SearchResultsResponse> search(){
+		SearchResultsResponse searchResultsResponse = new SearchResultsResponse();
+		log.info("inside wildcard search");
+
+		final String query = request.getParameter("q");
+
+		SearchInput searchInput = new SearchInput();
+
+		searchInput.setSearchTerm(query);
+
+		// search for schemes
+		searchResultsResponse.setSubsidySchemes(searchService.searchSchemes(searchInput));
+		// search for subsidy awards
+		searchResultsResponse.setAwards(searchService.searchAwards(searchInput));
+		// search for standalone awards
+
+		// search for mfa awards
+
+
+
+		return new ResponseEntity<>(searchResultsResponse, HttpStatus.OK);
 	}
 
 	/**

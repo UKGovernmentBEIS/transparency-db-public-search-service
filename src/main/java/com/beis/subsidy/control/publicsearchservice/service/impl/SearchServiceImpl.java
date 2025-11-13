@@ -272,6 +272,23 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
+	public SubsidyMeasuresResponse searchSchemes(SearchInput searchInput) {
+		Page<SubsidyMeasure> results = schemeRepository.findAllBySubsidyMeasureTitleContainingOrScNumberContaining(searchInput.getSearchTerm(),searchInput.getSearchTerm(),Pageable.unpaged());
+
+		List<SubsidyMeasure> schemeResults = results.getContent();
+		return new SubsidyMeasuresResponse(schemeResults, results.getTotalElements(),
+				results.getNumber() + 1, results.getTotalPages());
+	}
+
+	@Override
+	public SearchResults searchAwards(SearchInput searchInput){
+		Page<Award> results = awardRepository.findAllByBeneficiary_BeneficiaryNameContains(searchInput.getSearchTerm(),Pageable.unpaged());
+
+		List<Award> awardResults = results.getContent();
+		return new SearchResults(awardResults, results.getTotalElements(), results.getNumber() + 1, results.getTotalPages());
+	}
+
+	@Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
 		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
 		List<Order> orders = getOrderByCondition(searchInput.getSortBy());

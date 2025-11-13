@@ -1,5 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -12,4 +14,7 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 public interface SubsidyMeasureRepository extends JpaRepository<SubsidyMeasure, Long>, JpaSpecificationExecutor<SubsidyMeasure> {
 
     SubsidyMeasure findByScNumber(String scNumber);
+
+    Page<SubsidyMeasure> findAllBySubsidyMeasureTitleContainingOrScNumberContaining(String title, String scNumber, Pageable pageable);
+
 }
