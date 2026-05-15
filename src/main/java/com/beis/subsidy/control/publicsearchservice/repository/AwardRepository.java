@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 
+import java.util.Optional;
+
 /**
  * Interface for Award repository to get award details from database 
  *
@@ -17,4 +19,8 @@ public interface AwardRepository extends JpaRepository<Award, Long>, JpaSpecific
 
     Award findByAwardNumber(Long awardNumber);
     Page<Award> findBySubsidyMeasure(SubsidyMeasure subsidyMeasure, Pageable pageable);
+
+    Page<Award> findByStatus(String status, Pageable pageable);
+
+    Optional<Award> findByAwardNumberAndStatus(Long awardNumber, String published);
 }
