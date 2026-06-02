@@ -2,13 +2,11 @@ package com.beis.subsidy.control.publicsearchservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -52,4 +50,6 @@ public class SubsidyMeasureDto {
     private String subsidySchemeInterest;
 
     private String legalBasis;
+
+    List<AwardSummaryDto> awards;
 }

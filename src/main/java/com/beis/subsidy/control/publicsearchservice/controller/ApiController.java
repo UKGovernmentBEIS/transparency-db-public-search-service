@@ -1,12 +1,14 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
 import com.beis.subsidy.control.publicsearchservice.dto.AwardDto;
+import com.beis.subsidy.control.publicsearchservice.dto.AwardSummaryDto;
 import com.beis.subsidy.control.publicsearchservice.dto.BeneficiaryDto;
 import com.beis.subsidy.control.publicsearchservice.dto.SubsidyMeasureDto;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.Beneficiary;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This is rest controller for Public Search service APIs
@@ -34,6 +39,9 @@ public class ApiController {
     @Autowired
     private AwardRepository awardRepository;
 
+    @Autowired
+    private SubsidyMeasureRepository subsidyMeasureRepository;
+
 
     @GetMapping("/awards")
     public Page<AwardDto> awards(HttpServletRequest request, Pageable pageable) {
@@ -48,6 +56,63 @@ public class ApiController {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Award " + awardNumber + " not found"));
+    }
+
+    @GetMapping("/schemes")
+    public Page<SubsidyMeasureDto> schemes(HttpServletRequest request, Pageable pageable) {
+        return subsidyMeasureRepository.findByStatus("Active", pageable)
+                .map(this::toDto);
+    }
+
+    @GetMapping("/schemes/{scNumber}")
+    public SubsidyMeasureDto award(HttpServletRequest request, @PathVariable String scNumber) {
+        return subsidyMeasureRepository.findByScNumberAndStatus(scNumber, "Active")
+                .map(this::toDto)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Scheme " + scNumber + " not found"));
+    }
+
+    private SubsidyMeasureDto toDto(SubsidyMeasure scheme){
+        List<Award> awards = scheme.getAwards();
+        List<AwardSummaryDto> awardDtos = Collections.emptyList();
+
+        if (scheme.getAwards() != null) {
+            awardDtos = scheme.getAwards().stream()
+                    .filter(award -> "Published".equals(award.getStatus()))
+                    .map(this::toDtoSummary)
+                    .collect(Collectors.toList());
+        }
+
+        return new SubsidyMeasureDto(
+                scheme.getScNumber(),
+                scheme.getSubsidyMeasureTitle(),
+                scheme.getStartDate(),
+                scheme.getEndDate(),
+                scheme.getDuration(),
+                scheme.getBudget(),
+                scheme.getGaSubsidyWebLink(),
+                scheme.getGaSubsidyWebLinkDescription(),
+                scheme.getPublishedMeasureDate(),
+                scheme.getStatus(),
+                scheme.getCreatedTimestamp(),
+                scheme.getLastModifiedTimestamp(),
+                scheme.getSubsidySchemeDescription(),
+                scheme.getSpecificPolicyObjective(),
+                scheme.getConfirmationDate(),
+                scheme.getSpendingSectors(),
+                scheme.getMaximumAmountUnderScheme(),
+                scheme.getPurpose(),
+                scheme.getSubsidySchemeInterest(),
+                scheme.getLegalBases().getLegalBasisText(),
+                awardDtos
+        );
+    }
+
+    private AwardSummaryDto toDtoSummary(Award award){
+        return new AwardSummaryDto(
+                award.getAwardNumber()
+        );
     }
 
     private AwardDto toDto(Award award) {
@@ -86,34 +151,13 @@ public class ApiController {
         );
     }
 
-    private static SubsidyMeasureDto getSubsidyMeasureDto(Award award) {
+    private SubsidyMeasureDto getSubsidyMeasureDto(Award award) {
         SubsidyMeasure subsidyMeasure = award.getSubsidyMeasure();
-        SubsidyMeasureDto subsidyMeasureDto = null;
 
-        if (subsidyMeasure != null){
-            subsidyMeasureDto = new SubsidyMeasureDto(
-                    subsidyMeasure.getScNumber(),
-                    subsidyMeasure.getSubsidyMeasureTitle(),
-                    subsidyMeasure.getStartDate(),
-                    subsidyMeasure.getEndDate(),
-                    subsidyMeasure.getDuration(),
-                    subsidyMeasure.getBudget(),
-                    subsidyMeasure.getGaSubsidyWebLink(),
-                    subsidyMeasure.getGaSubsidyWebLinkDescription(),
-                    subsidyMeasure.getPublishedMeasureDate(),
-                    subsidyMeasure.getStatus(),
-                    subsidyMeasure.getCreatedTimestamp(),
-                    subsidyMeasure.getLastModifiedTimestamp(),
-                    subsidyMeasure.getSubsidySchemeDescription(),
-                    subsidyMeasure.getSpecificPolicyObjective(),
-                    subsidyMeasure.getConfirmationDate(),
-                    subsidyMeasure.getSpendingSectors(),
-                    subsidyMeasure.getMaximumAmountUnderScheme(),
-                    subsidyMeasure.getPurpose(),
-                    subsidyMeasure.getSubsidySchemeInterest(),
-                    subsidyMeasure.getLegalBases().getLegalBasisText()
-            );
+        if (subsidyMeasure == null){
+            return null;
         }
-        return subsidyMeasureDto;
+
+        return toDto(subsidyMeasure);
     }
 }
