@@ -4,7 +4,6 @@ import com.beis.subsidy.control.publicsearchservice.dto.AwardDto;
 import com.beis.subsidy.control.publicsearchservice.dto.BeneficiaryDto;
 import com.beis.subsidy.control.publicsearchservice.dto.SubsidyMeasureDto;
 import com.beis.subsidy.control.publicsearchservice.model.Award;
-import com.beis.subsidy.control.publicsearchservice.model.AdminProgram;
 import com.beis.subsidy.control.publicsearchservice.model.Beneficiary;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
@@ -53,14 +52,43 @@ public class ApiController {
 
     private AwardDto toDto(Award award) {
         Beneficiary beneficiary = award.getBeneficiary();
+        SubsidyMeasureDto subsidyMeasureDto = getSubsidyMeasureDto(award);
+        return new AwardDto(
+                new BeneficiaryDto(
+                        beneficiary.getBeneficiaryName(),
+                        beneficiary.getNationalId(),
+                        beneficiary.getNationalIdType()
+                ),
+                subsidyMeasureDto,
+                award.getAwardNumber(),
+                award.getStandaloneAwardTitle(),
+                award.getGrantingAuthority().getGrantingAuthorityName(),
+                award.getSubsidyFullAmountRange(),
+                award.getSubsidyFullAmountExact(),
+                award.getSubsidyObjective(),
+                award.getGoodsServicesFilter(),
+                award.getLegalGrantingDate(),
+                award.getPublishedAwardDate(),
+                award.getSpendingRegion(),
+                award.getSubsidyInstrument(),
+                award.getSpendingSector(),
+                award.getStatus(),
+                award.getCreatedTimestamp(),
+                award.getLastModifiedTimestamp(),
+                award.getStandaloneAward(),
+                award.getSubsidyAwardDescription(),
+                award.getSpecificPolicyObjective(),
+                award.getSubsidyAwardInterest(),
+                award.getAuthorityURL(),
+                award.getAuthorityURLDescription(),
+                award.getSpei(),
+                award.getLegalBasis()
+        );
+    }
+
+    private static SubsidyMeasureDto getSubsidyMeasureDto(Award award) {
         SubsidyMeasure subsidyMeasure = award.getSubsidyMeasure();
         SubsidyMeasureDto subsidyMeasureDto = null;
-        AdminProgram adminProgram = award.getAdminProgram();
-        String adminProgramName = null;
-
-        if (adminProgram != null){
-            adminProgramName = adminProgram.getAdminProgramName();
-        }
 
         if (subsidyMeasure != null){
             subsidyMeasureDto = new SubsidyMeasureDto(
@@ -86,37 +114,6 @@ public class ApiController {
                     subsidyMeasure.getLegalBases().getLegalBasisText()
             );
         }
-        return new AwardDto(
-                new BeneficiaryDto(
-                        beneficiary.getBeneficiaryName(),
-                        beneficiary.getNationalId(),
-                        beneficiary.getNationalIdType()
-                ),
-                subsidyMeasureDto,
-                award.getAwardNumber(),
-                award.getGrantingAuthority().getGrantingAuthorityName(),
-                award.getSubsidyFullAmountRange(),
-                award.getSubsidyFullAmountExact(),
-                award.getSubsidyObjective(),
-                award.getGoodsServicesFilter(),
-                award.getLegalGrantingDate(),
-                award.getPublishedAwardDate(),
-                award.getSpendingRegion(),
-                award.getSubsidyInstrument(),
-                award.getSpendingSector(),
-                award.getStatus(),
-                award.getCreatedTimestamp(),
-                award.getLastModifiedTimestamp(),
-                award.getStandaloneAward(),
-                award.getSubsidyAwardDescription(),
-                award.getSpecificPolicyObjective(),
-                adminProgramName,
-                award.getSubsidyAwardInterest(),
-                award.getAuthorityURL(),
-                award.getAuthorityURLDescription(),
-                award.getSpei(),
-                award.getLegalBasis(),
-                award.getStandaloneAwardTitle()
-        );
+        return subsidyMeasureDto;
     }
 }

@@ -1,18 +1,8 @@
 package com.beis.subsidy.control.publicsearchservice.dto;
 
-import com.beis.subsidy.control.publicsearchservice.model.AdminProgram;
-import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
-import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -27,25 +17,27 @@ public class AwardDto {
 
     private Long awardNumber;
 
-    private String grantingAuthority;
+    private String standaloneAwardTitle;
 
-    private String subsidyFullAmountRange;
+    private String publicAuthority;
 
-    private BigDecimal subsidyFullAmountExact;
+    private String subsidyAmountRange;
 
-    private String subsidyObjective;
+    private BigDecimal subsidyAmountExact;
 
-    private String goodsServicesFilter;
+    private String subsidyPurposes;
 
-    private LocalDate legalGrantingDate;
+    private String goodsOrServices;
 
-    private LocalDate publishedAwardDate;
+    private LocalDate awardedDate;
 
-    private String spendingRegion;
+    private LocalDate publishedDate;
 
-    private String subsidyInstrument;
+    private String geographicalLocation;
 
-    private String spendingSector;
+    private String subsidyForm;
+
+    private String sector;
 
     private String status;
 
@@ -57,9 +49,7 @@ public class AwardDto {
 
     private String subsidyAwardDescription;
 
-    private String specificPolicyObjective;
-
-    private String adminProgramName;
+    private String policyObjective;
 
     private String subsidyAwardInterest;
 
@@ -67,9 +57,7 @@ public class AwardDto {
 
     private String authorityURLDescription;
 
-    private String spei;
+    private String servicesOfPublicEconomicInterest;
 
     private String legalBasis;
-
-    private String standaloneAwardTitle;
 }
