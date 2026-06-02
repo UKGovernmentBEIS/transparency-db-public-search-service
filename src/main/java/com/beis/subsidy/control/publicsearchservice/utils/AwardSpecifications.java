@@ -1,0 +1,45 @@
+package com.beis.subsidy.control.publicsearchservice.utils;
+
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
+import com.beis.subsidy.control.publicsearchservice.model.Award;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AwardSpecifications {
+
+    public static Specification<Award> withFilters(Filter filter) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(criteriaBuilder.equal(root.get("status"), "Published"));
+
+            if (filter != null) {
+                if (hasText(filter.getKeyword())) {
+                    String keyword = "%" + filter.getKeyword().toLowerCase().trim() + "%";
+
+                    predicates.add(criteriaBuilder.or(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("beneficiary").get("beneficiaryName")), keyword),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("grantingAuthority").get("grantingAuthorityName")), keyword)
+                    ));
+                }
+
+//                if (hasText(filter.getGa())) {
+//                    predicates.add(criteriaBuilder.equal(root.get("ga"), filter.getGa().trim()));
+//                }
+//
+//                if (hasText(filter.getGeoLocation())) {
+//                    predicates.add(criteriaBuilder.equal(root.get("geoLocation"), filter.getGeoLocation().trim()));
+//                }
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+}
