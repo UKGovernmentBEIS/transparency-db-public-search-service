@@ -49,7 +49,7 @@ public class ApiController {
                 .map(award -> toDto(award, site));
     }
 
-    @GetMapping("/award/{awardNumber}")
+    @GetMapping("/awards/{awardNumber}")
     public AwardDto award(HttpServletRequest request, @PathVariable Long awardNumber) {
         String site = ApiUtils.getSiteUrl(request);
         return awardRepository.findByAwardNumberAndStatus(awardNumber, "Published")
@@ -91,7 +91,7 @@ public class ApiController {
 
         Map<String, LinkDto> links = Collections.singletonMap(
                 "self",
-                new LinkDto(site + "/api/award/" + award.getAwardNumber())
+                new LinkDto(site + "/api/awards/" + award.getAwardNumber())
         );
         return new AwardDto(
                 new BeneficiaryDto(
