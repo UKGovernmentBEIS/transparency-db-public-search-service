@@ -1,7 +1,9 @@
 package com.beis.subsidy.control.publicsearchservice.service;
 
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
 import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
+import org.springframework.data.domain.Pageable;
 
 public interface SearchService {
 
@@ -21,4 +23,6 @@ public interface SearchService {
     SearchResults findStandaloneAwards(SearchInput searchInput);
 
     SubsidyMeasureVersionResponse findSubsidySchemeVersion(String scNumber, String version);
+
+    AwardsResponse findAwards(Filter filter, Pageable pageable);
 }

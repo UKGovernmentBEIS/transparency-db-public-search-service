@@ -1,9 +1,10 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
-import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardsResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
+import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
+import com.beis.subsidy.control.publicsearchservice.model.Award;
+import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 
 
@@ -11,11 +12,12 @@ import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -287,5 +289,14 @@ public class SearchController {
 		MFAAwardResponse mfaAwardById = searchService.findMfaByAwardNumber(awardNumber);
 
 		return new ResponseEntity<MFAAwardResponse>(mfaAwardById, HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/awards",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<AwardsResponse> findAwards(@ModelAttribute Filter filter, Pageable pageable){
+		filter.normalise();
+		return new ResponseEntity<AwardsResponse>(searchService.findAwards(filter, pageable),HttpStatus.OK);
 	}
 }

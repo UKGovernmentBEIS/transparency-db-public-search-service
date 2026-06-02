@@ -1,5 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.service.impl;
 
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
@@ -9,11 +10,8 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasureVersion;
 import com.beis.subsidy.control.publicsearchservice.repository.*;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
-import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
-import com.beis.subsidy.control.publicsearchservice.utils.MFAAwardSpecificationUtils;
-import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
+import com.beis.subsidy.control.publicsearchservice.utils.*;
 
-import com.beis.subsidy.control.publicsearchservice.utils.SubsidyMeasureSpecificationUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -269,6 +267,18 @@ public class SearchServiceImpl implements SearchService {
 		SubsidyMeasureVersion schemeVersion = subsidyMeasureVersionRepository.findByScNumberAndVersion(scNumber, UUID.fromString(version));
 
 		return new SubsidyMeasureVersionResponse(schemeVersion);
+	}
+
+	@Override
+	public AwardsResponse findAwards(Filter filter, Pageable pageable) {
+		Page<Award> awards = awardRepository.findAll(AwardSpecifications.withFilters(filter), pageable);
+
+		return new AwardsResponse(
+				awards.getContent(),
+				awards.getTotalElements(),
+				awards.getNumber() + 1,
+				awards.getTotalPages()
+		);
 	}
 
 	@Override
