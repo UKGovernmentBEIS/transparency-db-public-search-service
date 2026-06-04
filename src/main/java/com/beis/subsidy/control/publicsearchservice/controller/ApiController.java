@@ -1,13 +1,9 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
-import com.beis.subsidy.control.publicsearchservice.dto.AwardDto;
-import com.beis.subsidy.control.publicsearchservice.dto.AwardSummaryDto;
-import com.beis.subsidy.control.publicsearchservice.dto.BeneficiaryDto;
-import com.beis.subsidy.control.publicsearchservice.dto.SubsidyMeasureDto;
-import com.beis.subsidy.control.publicsearchservice.model.Award;
-import com.beis.subsidy.control.publicsearchservice.model.Beneficiary;
-import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
+import com.beis.subsidy.control.publicsearchservice.dto.*;
+import com.beis.subsidy.control.publicsearchservice.model.*;
 import com.beis.subsidy.control.publicsearchservice.repository.AwardRepository;
+import com.beis.subsidy.control.publicsearchservice.repository.MFAAwardRepository;
 import com.beis.subsidy.control.publicsearchservice.repository.SubsidyMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +38,9 @@ public class ApiController {
 
     @Autowired
     private SubsidyMeasureRepository subsidyMeasureRepository;
+
+    @Autowired
+    private MFAAwardRepository mfaAwardRepository;
 
 
     @GetMapping("/awards")
@@ -65,7 +65,7 @@ public class ApiController {
     }
 
     @GetMapping("/schemes/{scNumber}")
-    public SubsidyMeasureDto award(HttpServletRequest request, @PathVariable String scNumber) {
+    public SubsidyMeasureDto scheme(HttpServletRequest request, @PathVariable String scNumber) {
         return subsidyMeasureRepository.findByScNumberAndStatus(scNumber, "Active")
                 .map(this::toDto)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -73,8 +73,56 @@ public class ApiController {
                         "Scheme " + scNumber + " not found"));
     }
 
+    @GetMapping("/mfaAwards")
+    public Page<MfaAwardDto> mfaAwards(HttpServletRequest request, Pageable pageable) {
+        return mfaAwardRepository.findByStatus("Published", pageable)
+                .map(this::toDto);
+    }
+
+    @GetMapping("/mfaAwards/{mfaAwardNumber}")
+    public MfaAwardDto mfaAward(HttpServletRequest request, @PathVariable Long mfaAwardNumber) {
+        return mfaAwardRepository.findByMfaAwardNumberAndStatus(mfaAwardNumber, "Published")
+                .map(this::toDto)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "MFA Award " + mfaAwardNumber + " not found"));
+    }
+
+    private MfaAwardDto toDto(MFAAward mfaAward){
+        MfaGroupingDto mfaGroupingDto = getMfaGroupingDto(mfaAward);
+
+        return new MfaAwardDto(
+                mfaAward.getMfaAwardNumber(),
+                mfaAward.getGrantingAuthority().getGrantingAuthorityName(),
+                mfaGroupingDto,
+                mfaAward.getAwardAmount(),
+                mfaAward.getConfirmationDate(),
+                mfaAward.getPublishedDate(),
+                mfaAward.getRecipientName(),
+                mfaAward.getRecipientIdType(),
+                mfaAward.getRecipientId(),
+                mfaAward.getStatus(),
+                mfaAward.getCreatedTimestamp(),
+                mfaAward.getLastModifiedTimestamp()
+        );
+    }
+
+    private MfaGroupingDto getMfaGroupingDto(MFAAward mfaAward) {
+        MFAGrouping mfaGrouping = mfaAward.getMfaGrouping();
+        if (mfaGrouping == null) {
+            return null;
+        }
+
+        return new MfaGroupingDto(
+                mfaGrouping.getMfaGroupingNumber(),
+                mfaGrouping.getMfaGroupingName(),
+                mfaGrouping.getStatus(),
+                mfaGrouping.getCreatedTimestamp(),
+                mfaGrouping.getLastModifiedTimestamp()
+        );
+    }
+
     private SubsidyMeasureDto toDto(SubsidyMeasure scheme){
-        List<Award> awards = scheme.getAwards();
         List<AwardSummaryDto> awardDtos = Collections.emptyList();
 
         if (scheme.getAwards() != null) {
