@@ -165,14 +165,15 @@ public class ApiController {
 
     private AwardDto toDto(Award award) {
         Beneficiary beneficiary = award.getBeneficiary();
-        SubsidyMeasureDto subsidyMeasureDto = getSubsidyMeasureDto(award);
+        // Include summary of schemes to prevent bringing in potentially thousands of duplicate award data.
+        SubsidyMeasureSummaryDto subsidyMeasureSummaryDto = getSubsidyMeasureSummaryDto(award);
         return new AwardDto(
                 new BeneficiaryDto(
                         beneficiary.getBeneficiaryName(),
                         beneficiary.getNationalId(),
                         beneficiary.getNationalIdType()
                 ),
-                subsidyMeasureDto,
+                subsidyMeasureSummaryDto,
                 award.getAwardNumber(),
                 award.getStandaloneAwardTitle(),
                 award.getGrantingAuthority().getGrantingAuthorityName(),
@@ -199,13 +200,20 @@ public class ApiController {
         );
     }
 
-    private SubsidyMeasureDto getSubsidyMeasureDto(Award award) {
-        SubsidyMeasure subsidyMeasure = award.getSubsidyMeasure();
+    private SubsidyMeasureSummaryDto getSubsidyMeasureSummaryDto(Award award) {
+        SubsidyMeasure scheme = award.getSubsidyMeasure();
 
-        if (subsidyMeasure == null){
+        if (scheme == null){
             return null;
         }
 
-        return toDto(subsidyMeasure);
+        return toDtoSummary(scheme);
+    }
+
+    private SubsidyMeasureSummaryDto toDtoSummary(SubsidyMeasure scheme){
+        return new SubsidyMeasureSummaryDto(
+                scheme.getScNumber(),
+                scheme.getSubsidyMeasureTitle()
+        );
     }
 }

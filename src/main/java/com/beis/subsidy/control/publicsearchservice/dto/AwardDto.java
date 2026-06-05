@@ -13,7 +13,7 @@ public class AwardDto {
 
     private BeneficiaryDto beneficiary;
 
-    private SubsidyMeasureDto subsidyScheme;
+    private SubsidyMeasureSummaryDto subsidyScheme;
 
     private Long awardNumber;
 
