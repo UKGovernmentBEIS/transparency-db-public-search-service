@@ -25,4 +25,6 @@ public interface SearchService {
     SubsidyMeasureVersionResponse findSubsidySchemeVersion(String scNumber, String version);
 
     AwardsResponse findAwards(Filter filter, Pageable pageable);
+
+    AwardsExportResponse findAwardsForExport(Filter filter);
 }

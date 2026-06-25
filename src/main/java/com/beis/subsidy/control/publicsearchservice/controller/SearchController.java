@@ -299,4 +299,13 @@ public class SearchController {
 		filter.normalise();
 		return new ResponseEntity<AwardsResponse>(searchService.findAwards(filter, pageable),HttpStatus.OK);
 	}
+
+	@GetMapping(
+			value = "/awards/export",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<AwardsExportResponse> exportAwards(@ModelAttribute Filter filter) {
+		filter.normalise();
+		return new ResponseEntity<AwardsExportResponse>(searchService.findAwardsForExport(filter),HttpStatus.OK);
+	}
 }

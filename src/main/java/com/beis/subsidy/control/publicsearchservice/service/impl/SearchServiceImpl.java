@@ -282,6 +282,14 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
+	public AwardsExportResponse findAwardsForExport(Filter filter) {
+		List<Award> awards = awardRepository.findAll(
+				AwardSpecifications.withFilters(filter)
+		);
+		return new AwardsExportResponse(awards);
+	}
+
+	@Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
 		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
 		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
