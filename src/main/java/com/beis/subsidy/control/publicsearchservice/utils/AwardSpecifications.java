@@ -26,9 +26,9 @@ public class AwardSpecifications {
                     ));
                 }
 
-//                if (hasText(filter.getGa())) {
-//                    predicates.add(criteriaBuilder.equal(root.get("ga"), filter.getGa().trim()));
-//                }
+                if (hasText(filter.getGa())) {
+                    predicates.add(criteriaBuilder.equal(root.get("grantingAuthority").get("grantingAuthorityName"), filter.getGa().trim()));
+                }
 //
 //                if (hasText(filter.getGeoLocation())) {
 //                    predicates.add(criteriaBuilder.equal(root.get("geoLocation"), filter.getGeoLocation().trim()));
