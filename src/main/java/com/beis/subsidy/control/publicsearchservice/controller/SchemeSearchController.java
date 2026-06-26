@@ -236,7 +236,8 @@ public class SchemeSearchController {
 	public ResponseEntity<GrantingAuthorityListResponse> allGas() {
 		List<GrantingAuthority> gaList = grantingAuthorityRepository.findAll();
 
-		gaList = SearchUtils.removeRolesFromGaList(gaList);
+        SearchUtils.removeRolesFromGaList(gaList);
+        SearchUtils.removeInactiveFromGaList(gaList);
 
 		return new ResponseEntity<GrantingAuthorityListResponse>(new GrantingAuthorityListResponse(gaList), HttpStatus.OK);
 	}

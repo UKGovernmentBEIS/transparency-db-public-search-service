@@ -159,6 +159,18 @@ public class SearchUtils {
 		return gaList;
 	}
 
+	/**
+	 * To remove inactive GAs from a list of GAs.
+	 *
+	 * @param gaList
+	 * @return reduced gaList
+	 */
+	public static List<GrantingAuthority> removeInactiveFromGaList(List<GrantingAuthority> gaList){
+		gaList.removeIf(ga -> Objects.equals(ga.getStatus(), "Inactive"));
+
+		return gaList;
+	}
+
 	final static String DATE_FORMAT = "yyyy-MM-dd";
 
 	public static boolean isDateValid(String date)
