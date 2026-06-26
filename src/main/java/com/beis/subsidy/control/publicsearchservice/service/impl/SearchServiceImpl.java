@@ -271,6 +271,9 @@ public class SearchServiceImpl implements SearchService {
 
 	@Override
 	public AwardsResponse findAwards(Filter filter, Pageable pageable) {
+		//		Map sorting to pageable
+
+
 		Page<Award> awards = awardRepository.findAll(AwardSpecifications.withFilters(filter), pageable);
 
 		return new AwardsResponse(
