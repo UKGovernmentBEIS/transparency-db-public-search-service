@@ -22,17 +22,36 @@ public class AwardSpecifications {
 
                     predicates.add(criteriaBuilder.or(
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("beneficiary").get("beneficiaryName")), keyword),
-                            criteriaBuilder.like(criteriaBuilder.lower(root.get("grantingAuthority").get("grantingAuthorityName")), keyword)
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("grantingAuthority").get("grantingAuthorityName")), keyword),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("subsidyMeasure").get("scNumber")), keyword),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("subsidyMeasure").get("subsidyMeasureTitle")), keyword),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("subsidyAwardDescription")), keyword),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("legalBasis")), keyword)
                     ));
                 }
 
                 if (hasText(filter.getGa())) {
                     predicates.add(criteriaBuilder.equal(root.get("grantingAuthority").get("grantingAuthorityName"), filter.getGa().trim()));
                 }
-//
-//                if (hasText(filter.getGeoLocation())) {
-//                    predicates.add(criteriaBuilder.equal(root.get("geoLocation"), filter.getGeoLocation().trim()));
-//                }
+
+                if (filter.getGeoLocations() != null && !filter.getGeoLocations().isEmpty()) {
+                    List<Predicate> regionPredicates = new ArrayList<>();
+
+                    for (String geoLocation : filter.getGeoLocations()) {
+                        String value = geoLocation.trim().toLowerCase();
+
+                        regionPredicates.add(
+                                criteriaBuilder.like(
+                                        criteriaBuilder.lower(root.get("spendingRegion")),
+                                        "%\"" + value + "\"%"
+                                )
+                        );
+                    }
+
+                    predicates.add(
+                            criteriaBuilder.or(regionPredicates.toArray(new Predicate[0]))
+                    );
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
