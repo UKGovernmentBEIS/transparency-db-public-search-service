@@ -27,4 +27,8 @@ public interface SearchService {
     AwardsResponse findAwards(Filter filter, Pageable pageable);
 
     AwardsExportResponse findAwardsForExport(Filter filter);
+
+    MFAAwardsResponse findMfaAwards(Filter filter, Pageable mappedPageable);
+
+    MFAAwardsExportResponse findMfaAwardsForExport(Filter filter);
 }
