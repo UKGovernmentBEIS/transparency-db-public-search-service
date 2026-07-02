@@ -136,9 +136,8 @@ public class SearchController {
 	)
 	public ResponseEntity<MFAAwardsResponse> findMfaAwards(@ModelAttribute Filter filter, Pageable pageable){
 		filter.normalise();
-		// need to fix this to work with other items, not just awards
-//		Pageable mappedPageable = mapSort(pageable);
-		return new ResponseEntity<MFAAwardsResponse>(searchService.findMfaAwards(filter, pageable),HttpStatus.OK);
+		Pageable mappedPageable = mapSort(pageable, "mfa");
+		return new ResponseEntity<MFAAwardsResponse>(searchService.findMfaAwards(filter, mappedPageable),HttpStatus.OK);
 	}
 
 	@GetMapping(
@@ -176,7 +175,7 @@ public class SearchController {
 	)
 	public ResponseEntity<AwardsResponse> findAwards(@ModelAttribute Filter filter, Pageable pageable){
 		filter.normalise();
-		Pageable mappedPageable = mapSort(pageable);
+		Pageable mappedPageable = mapSort(pageable, "award");
 		return new ResponseEntity<AwardsResponse>(searchService.findAwards(filter, mappedPageable),HttpStatus.OK);
 	}
 
@@ -189,8 +188,8 @@ public class SearchController {
 		return new ResponseEntity<AwardsExportResponse>(searchService.findAwardsForExport(filter),HttpStatus.OK);
 	}
 
-	private Pageable mapSort(Pageable pageable) {
-		Sort mappedSort = mapSort(pageable.getSort());
+	private Pageable mapSort(Pageable pageable, String type) {
+		Sort mappedSort = mapSort(pageable.getSort(), type);
 
 		return PageRequest.of(
 				pageable.getPageNumber(),
@@ -199,16 +198,16 @@ public class SearchController {
 		);
 	}
 
-	private Sort mapSort(Sort sort) {
-		if (sort == null || sort.isUnsorted()) {
-			return Sort.by(Sort.Direction.DESC, "publishedAwardDate");
+	private Sort mapSort(Sort sort, String type) {
+        if (sort == null || sort.isUnsorted()) {
+			return Sort.by(Sort.Direction.DESC, mapSortField(null, type));
 		}
 
 		List<Sort.Order> mappedOrders = new ArrayList<>();
 
 		for (Sort.Order order : sort) {
 			String frontendField = order.getProperty();
-			String backendField = mapSortField(frontendField);
+			String backendField = mapSortField(frontendField, type);
 
 			mappedOrders.add(new Sort.Order(order.getDirection(), backendField));
 		}
@@ -216,20 +215,30 @@ public class SearchController {
 		return Sort.by(mappedOrders);
 	}
 
-	private String mapSortField(String frontendField) {
+	private String mapSortField(String frontendField, String type) {
+        // Default to award mappings
+        String recipientField = "beneficiary.beneficiaryName";
+        String publishedField = "publishedAwardDate";
+        switch (type) {
+            case "scheme":
+                break;
+            case "mfa":
+                recipientField = "recipientName";
+                publishedField = "publishedDate";
+                break;
+            default:
+                break;
+        }
 		if (frontendField == null) {
-			return "publishedAwardDate";
+			return publishedField;
 		}
 
 		switch (frontendField) {
-			case "amount":
-				return "subsidyFullAmountExact";
-
 			case "recipientName":
-				return "beneficiary.beneficiaryName";
+				return recipientField;
 
 			default:
-				return "publishedAwardDate";
+				return publishedField;
 		}
 	}
 }
