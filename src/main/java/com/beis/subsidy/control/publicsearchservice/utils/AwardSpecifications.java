@@ -30,8 +30,8 @@ public class AwardSpecifications {
                     ));
                 }
 
-                if (hasText(filter.getGa())) {
-                    predicates.add(criteriaBuilder.equal(root.get("grantingAuthority").get("grantingAuthorityName"), filter.getGa().trim()));
+                if (hasText(filter.getPa())) {
+                    predicates.add(criteriaBuilder.equal(root.get("grantingAuthority").get("grantingAuthorityName"), filter.getPa().trim()));
                 }
 
                 if (filter.getGeoLocations() != null && !filter.getGeoLocations().isEmpty()) {

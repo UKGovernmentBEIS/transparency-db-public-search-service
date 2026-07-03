@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 
 public class Filter {
     private String keyword;
-    private String ga;
+    private String pa;
     private String[] geoLocation;
 
     private List<String> geoLocations;
 
     public void normalise() {
         keyword = blankToNull(keyword);
-        ga = blankToNull(ga);
+        pa = blankToNull(pa);
         if (geoLocation != null) {
             geoLocations = Arrays.stream(geoLocation)
                     .map(this::blankToNull)
