@@ -1,8 +1,7 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
-import com.beis.subsidy.control.publicsearchservice.controller.response.AwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardResponse;
-import com.beis.subsidy.control.publicsearchservice.controller.response.MFAAwardsResponse;
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
+import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 
@@ -11,11 +10,14 @@ import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
-import com.beis.subsidy.control.publicsearchservice.controller.response.SearchResults;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -287,5 +291,68 @@ public class SearchController {
 		MFAAwardResponse mfaAwardById = searchService.findMfaByAwardNumber(awardNumber);
 
 		return new ResponseEntity<MFAAwardResponse>(mfaAwardById, HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/awards",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<AwardsResponse> findAwards(@ModelAttribute Filter filter, Pageable pageable){
+		filter.normalise();
+		Pageable mappedPageable = mapSort(pageable);
+		return new ResponseEntity<AwardsResponse>(searchService.findAwards(filter, mappedPageable),HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/awards/export",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<AwardsExportResponse> exportAwards(@ModelAttribute Filter filter) {
+		filter.normalise();
+		return new ResponseEntity<AwardsExportResponse>(searchService.findAwardsForExport(filter),HttpStatus.OK);
+	}
+
+	private Pageable mapSort(Pageable pageable) {
+		Sort mappedSort = mapSort(pageable.getSort());
+
+		return PageRequest.of(
+				pageable.getPageNumber(),
+				pageable.getPageSize(),
+				mappedSort
+		);
+	}
+
+	private Sort mapSort(Sort sort) {
+		if (sort == null || sort.isUnsorted()) {
+			return Sort.by(Sort.Direction.DESC, "publishedAwardDate");
+		}
+
+		List<Sort.Order> mappedOrders = new ArrayList<>();
+
+		for (Sort.Order order : sort) {
+			String frontendField = order.getProperty();
+			String backendField = mapSortField(frontendField);
+
+			mappedOrders.add(new Sort.Order(order.getDirection(), backendField));
+		}
+
+		return Sort.by(mappedOrders);
+	}
+
+	private String mapSortField(String frontendField) {
+		if (frontendField == null) {
+			return "publishedAwardDate";
+		}
+
+		switch (frontendField) {
+			case "amount":
+				return "subsidyFullAmountExact";
+
+			case "recipientName":
+				return "beneficiary.beneficiaryName";
+
+			default:
+				return "publishedAwardDate";
+		}
 	}
 }
