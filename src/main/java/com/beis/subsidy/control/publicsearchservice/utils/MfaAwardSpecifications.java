@@ -21,6 +21,7 @@ public class MfaAwardSpecifications {
                     String keyword = "%" + filter.getKeyword().toLowerCase().trim() + "%";
 
                     predicates.add(criteriaBuilder.or(
+                            //TODO: Identify which filters DBT want to search on for MFA awards
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("recipientName")), keyword)
                     ));
                 }
