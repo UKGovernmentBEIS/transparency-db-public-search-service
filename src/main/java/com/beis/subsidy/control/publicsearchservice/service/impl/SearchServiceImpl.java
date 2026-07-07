@@ -290,6 +290,26 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
+	public MFAAwardsResponse findMfaAwards(Filter filter, Pageable pageable) {
+		Page<MFAAward> awards = mfaAwardRepository.findAll(MfaAwardSpecifications.withFilters(filter), pageable);
+
+		return new MFAAwardsResponse(
+				awards.getContent(),
+				awards.getTotalElements(),
+				awards.getNumber() + 1,
+				awards.getTotalPages()
+		);
+	}
+
+	@Override
+	public MFAAwardsExportResponse findMfaAwardsForExport(Filter filter) {
+		List<MFAAward> mfaAwards = mfaAwardRepository.findAll(
+				MfaAwardSpecifications.withFilters(filter)
+		);
+		return new MFAAwardsExportResponse(mfaAwards);
+	}
+
+	@Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
 		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
 		List<Order> orders = getOrderByCondition(searchInput.getSortBy());
