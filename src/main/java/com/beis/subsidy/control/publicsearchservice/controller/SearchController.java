@@ -188,6 +188,25 @@ public class SearchController {
 		return new ResponseEntity<AwardsExportResponse>(searchService.findAwardsForExport(filter),HttpStatus.OK);
 	}
 
+	@GetMapping(
+			value = "/schemes",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasuresResponse> findSchemes(@ModelAttribute Filter filter, Pageable pageable){
+		filter.normalise();
+		Pageable mappedPageable = mapSort(pageable, "scheme");
+		return new ResponseEntity<SubsidyMeasuresResponse>(searchService.findSchemes(filter, mappedPageable),HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/schemes/export",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasuresExportResponse> exportSchemes(@ModelAttribute Filter filter) {
+		filter.normalise();
+		return new ResponseEntity<SubsidyMeasuresExportResponse>(searchService.findSchemesForExport(filter),HttpStatus.OK);
+	}
+
 	private Pageable mapSort(Pageable pageable, String type) {
 		Sort mappedSort = mapSort(pageable.getSort(), type);
 
@@ -221,6 +240,7 @@ public class SearchController {
         String publishedField = "publishedAwardDate";
         switch (type) {
             case "scheme":
+				publishedField = "publishedMeasureDate";
                 break;
             case "mfa":
                 recipientField = "recipientName";
