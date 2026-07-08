@@ -32,6 +32,10 @@ public class SubsidyMeasureSpecifications {
                 if (hasText(filter.getPa())) {
                     predicates.add(criteriaBuilder.equal(root.get("grantingAuthority").get("grantingAuthorityName"), filter.getPa().trim()));
                 }
+
+                if(hasText(filter.getSchemeStatus())) {
+                    predicates.add(criteriaBuilder.equal(root.get("status"),filter.getSchemeStatus().trim()));
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

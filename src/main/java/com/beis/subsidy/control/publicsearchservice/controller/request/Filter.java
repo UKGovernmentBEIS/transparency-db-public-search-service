@@ -15,6 +15,7 @@ public class Filter {
     private String keyword;
     private String pa;
     private String[] geoLocation;
+    private String schemeStatus;
 
     private List<String> geoLocations;
 
@@ -31,6 +32,7 @@ public class Filter {
                 geoLocations = null;
             }
         }
+        schemeStatus = blankToNull(schemeStatus);
     }
 
     private String blankToNull(String value) {
