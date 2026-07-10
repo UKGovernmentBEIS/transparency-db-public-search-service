@@ -17,6 +17,7 @@ public class SubsidyMeasureSpecifications {
             predicates.add(criteriaBuilder.notEqual(root.get("status"), "Deleted"));
 
             if (filter != null) {
+                // Keyword or SC
                 if (hasText(filter.getKeyword())) {
                     String keyword = "%" + filter.getKeyword().toLowerCase().trim() + "%";
 
@@ -29,12 +30,19 @@ public class SubsidyMeasureSpecifications {
                     ));
                 }
 
+                // Public Authority
                 if (hasText(filter.getPa())) {
                     predicates.add(criteriaBuilder.equal(root.get("grantingAuthority").get("grantingAuthorityName"), filter.getPa().trim()));
                 }
 
+                // Scheme Status
                 if(hasText(filter.getSchemeStatus())) {
                     predicates.add(criteriaBuilder.equal(root.get("status"),filter.getSchemeStatus().trim()));
+                }
+
+                // Start Date
+                if(filter.getSchemeStartFromDate() != null && filter.getSchemeStartToDate() != null){
+                    predicates.add(criteriaBuilder.between(root.get("startDate"), filter.getSchemeStartFromDate(), filter.getSchemeStartToDate()));
                 }
             }
 
