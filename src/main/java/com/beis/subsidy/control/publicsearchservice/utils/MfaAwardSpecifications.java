@@ -25,6 +25,9 @@ public class MfaAwardSpecifications {
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("recipientName")), keyword)
                     ));
                 }
+                if (hasNumber(filter.getAwardFullAmountFrom()) && hasNumber(filter.getAwardFullAmountTo())){
+                    predicates.add(criteriaBuilder.between(root.get("awardAmount"),filter.getAwardFullAmountFrom(),filter.getAwardFullAmountTo()));
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -34,4 +37,6 @@ public class MfaAwardSpecifications {
     private static boolean hasText(String value) {
         return value != null && !value.trim().isEmpty();
     }
+
+    private static boolean hasNumber(Integer value) { return value != null && !value.toString().trim().isEmpty(); }
 }
