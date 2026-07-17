@@ -26,18 +26,11 @@ public class MfaAwardSpecifications {
 
             if (filter != null) {
                 if (hasText(filter.getKeyword())) {
-                    int keywordNumber;
-                    try {
-                        keywordNumber = Integer.parseInt(filter.getKeyword());
-                    }
-                    catch (NumberFormatException e) {
-                        keywordNumber = 0;
-                    }
                     String keyword = "%" + filter.getKeyword().toLowerCase().trim() + "%";
 
                     predicates.add(criteriaBuilder.or(
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("recipientName")), keyword),
-                            criteriaBuilder.equal((root.get("mfaAwardNumber")), keywordNumber),
+                            criteriaBuilder.equal(root.get("mfaAwardNumber"), stringToInt(filter.getKeyword())),
                             criteriaBuilder.like(criteriaBuilder.lower(mfaGroupingJoin.get("mfaGroupingNumber")), keyword),
                             criteriaBuilder.like(criteriaBuilder.lower(mfaGroupingJoin.get("mfaGroupingName")), keyword),
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("grantingAuthority").get("grantingAuthorityName")), keyword)
@@ -62,4 +55,13 @@ public class MfaAwardSpecifications {
     }
 
     private static boolean hasNumber(Integer value) { return value != null && !value.toString().trim().isEmpty(); }
+
+    private static int stringToInt(String value){
+        try {
+            return Integer.parseInt(value);
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+    }
 }
