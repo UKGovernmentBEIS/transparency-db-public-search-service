@@ -15,11 +15,13 @@ public class Filter {
     private String keyword;
     private String pa;
     private String[] geoLocation;
+    private String mfaAssistance;
     private String awardFullFromAmount;
     private String awardFullToAmount;
 
 
     private List<String> geoLocations;
+    private Boolean isSpei = false;
     private Integer awardFullAmountFrom;
     private Integer awardFullAmountTo;
 
@@ -35,6 +37,10 @@ public class Filter {
             if (geoLocations.isEmpty()) {
                 geoLocations = null;
             }
+        }
+        mfaAssistance = blankToNull(mfaAssistance);
+        if (mfaAssistance != null && mfaAssistance.equalsIgnoreCase("spei")){
+            isSpei = true;
         }
         awardFullAmountFrom = stringToInteger(awardFullFromAmount);
         awardFullAmountTo = stringToInteger(awardFullToAmount);

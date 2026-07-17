@@ -25,6 +25,11 @@ public class MfaAwardSpecifications {
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("recipientName")), keyword)
                     ));
                 }
+
+                if(hasText(filter.getMfaAssistance())){
+                    predicates.add(criteriaBuilder.equal(root.get("isSPEI"), filter.getIsSpei()));
+                }
+
                 if (hasNumber(filter.getAwardFullAmountFrom()) && hasNumber(filter.getAwardFullAmountTo())){
                     predicates.add(criteriaBuilder.between(root.get("awardAmount"),filter.getAwardFullAmountFrom(),filter.getAwardFullAmountTo()));
                 }
