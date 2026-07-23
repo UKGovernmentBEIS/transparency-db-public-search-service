@@ -44,6 +44,10 @@ public class MfaAwardSpecifications {
                 if (hasNumber(filter.getAwardFullAmountFrom()) && hasNumber(filter.getAwardFullAmountTo())){
                     predicates.add(criteriaBuilder.between(root.get("awardAmount"),filter.getAwardFullAmountFrom(),filter.getAwardFullAmountTo()));
                 }
+
+                if(filter.getConfirmationDateFrom() != null && filter.getConfirmationDateTo() != null){
+                    predicates.add(criteriaBuilder.between(root.get("confirmationDate"),filter.getConfirmationDateFrom(),filter.getConfirmationDateTo()));
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
