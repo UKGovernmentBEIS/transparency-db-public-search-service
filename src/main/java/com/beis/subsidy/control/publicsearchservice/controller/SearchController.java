@@ -67,7 +67,7 @@ public class SearchController {
 			if(searchInput.getTotalRecordsPerPage() == 0) {
 				searchInput.setTotalRecordsPerPage(10);
 			}
-			log.info("inside  findSearchResults::::");
+			log.trace("inside  findSearchResults::::");
 			SearchResults searchResults = searchService.findMatchingAwards(searchInput);
 			
 			return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
@@ -103,7 +103,7 @@ public class SearchController {
 
 		searchInput.setSortBy(sort);
 
-		log.info("inside  findSearchResults::::");
+		log.trace("inside  findSearchResults::::");
 		SearchResults searchResults = searchService.findStandaloneAwards(searchInput);
 
 		return new ResponseEntity<SearchResults>(searchResults, HttpStatus.OK);
@@ -122,7 +122,7 @@ public class SearchController {
 		if(StringUtils.isEmpty(awardNumber)) {
 			throw new InvalidRequestException("Invalid Request");
 		}
-		log.info("inside  getAwardDetailsByAwardNumber::::{}",awardNumber);
+		log.trace("inside  getAwardDetailsByAwardNumber::::{}",awardNumber);
 		AwardResponse awardResponse = searchService.findByAwardNumber(awardNumber);
 		return new ResponseEntity<AwardResponse>(awardResponse, HttpStatus.OK);
 	}
@@ -263,7 +263,7 @@ public class SearchController {
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);
 		searchInput.setSortBy(sort);
-		log.info("inside  findSearchResults::::");
+		log.trace("inside  findSearchResults::::");
 		MFAAwardsResponse response = searchService.findMatchingMfaAwards(searchInput);
 
 		return new ResponseEntity<MFAAwardsResponse>(response, HttpStatus.OK);
