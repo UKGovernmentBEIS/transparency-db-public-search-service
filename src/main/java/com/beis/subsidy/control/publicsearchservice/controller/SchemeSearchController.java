@@ -222,7 +222,7 @@ public class SchemeSearchController {
 		searchInput.setTotalRecordsPerPage(limit);
 		searchInput.setPageNumber(page);
 		searchInput.setSortBy(sort);
-		log.info("inside  allSchemes::::");
+		log.trace("inside  allSchemes::::");
 		SubsidyMeasuresResponse allSchemes = searchService.findAllSchemes(searchInput);
 
 		return new ResponseEntity<SubsidyMeasuresResponse>(allSchemes, HttpStatus.OK);
@@ -272,7 +272,7 @@ public class SchemeSearchController {
 		if(StringUtils.isEmpty(scNumber)) {
 			throw new InvalidRequestException("Invalid Request");
 		}
-		log.info("inside getSchemeDetailsByScNumberWithAwards::::{}",scNumber);
+		log.trace("inside getSchemeDetailsByScNumberWithAwards::::{}",scNumber);
 		SubsidyMeasureResponse schemeResponse = searchService.findSchemeByScNumberWithAwards(scNumber, searchInput);
 		return new ResponseEntity<SubsidyMeasureResponse>(schemeResponse, HttpStatus.OK);
 	}
