@@ -103,16 +103,16 @@ public class SearchServiceImpl implements SearchService {
 			Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 			
 			List<Award> awardResults = pageAwards.getContent();
-			log.info("inside  awardResults.size::::" +awardResults.size());
+			log.trace("inside  awardResults.size::::" +awardResults.size());
 			SearchResults searchResults = null; 
 			
 			if (!awardResults.isEmpty()) {
-				log.info("SearchResult Found::::" );
+				log.trace("SearchResult Found::::" );
 					searchResults = new SearchResults(awardResults, pageAwards.getTotalElements(),
 							pageAwards.getNumber() + 1, pageAwards.getTotalPages());
 			} else {
 
-				log.info("SearchResultNotFoundException::::" );
+				log.warn("SearchResultNotFoundException::::" );
 				throw new SearchResultNotFoundException("AwardResults NotFound");
 				
 			}
@@ -174,7 +174,7 @@ public class SearchServiceImpl implements SearchService {
 		}
 		catch(SearchResultNotFoundException ex)
 		{
-			log.info("SearchResultNotFoundException: No matching awards found");
+			log.warn("SearchResultNotFoundException: No matching awards found");
 			return new SubsidyMeasureResponse(subsidyMeasure, true);
 		}
 	}
@@ -245,16 +245,16 @@ public class SearchServiceImpl implements SearchService {
 		Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 
 		List<Award> awardResults = pageAwards.getContent();
-		log.info("inside  awardResults.size::::" +awardResults.size());
+		log.trace("inside  awardResults.size::::" +awardResults.size());
 		SearchResults searchResults = null;
 
 		if (!awardResults.isEmpty()) {
-			log.info("SearchResult Found::::" );
+			log.trace("SearchResult Found::::" );
 			searchResults = new SearchResults(awardResults, pageAwards.getTotalElements(),
 					pageAwards.getNumber() + 1, pageAwards.getTotalPages());
 		} else {
 
-			log.info("SearchResultNotFoundException::::" );
+			log.warn("SearchResultNotFoundException::::" );
 			throw new SearchResultNotFoundException("AwardResults NotFound");
 
 		}
