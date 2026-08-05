@@ -27,6 +27,9 @@ public class MFAAwardResponse {
     private String mfaGroupingNumber;
 
     @JsonProperty
+    private GrantingAuthorityResponse grantingAuthorityResponse;
+
+    @JsonProperty
     private MFAGroupingResponse mfaGroupingResponse;
 
     @JsonProperty
@@ -83,6 +86,7 @@ public class MFAAwardResponse {
     public MFAAwardResponse(MFAAward mfaAward){
         this.mfaAwardNumber = mfaAward.getMfaAwardNumber();
         this.isSpeiAssistance = mfaAward.isSPEI() ? "Yes" : "No";
+        this.grantingAuthorityResponse = new GrantingAuthorityResponse(mfaAward.getGrantingAuthority());
         this.hasMfaGrouping = mfaAward.isMfaGroupingPresent();
         if (mfaAward.isMfaGroupingPresent()){
             this.mfaGroupingNumber = mfaAward.getMfaGroupingNumber();

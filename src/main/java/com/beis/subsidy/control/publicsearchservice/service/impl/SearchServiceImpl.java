@@ -1,5 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.service.impl;
 
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
@@ -9,11 +10,8 @@ import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasureVersion;
 import com.beis.subsidy.control.publicsearchservice.repository.*;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
-import com.beis.subsidy.control.publicsearchservice.utils.AwardSpecificationUtils;
-import com.beis.subsidy.control.publicsearchservice.utils.MFAAwardSpecificationUtils;
-import com.beis.subsidy.control.publicsearchservice.utils.SearchUtils;
+import com.beis.subsidy.control.publicsearchservice.utils.*;
 
-import com.beis.subsidy.control.publicsearchservice.utils.SubsidyMeasureSpecificationUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,16 +103,16 @@ public class SearchServiceImpl implements SearchService {
 			Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 			
 			List<Award> awardResults = pageAwards.getContent();
-			log.info("inside  awardResults.size::::" +awardResults.size());
+			log.trace("inside  awardResults.size::::" +awardResults.size());
 			SearchResults searchResults = null; 
 			
 			if (!awardResults.isEmpty()) {
-				log.info("SearchResult Found::::" );
+				log.trace("SearchResult Found::::" );
 					searchResults = new SearchResults(awardResults, pageAwards.getTotalElements(),
 							pageAwards.getNumber() + 1, pageAwards.getTotalPages());
 			} else {
 
-				log.info("SearchResultNotFoundException::::" );
+				log.warn("SearchResultNotFoundException::::" );
 				throw new SearchResultNotFoundException("AwardResults NotFound");
 				
 			}
@@ -176,7 +174,7 @@ public class SearchServiceImpl implements SearchService {
 		}
 		catch(SearchResultNotFoundException ex)
 		{
-			log.info("SearchResultNotFoundException: No matching awards found");
+			log.warn("SearchResultNotFoundException: No matching awards found");
 			return new SubsidyMeasureResponse(subsidyMeasure, true);
 		}
 	}
@@ -247,16 +245,16 @@ public class SearchServiceImpl implements SearchService {
 		Page<Award> pageAwards = awardRepository.findAll(awardSpecifications, pagingSortAwards);
 
 		List<Award> awardResults = pageAwards.getContent();
-		log.info("inside  awardResults.size::::" +awardResults.size());
+		log.trace("inside  awardResults.size::::" +awardResults.size());
 		SearchResults searchResults = null;
 
 		if (!awardResults.isEmpty()) {
-			log.info("SearchResult Found::::" );
+			log.trace("SearchResult Found::::" );
 			searchResults = new SearchResults(awardResults, pageAwards.getTotalElements(),
 					pageAwards.getNumber() + 1, pageAwards.getTotalPages());
 		} else {
 
-			log.info("SearchResultNotFoundException::::" );
+			log.warn("SearchResultNotFoundException::::" );
 			throw new SearchResultNotFoundException("AwardResults NotFound");
 
 		}
@@ -269,6 +267,26 @@ public class SearchServiceImpl implements SearchService {
 		SubsidyMeasureVersion schemeVersion = subsidyMeasureVersionRepository.findByScNumberAndVersion(scNumber, UUID.fromString(version));
 
 		return new SubsidyMeasureVersionResponse(schemeVersion);
+	}
+
+	@Override
+	public MFAAwardsResponse findMfaAwards(Filter filter, Pageable pageable) {
+		Page<MFAAward> awards = mfaAwardRepository.findAll(MfaAwardSpecifications.withFilters(filter), pageable);
+
+		return new MFAAwardsResponse(
+				awards.getContent(),
+				awards.getTotalElements(),
+				awards.getNumber() + 1,
+				awards.getTotalPages()
+		);
+	}
+
+	@Override
+	public MFAAwardsExportResponse findMfaAwardsForExport(Filter filter) {
+		List<MFAAward> mfaAwards = mfaAwardRepository.findAll(
+				MfaAwardSpecifications.withFilters(filter)
+		);
+		return new MFAAwardsExportResponse(mfaAwards);
 	}
 
 	@Override
