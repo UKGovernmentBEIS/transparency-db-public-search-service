@@ -14,7 +14,7 @@
   </scm>
 	<groupId>com.beis.subsidy.control</groupId>
 	<artifactId>public-search-service</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>0.10.1-SNAPSHOT</version>
 	<name>public-search-service</name>
 	<description>Transparency DB Public Search Service Api</description>
 
@@ -35,10 +35,6 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.1</version>
 		</dependency>
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -177,6 +173,7 @@
 						<exclude>com/beis/subsidy/control/publicsearchservice/model/*.class</exclude>
 						<exclude>com/beis/subsidy/control/publicsearchservice/utils/AwardSpecificationUtils.class</exclude>
 						<exclude>com/beis/subsidy/control/publicsearchservice/utils/SubsidyMeasureSpecificationUtils.class</exclude>
+						<exclude>com/beis/subsidy/control/publicsearchservice/utils/MfaAwardSpecifications.class</exclude>
 						<exclude>com/beis/subsidy/control/publicsearchservice/utils/MFAAwardSpecificationUtils.class</exclude>
 					</excludes>
 				</configuration>
