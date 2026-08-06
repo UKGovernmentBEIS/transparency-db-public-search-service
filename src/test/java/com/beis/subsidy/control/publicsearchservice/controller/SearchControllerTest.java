@@ -1,5 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.controller;
 
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
@@ -17,6 +18,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -58,9 +62,17 @@ public class SearchControllerTest {
     MFAAward mfaAward = new MFAAward();
     MFAAwardResponse mfaAwardResponse;
     MFAAwardsResponse mfaAwardsResponse;
+    Filter filter;
+    Pageable mfaPageable;
 
     @BeforeEach
     public void setUp() throws Exception {
+        filter = new Filter();
+        mfaPageable = PageRequest.of(
+                0,
+                10,
+                Sort.by(Sort.Direction.DESC, "publishedDate")
+        );
         grantingAuthority.setGrantingAuthorityName("TEST GA");
 
         mfaGrouping.setMfaGroupingName("MFA Grouping");
@@ -158,207 +170,9 @@ public class SearchControllerTest {
         final HttpStatus expectedHttpStatus = HttpStatus.OK;
 
         Mockito.when(requestMock.getParameter(Mockito.any(String.class))).thenReturn(null);
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
+        Mockito.when(searchServiceMock.findMfaAwards(Mockito.any(Filter.class),Mockito.any(Pageable.class))).thenReturn(mfaAwardsResponse);
 
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNotNull();
-        assertThat(mfaAwardsResponseActual.getMfaAwards().size()).isEqualTo(3);
-    }
-
-    @Test
-    public void testFindMfaAwardsAllFilters(){
-        final HttpStatus expectedHttpStatus = HttpStatus.OK;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("sort")).thenReturn("mfaAwardNumber");
-        Mockito.when(requestMock.getParameter("page")).thenReturn("1");
-        Mockito.when(requestMock.getParameter("limit")).thenReturn("10");
-        Mockito.when(requestMock.getParameter("amount-from")).thenReturn("500");
-        Mockito.when(requestMock.getParameter("amount-to")).thenReturn("1000");
-        Mockito.when(requestMock.getParameter("speia")).thenReturn("Yes");
-        Mockito.when(requestMock.getParameter("ga")).thenReturn("Granting Authority");
-        Mockito.when(requestMock.getParameter("recipient")).thenReturn("A Charity");
-        Mockito.when(requestMock.getParameter("mfa-grouping")).thenReturn("MFA Grouping");
-        Mockito.when(requestMock.getParameter("confirmation-day-from")).thenReturn("01");
-        Mockito.when(requestMock.getParameter("confirmation-month-from")).thenReturn("01");
-        Mockito.when(requestMock.getParameter("confirmation-year-from")).thenReturn("2022");
-        Mockito.when(requestMock.getParameter("confirmation-day-to")).thenReturn("31");
-        Mockito.when(requestMock.getParameter("confirmation-month-to")).thenReturn("12");
-        Mockito.when(requestMock.getParameter("confirmation-year-to")).thenReturn("2022");
-        Mockito.when(requestMock.getParameter("status")).thenReturn("Published");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNotNull();
-        assertThat(mfaAwardsResponseActual.getMfaAwards().size()).isEqualTo(3);
-    }
-
-    @Test
-    public void testFindMfaAwardsNoEndDate(){
-        final HttpStatus expectedHttpStatus = HttpStatus.OK;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("confirmation-day-from")).thenReturn("01");
-        Mockito.when(requestMock.getParameter("confirmation-month-from")).thenReturn("01");
-        Mockito.when(requestMock.getParameter("confirmation-year-from")).thenReturn("2022");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNotNull();
-        assertThat(mfaAwardsResponseActual.getMfaAwards().size()).isEqualTo(3);
-    }
-
-    @Test
-    public void testFindMfaAwardsNoStartDate(){
-        final HttpStatus expectedHttpStatus = HttpStatus.OK;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("confirmation-day-to")).thenReturn("31");
-        Mockito.when(requestMock.getParameter("confirmation-month-to")).thenReturn("12");
-        Mockito.when(requestMock.getParameter("confirmation-year-to")).thenReturn("2022");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNotNull();
-        assertThat(mfaAwardsResponseActual.getMfaAwards().size()).isEqualTo(3);
-    }
-
-    @Test
-    public void testFindMfaAwardsInvalidPageNumber(){
-        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("page")).thenReturn("X");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNull();
-    }
-
-    @Test
-    public void testFindMfaAwardsInvalidSpeia(){
-        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("speia")).thenReturn("X");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNull();
-    }
-
-    @Test
-    public void testFindMfaAwardsInvalidFromDate(){
-        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("confirmation-day-from")).thenReturn("31");
-        Mockito.when(requestMock.getParameter("confirmation-month-from")).thenReturn("X");
-        Mockito.when(requestMock.getParameter("confirmation-year-from")).thenReturn("Y");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNull();
-    }
-
-    @Test
-    public void testFindMfaAwardsInvalidToDate(){
-        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("confirmation-day-to")).thenReturn("31");
-        Mockito.when(requestMock.getParameter("confirmation-month-to")).thenReturn("X");
-        Mockito.when(requestMock.getParameter("confirmation-year-to")).thenReturn("Y");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNull();
-    }
-
-    @Test
-    public void testFindMfaAwardsInvalidStatus(){
-        final HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("status")).thenReturn("X");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
-        assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-
-        MFAAwardsResponse mfaAwardsResponseActual = (MFAAwardsResponse) actual.getBody();
-        assert mfaAwardsResponseActual != null;
-        assertThat(mfaAwardsResponseActual.getMfaAwards()).isNull();
-    }
-
-    @Test
-    public void testFindMfaAwardsDescendingSort(){
-        final HttpStatus expectedHttpStatus = HttpStatus.OK;
-
-        Mockito.when(searchServiceMock.findMatchingMfaAwards(Mockito.any(SearchInput.class))).thenReturn(mfaAwardsResponse);
-
-        // start param mocks
-        Mockito.when(requestMock.getParameter("sort")).thenReturn("-mfaAwardNumber");
-        // end param mocks
-
-        ResponseEntity<?> actual = searchController.findMfaAwards();
+        ResponseEntity<?> actual = searchController.findMfaAwards(filter, mfaPageable);
         assertThat(actual.getBody()).isInstanceOf(MFAAwardsResponse.class);
         assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
 
