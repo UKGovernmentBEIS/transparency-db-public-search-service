@@ -21,16 +21,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubsidyMeasuresResponse {
-    public long totalResults;
+    public long totalSearchResults;
     public int currentPage;
     public int totalPages;
     public List<SubsidyMeasureResponse> subsidySchemes;
 
-    public SubsidyMeasuresResponse(List<SubsidyMeasure> schemes, long totalResults,
+    public SubsidyMeasuresResponse(List<SubsidyMeasure> schemes, long totalSearchResults,
                                    int currentPage, int totalPages) {
         this.subsidySchemes = schemes.stream().map(scheme ->
                 new SubsidyMeasureResponse(scheme, true)).collect(Collectors.toList());
-        this.totalResults = totalResults;
+        this.totalSearchResults = totalSearchResults;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
     }
