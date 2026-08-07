@@ -1,6 +1,5 @@
 package com.beis.subsidy.control.publicsearchservice.controller.response;
 
-import com.beis.subsidy.control.publicsearchservice.model.Award;
 import com.beis.subsidy.control.publicsearchservice.model.SubsidyMeasure;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
