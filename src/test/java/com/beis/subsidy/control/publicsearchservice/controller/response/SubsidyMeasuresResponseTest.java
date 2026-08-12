@@ -52,7 +52,7 @@ public class SubsidyMeasuresResponseTest {
         SubsidyMeasuresResponse subsidyMeasuresResponse = new SubsidyMeasuresResponse(subsidyMeasureList, 1, 2, 3);
         assertThat(subsidyMeasuresResponse).isNotNull();
         assertThat(subsidyMeasuresResponse.getSubsidySchemes().size()).isEqualTo(1);
-        assertThat(subsidyMeasuresResponse.getTotalResults()).isEqualTo(1);
+        assertThat(subsidyMeasuresResponse.getTotalSearchResults()).isEqualTo(1);
         assertThat(subsidyMeasuresResponse.getCurrentPage()).isEqualTo(2);
         assertThat(subsidyMeasuresResponse.getTotalPages()).isEqualTo(3);
 
@@ -62,16 +62,16 @@ public class SubsidyMeasuresResponseTest {
 
         SubsidyMeasuresResponse subsidyMeasuresResponse1 = new SubsidyMeasuresResponse(1, 2, 3, subsidyMeasureResponseList);
         assertThat(subsidyMeasuresResponse1.getSubsidySchemes().size()).isEqualTo(1);
-        assertThat(subsidyMeasuresResponse1.getTotalResults()).isEqualTo(1);
+        assertThat(subsidyMeasuresResponse1.getTotalSearchResults()).isEqualTo(1);
         assertThat(subsidyMeasuresResponse1.getCurrentPage()).isEqualTo(2);
         assertThat(subsidyMeasuresResponse1.getTotalPages()).isEqualTo(3);
 
         SubsidyMeasuresResponse subsidyMeasuresResponse2 = new SubsidyMeasuresResponse();
-        subsidyMeasuresResponse2.setTotalResults(1);
+        subsidyMeasuresResponse2.setTotalSearchResults(1);
         subsidyMeasuresResponse2.setCurrentPage(2);
         subsidyMeasuresResponse2.setTotalPages(3);
 
-        assertThat(subsidyMeasuresResponse2.getTotalResults()).isEqualTo(1);
+        assertThat(subsidyMeasuresResponse2.getTotalSearchResults()).isEqualTo(1);
         assertThat(subsidyMeasuresResponse2.getCurrentPage()).isEqualTo(2);
         assertThat(subsidyMeasuresResponse2.getTotalPages()).isEqualTo(3);
     }
