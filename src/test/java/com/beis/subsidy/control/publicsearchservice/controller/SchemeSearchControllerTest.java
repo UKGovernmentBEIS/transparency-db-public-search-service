@@ -59,8 +59,6 @@ public class SchemeSearchControllerTest {
     private SchemeSearchController schemeSearchController;
 
     SearchService searchServiceMock;
-    GrantingAuthorityRepository grantingAuthorityRepositoryMock;
-    List<GrantingAuthority> gaList = new ArrayList<>();
     SubsidyMeasureResponse smResponse;
     SubsidyMeasuresResponse smsResponse;
     SearchResults smAwardSearchResults;
@@ -148,7 +146,6 @@ public class SchemeSearchControllerTest {
         smvResponse = new SubsidyMeasureVersionResponse(smv);
 
         searchServiceMock = mock(SearchService.class);
-        grantingAuthorityRepositoryMock = mock(GrantingAuthorityRepository.class);
         requestMock = mock(HttpServletRequest.class);
         MockitoAnnotations.openMocks(this);
     }
@@ -162,23 +159,6 @@ public class SchemeSearchControllerTest {
 
         assertThat(actual.getBody()).isNotNull();
         assertThat(actual.getBody()).isEqualTo("Successful health check - Public Search API");
-    }
-
-    @Test
-    public void testAllGas(){
-        final HttpStatus expectedHttpStatus = HttpStatus.OK;
-        gaList.add(new GrantingAuthority());
-        when(grantingAuthorityRepositoryMock.findAll()).thenReturn(gaList);
-
-        ResponseEntity<?> actual = schemeSearchController.allGas();
-
-        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
-        assertThat(actual.getBody()).isInstanceOf(GrantingAuthorityListResponse.class);
-
-        GrantingAuthorityListResponse gaResponse = (GrantingAuthorityListResponse) actual.getBody();
-        assert gaResponse != null;
-        assertThat(gaResponse.getGaList()).isNotNull();
-        assertThat(gaResponse.getGaList().size()).isEqualTo(1);
     }
 
     @Test

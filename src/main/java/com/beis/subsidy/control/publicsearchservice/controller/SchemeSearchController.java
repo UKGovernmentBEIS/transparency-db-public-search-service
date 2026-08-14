@@ -34,8 +34,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class SchemeSearchController {
 
 	@Autowired
-	private GrantingAuthorityRepository grantingAuthorityRepository;
-	@Autowired
 	private SearchService searchService;
 	@Autowired
 	private HttpServletRequest request;
@@ -47,20 +45,6 @@ public class SchemeSearchController {
 	@GetMapping("/health")
 	public ResponseEntity<String> getHealth() {
 		return new ResponseEntity<>("Successful health check - Public Search API", HttpStatus.OK);
-	}
-
-	/**
-	 *
-	 * @return response with list of granting authorities and HTTP status
-	 */
-	@GetMapping("/all_gas")
-	public ResponseEntity<GrantingAuthorityListResponse> allGas() {
-		List<GrantingAuthority> gaList = grantingAuthorityRepository.findAll();
-
-        SearchUtils.removeRolesFromGaList(gaList);
-        SearchUtils.removeInactiveFromGaList(gaList);
-
-		return new ResponseEntity<GrantingAuthorityListResponse>(new GrantingAuthorityListResponse(gaList), HttpStatus.OK);
 	}
 
 	/**
