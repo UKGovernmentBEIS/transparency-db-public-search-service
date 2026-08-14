@@ -32,8 +32,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -228,5 +231,41 @@ public class SearchControllerTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
         verify(searchServiceMock, times(1)).findStandaloneAwards(searchInput);
+    }
+
+    @Test
+    void findSchemesTest() {
+        Filter filter = new Filter();
+        filter.setKeyword("keyword");
+
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.by(Sort.Direction.DESC, "publishedDate")
+        );
+
+        SubsidyMeasuresResponse expectedResponse = new SubsidyMeasuresResponse(
+                Collections.emptyList(),
+                0,
+                1,
+                0
+        );
+
+        when(searchServiceMock.findSchemes(any(Filter.class), any(Pageable.class)))
+                .thenReturn(expectedResponse);
+
+        ResponseEntity<SubsidyMeasuresResponse> response =
+                searchController.findSchemes(filter, pageable);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertSame(expectedResponse, response.getBody());
+
+        verify(searchServiceMock).findSchemes(
+                eq(filter),
+                argThat(mappedPageable ->
+                        mappedPageable.getPageNumber() == 0
+                                && mappedPageable.getPageSize() == 10
+                )
+        );
     }
 }

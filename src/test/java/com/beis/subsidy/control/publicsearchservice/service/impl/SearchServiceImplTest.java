@@ -1,5 +1,6 @@
 package com.beis.subsidy.control.publicsearchservice.service.impl;
 
+import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
 import com.beis.subsidy.control.publicsearchservice.controller.request.SearchInput;
 import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.SearchResultNotFoundException;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,15 +28,12 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -51,7 +50,7 @@ public class SearchServiceImplTest {
     MFAAwardRepository mfaAwardRepositoryMock;
 
     @InjectMocks
-    private SearchServiceImpl sut;
+    private SearchServiceImpl searchService;
 
     Award award;
     SubsidyMeasure subsidyMeasure;
@@ -184,17 +183,17 @@ public class SearchServiceImplTest {
 
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);
-        SearchResults searchResults = sut.findMatchingAwards(input);
+        SearchResults searchResults = searchService.findMatchingAwards(input);
         assertThat(searchResults).isNotNull();
         verify(awardRepository, times(1)).findAll(any(Specification.class),any(Pageable.class));
 
         input.setLegalGrantingFromDate("2000-10-10");
         input.setLegalGrantingToDate("2010-10-10");
-        searchResults = sut.findMatchingAwards(input);
+        searchResults = searchService.findMatchingAwards(input);
         assertThat(searchResults).isNotNull();
 
         input.setSubsidyInstrument(Arrays.asList("Other-"));
-        searchResults = sut.findMatchingAwards(input);
+        searchResults = searchService.findMatchingAwards(input);
         assertThat(searchResults).isNotNull();
     }
 
@@ -225,7 +224,7 @@ public class SearchServiceImplTest {
 
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);
-        SearchResults searchResults = sut.findMatchingAwards(input);
+        SearchResults searchResults = searchService.findMatchingAwards(input);
         assertThat(searchResults).isNotNull();
         verify(awardRepository, times(1)).findAll(any(Specification.class),any(Pageable.class));
     }
@@ -257,7 +256,7 @@ public class SearchServiceImplTest {
 
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);
-        SearchResults searchResults = sut.findMatchingAwards(input);
+        SearchResults searchResults = searchService.findMatchingAwards(input);
         assertThat(searchResults).isNotNull();
         verify(awardRepository, times(1)).findAll(any(Specification.class),any(Pageable.class));
     }
@@ -279,7 +278,7 @@ public class SearchServiceImplTest {
 
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);
-        SearchResults searchResults = sut.findMatchingAwards(input);
+        SearchResults searchResults = searchService.findMatchingAwards(input);
         assertThat(searchResults).isNotNull();
         verify(awardRepository, times(1)).findAll(any(Specification.class),any(Pageable.class));
     }
@@ -296,7 +295,7 @@ public class SearchServiceImplTest {
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(new ArrayList<Award>());
         Assertions.assertThrows(SearchResultNotFoundException.class, () -> {
-            sut.findMatchingAwards(input);
+            searchService.findMatchingAwards(input);
         });
     }
 
@@ -304,7 +303,7 @@ public class SearchServiceImplTest {
     public void testGetAwardDetails() {
         Long awardNumber = new Long(12);
         when(awardRepository.findByAwardNumber(awardNumber)).thenReturn(award);
-        AwardResponse response = sut.findByAwardNumber(awardNumber);
+        AwardResponse response = searchService.findByAwardNumber(awardNumber);
         assertThat(response).isNotNull();
         verify(awardRepository, times(1)).findByAwardNumber(awardNumber);
     }
@@ -314,7 +313,7 @@ public class SearchServiceImplTest {
         Long awardNumber = new Long(12);
         when(awardRepository.findByAwardNumber(awardNumber)).thenReturn(null);
         Assertions.assertThrows(SearchResultNotFoundException.class, () -> {
-            sut.findByAwardNumber(awardNumber);
+            searchService.findByAwardNumber(awardNumber);
         });
     }
 
@@ -323,11 +322,11 @@ public class SearchServiceImplTest {
         SubsidyMeasureResponse smr = new SubsidyMeasureResponse(subsidyMeasure, true);
         when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(subsidyMeasure);
 
-        SubsidyMeasureResponse actual = sut.findSchemeByScNumber("SC10001");
+        SubsidyMeasureResponse actual = searchService.findSchemeByScNumber("SC10001");
         assertThat(actual.getScNumber()).isEqualTo("SC10001");
 
         when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(null);
-        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> sut.findSchemeByScNumber("SC99999"));
+        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> searchService.findSchemeByScNumber("SC99999"));
 
         String expectedMessage = "Scheme NotFound";
         String actualMessage = exception.getMessage();
@@ -342,21 +341,21 @@ public class SearchServiceImplTest {
 
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);
-        SubsidyMeasureResponse subsidyMeasureResponse = sut.findSchemeByScNumberWithAwards(subsidyMeasure.getScNumber(),input);
+        SubsidyMeasureResponse subsidyMeasureResponse = searchService.findSchemeByScNumberWithAwards(subsidyMeasure.getScNumber(),input);
         assertThat(subsidyMeasureResponse).isNotNull();
         assertThat(subsidyMeasureResponse.getAwardSearchResults()).isNotNull();
         assertThat(subsidyMeasureResponse.getAwardSearchResults()).isInstanceOf(SearchResults.class);
         assertThat(subsidyMeasureResponse.getAwardSearchResults().getAwards() == Arrays.asList(new AwardResponse(award,true)));
 
         when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(null);
-        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> sut.findSchemeByScNumberWithAwards("SC99999", input));
+        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> searchService.findSchemeByScNumberWithAwards("SC99999", input));
         String expectedMessage = "Scheme NotFound";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
 
         when(awardPage.getContent()).thenReturn(new ArrayList<Award>());
         when(subsidyMeasureRepositoryMock.findByScNumber(Mockito.any(String.class))).thenReturn(subsidyMeasureWithoutAwards);
-        assertThat(sut.findSchemeByScNumberWithAwards("SC10001", input).getAwardSearchResults()).isNull();
+        assertThat(searchService.findSchemeByScNumberWithAwards("SC10001", input).getAwardSearchResults()).isNull();
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
@@ -460,7 +459,7 @@ public class SearchServiceImplTest {
         when(subsidyMeasureRepositoryMock.findAll(any(Specification.class),any(Pageable.class))).thenReturn(smPage);
         when(smPage.getContent()).thenReturn(subsidyMeasures);
 
-        SubsidyMeasuresResponse actual = sut.findAllSchemes(searchInput);
+        SubsidyMeasuresResponse actual = searchService.findAllSchemes(searchInput);
         assertThat(actual).isNotNull();
         verify(subsidyMeasureRepositoryMock, times(1)).findAll(any(Specification.class),any(Pageable.class));
 
@@ -475,7 +474,7 @@ public class SearchServiceImplTest {
         searchInput.setSubsidyEndDateFrom(null);
         searchInput.setSubsidyEndDateTo(null);
 
-        actual = sut.findAllSchemes(searchInput);
+        actual = searchService.findAllSchemes(searchInput);
         assertThat(actual).isNotNull();
     }
 
@@ -487,7 +486,7 @@ public class SearchServiceImplTest {
         when(mfaAwardRepositoryMock.findAll(any(Specification.class),any(Pageable.class))).thenReturn(mfaAwardPage);
         when(mfaAwardPage.getContent()).thenReturn(mfaAwards);
 
-        MFAAwardsResponse results = sut.findMatchingMfaAwards(searchInput);
+        MFAAwardsResponse results = searchService.findMatchingMfaAwards(searchInput);
         assertThat(results.mfaAwards.size()).isGreaterThan(0);
         assertThat(results.mfaAwards.get(0).getMfaAwardNumber()).isEqualTo(mfaAward.getMfaAwardNumber());
     }
@@ -496,10 +495,10 @@ public class SearchServiceImplTest {
     public void testFindMfaAwardByNumber()
     {
         when(mfaAwardRepositoryMock.findByMfaAwardNumber(any(Long.class))).thenReturn(mfaAward);
-        assertThat(sut.findMfaByAwardNumber(1L).getMfaAwardNumber()).isEqualTo(mfaAward.getMfaAwardNumber());
+        assertThat(searchService.findMfaByAwardNumber(1L).getMfaAwardNumber()).isEqualTo(mfaAward.getMfaAwardNumber());
 
         when(mfaAwardRepositoryMock.findByMfaAwardNumber(any(Long.class))).thenReturn(null);
-        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> sut.findMfaByAwardNumber(1L));
+        Exception exception = assertThrows(SearchResultNotFoundException.class, () -> searchService.findMfaByAwardNumber(1L));
 
         String expectedMessage = "AwardResults NotFound";
         String actualMessage = exception.getMessage();
@@ -518,7 +517,7 @@ public class SearchServiceImplTest {
         input.setSubsidyObjective(Arrays.asList("Other-"));
         when(awardRepository.findAll(any(Specification.class),any(Pageable.class))).thenReturn(awardPage);
         when(awardPage.getContent()).thenReturn(awards);
-        SearchResults searchResults = sut.findStandaloneAwards(input);
+        SearchResults searchResults = searchService.findStandaloneAwards(input);
         assertThat(searchResults).isNotNull();
         verify(awardRepository, times(1)).findAll(any(Specification.class),any(Pageable.class));
 
@@ -526,12 +525,12 @@ public class SearchServiceImplTest {
         input.setOtherSubsidyObjective(Arrays.asList("ObjectiveOther"));
         input.setSubsidyInstrument(Arrays.asList("Other-Instrument"));
         input.setOtherSubsidyInstrument(Arrays.asList("InstrumentOther"));
-        searchResults = sut.findStandaloneAwards(input);
+        searchResults = searchService.findStandaloneAwards(input);
         assertThat(searchResults).isNotNull();
 
         when(awardPage.getContent()).thenReturn(new ArrayList<>());
         Assertions.assertThrows(SearchResultNotFoundException.class, () -> {
-            sut.findStandaloneAwards(input);
+            searchService.findStandaloneAwards(input);
         });
     }
 
@@ -539,7 +538,7 @@ public class SearchServiceImplTest {
     public void testFindSubsidySchemeVersion(){
         when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
 
-        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+        SubsidyMeasureVersionResponse actual = searchService.findSubsidySchemeVersion("sc10001", versionNumber.toString());
 
         assertThat(actual).isNotNull();
         verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
@@ -553,7 +552,7 @@ public class SearchServiceImplTest {
         subsidyMeasureVersion.setEndDate(null);
         when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
 
-        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+        SubsidyMeasureVersionResponse actual = searchService.findSubsidySchemeVersion("sc10001", versionNumber.toString());
 
         assertThat(actual).isNotNull();
         verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
@@ -566,7 +565,7 @@ public class SearchServiceImplTest {
         subsidyMeasureVersion.setBudget("£123");
         when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
 
-        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+        SubsidyMeasureVersionResponse actual = searchService.findSubsidySchemeVersion("sc10001", versionNumber.toString());
 
         assertThat(actual).isNotNull();
         verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
@@ -582,7 +581,7 @@ public class SearchServiceImplTest {
         subsidyMeasureVersion.setDeletedTimestamp(deleteDateTime);
         when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
 
-        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+        SubsidyMeasureVersionResponse actual = searchService.findSubsidySchemeVersion("sc10001", versionNumber.toString());
 
         assertThat(actual).isNotNull();
         verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
@@ -601,12 +600,47 @@ public class SearchServiceImplTest {
 
         when(subsidyMeasureVersionRepositoryMock.findByScNumberAndVersion(any(String.class),any(UUID.class))).thenReturn(subsidyMeasureVersion);
 
-        SubsidyMeasureVersionResponse actual = sut.findSubsidySchemeVersion("sc10001", versionNumber.toString());
+        SubsidyMeasureVersionResponse actual = searchService.findSubsidySchemeVersion("sc10001", versionNumber.toString());
 
         assertThat(actual).isNotNull();
         verify(subsidyMeasureVersionRepositoryMock, times(1)).findByScNumberAndVersion(any(String.class),any(UUID.class));
         assertEquals(actual.getVersion(),subsidyMeasureVersion.getVersion().toString());
         assertEquals(actual.getConfirmationDate(),confirmationDateString);
 
+    }
+
+    @Test
+    void findSchemesTest() {
+        Filter filter = new Filter();
+        filter.setKeyword("keyword");
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<SubsidyMeasure> schemes = Collections.singletonList(
+                subsidyMeasure
+        );
+
+        Page<SubsidyMeasure> page = new PageImpl<SubsidyMeasure>(
+                schemes,
+                pageable,
+                12
+        );
+
+        when(subsidyMeasureRepositoryMock.findAll(
+                any(Specification.class),
+                eq(pageable)
+        )).thenReturn(page);
+
+        SubsidyMeasuresResponse response =
+                searchService.findSchemes(filter, pageable);
+
+        assertEquals(12, response.getTotalSearchResults());
+        assertEquals(1, response.getCurrentPage());
+        assertEquals(2, response.getTotalPages());
+
+        verify(subsidyMeasureRepositoryMock).findAll(
+                any(Specification.class),
+                eq(pageable)
+        );
     }
 }
