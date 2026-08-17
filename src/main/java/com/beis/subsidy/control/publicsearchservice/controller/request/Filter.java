@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public class Filter {
     private String keyword;
+
+    private String awardType;
     private String pa;
     private String[] geoLocation;
     private String mfaAssistance;
@@ -34,8 +36,27 @@ public class Filter {
     private LocalDate confirmationDateFrom;
     private LocalDate confirmationDateTo;
 
+    private List<String> sectors;
+    private String[] sector;
+
+    private List<String> subsidyForms;
+
+    private String[] subsidyForm;
+    private String subsidyFormOther;
+
+    private List<String> subsidyPurposes;
+
+    private String[] subsidyPurpose;
+
+    private String subsidyPurposeOther;
+
+    private String subsidyInterest;
+
+
+
     public void normalise() {
         keyword = blankToNull(keyword);
+        awardType = blankToNull(awardType);
         pa = blankToNull(pa);
         if (geoLocation != null) {
             geoLocations = Arrays.stream(geoLocation)
@@ -56,6 +77,39 @@ public class Filter {
 
         confirmationDateFrom = stringToDate(confirmationFromDay, confirmationFromMonth, confirmationFromYear);
         confirmationDateTo = stringToDate(confirmationToDay, confirmationToMonth, confirmationToYear);
+        if (sector != null) {
+            sectors = Arrays.stream(sector)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (sectors.isEmpty()) {
+                sectors = null;
+            }
+        }
+        if (subsidyForm != null) {
+            subsidyForms = Arrays.stream(subsidyForm)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (subsidyForms.isEmpty()) {
+                subsidyForm = null;
+            }
+        }
+        subsidyFormOther = blankToNull(subsidyFormOther);
+        if (subsidyPurpose != null) {
+            subsidyPurposes = Arrays.stream(subsidyPurpose)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (subsidyPurposes.isEmpty()) {
+                subsidyPurpose = null;
+            }
+        }
+        subsidyPurposeOther = blankToNull(subsidyPurposeOther);
+        subsidyInterest = blankToNull(subsidyInterest);
     }
 
     private String blankToNull(String value) {
