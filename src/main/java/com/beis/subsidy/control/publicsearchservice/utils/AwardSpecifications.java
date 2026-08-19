@@ -9,7 +9,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AwardSpecifications {
 
@@ -36,33 +38,19 @@ public class AwardSpecifications {
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("legalBasis")), keyword)
                     ));
                 }
-                if (filter.getAwardType() != null
-                        && !filter.getAwardType().isEmpty()) {
-
-                    String awardType = filter.getAwardType().toLowerCase();
-
-                    boolean standaloneSelected = awardType.contains("standalone award");
-                    boolean schemeSelected = awardType.contains("award under a scheme");
-
-                    if (standaloneSelected && schemeSelected) {
-                        // Don't add a predicate.
-                        // Both yes and no are valid, so return both.
-                    } else if (standaloneSelected) {
-                        predicates.add(
-                                criteriaBuilder.equal(
-                                        criteriaBuilder.lower(root.get("standaloneAward")),
-                                        "yes"
-                                )
-                        );
-                    } else if (schemeSelected) {
-                        predicates.add(
-                                criteriaBuilder.equal(
-                                        criteriaBuilder.lower(root.get("standaloneAward")),
-                                        "no"
-                                )
-                        );
+                if(filter.getAwardType() != null && !filter.getAwardType().isEmpty()){
+                    Set<String> standaloneValues = new HashSet<>();
+                    if (Boolean.TRUE.equals(filter.getIsStandalone())) {
+                        standaloneValues.add("yes");
+                    }
+                    if (Boolean.TRUE.equals(filter.getIsAwardUnderScheme())) {
+                        standaloneValues.add("no");
+                    }
+                    if (!standaloneValues.isEmpty()) {
+                        predicates.add(criteriaBuilder.lower(root.get("standaloneAward")).in(standaloneValues));
                     }
                 }
+
                 if (hasText(filter.getPa())) {
                     predicates.add(criteriaBuilder.equal(root.get("grantingAuthority").get("grantingAuthorityName"), filter.getPa().trim()));
                 }
@@ -132,6 +120,7 @@ public class AwardSpecifications {
                             criteriaBuilder.or(formPredicates.toArray(new Predicate[0]))
                     );
                 }
+
                 if(filter.getSubsidyPurposes() != null && !filter.getSubsidyPurposes().isEmpty()){
                     List<Predicate> purposePredicates = new ArrayList<>();
 
@@ -144,7 +133,7 @@ public class AwardSpecifications {
                         purposePredicates.add(
                                 criteriaBuilder.like(
                                         criteriaBuilder.lower(root.get("subsidyObjective")),
-                                        "%\"" + value + "\"%"
+                                        "%" + value + "%"
                                 )
                         );
                     }
@@ -153,6 +142,7 @@ public class AwardSpecifications {
                             criteriaBuilder.or(purposePredicates.toArray(new Predicate[0]))
                     );
                 }
+
                 if(filter.getSubsidyInterest() != null){
                     String value = filter.getSubsidyInterest().trim().toLowerCase();
                     predicates.add(criteriaBuilder.like(
@@ -161,8 +151,6 @@ public class AwardSpecifications {
                             )
                     );
                 }
-
-
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

@@ -17,6 +17,9 @@ public class Filter {
     private String keyword;
 
     private String awardType;
+
+    private Boolean isStandalone = false;
+    private Boolean isAwardUnderScheme = false;
     private String pa;
     private String[] geoLocation;
     private String mfaAssistance;
@@ -57,6 +60,8 @@ public class Filter {
     public void normalise() {
         keyword = blankToNull(keyword);
         awardType = blankToNull(awardType);
+        isStandalone = "standalone award".equalsIgnoreCase(awardType);
+        isAwardUnderScheme = "award under a scheme".equalsIgnoreCase(awardType);
         pa = blankToNull(pa);
         if (geoLocation != null) {
             geoLocations = Arrays.stream(geoLocation)
