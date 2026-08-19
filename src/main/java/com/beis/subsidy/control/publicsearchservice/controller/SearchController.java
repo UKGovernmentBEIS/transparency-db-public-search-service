@@ -260,6 +260,7 @@ public class SearchController {
         switch (type) {
             case "scheme":
 				publishedField = "publishedMeasureDate";
+				recipientField = "subsidyMeasureTitle";
                 break;
             case "mfa":
                 recipientField = "recipientName";
@@ -272,12 +273,10 @@ public class SearchController {
 			return publishedField;
 		}
 
-		switch (frontendField) {
-			case "recipientName":
-				return recipientField;
-
-			default:
-				return publishedField;
+		if (frontendField.equalsIgnoreCase("recipientName") || frontendField.equalsIgnoreCase("subsidySchemeName")){
+			return recipientField;
+		}else{
+			return publishedField;
 		}
 	}
 }
