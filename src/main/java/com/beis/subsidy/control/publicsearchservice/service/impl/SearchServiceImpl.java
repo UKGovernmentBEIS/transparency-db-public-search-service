@@ -310,6 +310,26 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
+	public SubsidyMeasuresResponse findSchemes(Filter filter, Pageable pageable) {
+		Page<SubsidyMeasure> schemes = schemeRepository.findAll(SubsidyMeasureSpecifications.withFilters(filter), pageable);
+
+		return new SubsidyMeasuresResponse(
+				schemes.getContent(),
+				schemes.getTotalElements(),
+				schemes.getNumber() + 1,
+				schemes.getTotalPages()
+		);
+	}
+
+    @Override
+    public SubsidyMeasuresExportResponse findSchemesForExport(Filter filter) {
+		List<SubsidyMeasure> schemes = schemeRepository.findAll(
+				SubsidyMeasureSpecifications.withFilters(filter)
+		);
+		return new SubsidyMeasuresExportResponse(schemes);
+    }
+
+    @Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
 		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
 		List<Order> orders = getOrderByCondition(searchInput.getSortBy());

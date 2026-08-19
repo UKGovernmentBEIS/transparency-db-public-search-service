@@ -31,4 +31,8 @@ public interface SearchService {
     MFAAwardsResponse findMfaAwards(Filter filter, Pageable mappedPageable);
 
     MFAAwardsExportResponse findMfaAwardsForExport(Filter filter);
+
+    SubsidyMeasuresResponse findSchemes(Filter filter, Pageable mappedPageable);
+
+    SubsidyMeasuresExportResponse findSchemesForExport(Filter filter);
 }
