@@ -40,10 +40,10 @@ public class AwardSpecifications {
                 }
                 if(filter.getAwardType() != null && !filter.getAwardType().isEmpty()){
                     Set<String> standaloneValues = new HashSet<>();
-                    if (Boolean.TRUE.equals(filter.getIsStandalone())) {
+                    if (filter.getIsStandalone()) {
                         standaloneValues.add("yes");
                     }
-                    if (Boolean.TRUE.equals(filter.getIsAwardUnderScheme())) {
+                    if (filter.getIsAwardUnderScheme()) {
                         standaloneValues.add("no");
                     }
                     if (!standaloneValues.isEmpty()) {
