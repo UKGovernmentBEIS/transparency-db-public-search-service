@@ -19,6 +19,11 @@ import java.util.stream.Collectors;
 public class Filter {
     // Values from front end
     private String keyword;
+
+    private String awardType;
+
+    private Boolean isStandalone = false;
+    private Boolean isAwardUnderScheme = false;
     private String pa;
     private String[] geoLocation;
     private String schemeStatus;
@@ -61,8 +66,29 @@ public class Filter {
     private LocalDate schemeStartFromDate;
     private LocalDate schemeStartToDate;
 
+    private List<String> sectors;
+    private String[] sector;
+
+    private List<String> subsidyForms;
+
+    private String[] subsidyForm;
+    private String subsidyFormOther;
+
+    private List<String> subsidyPurposes;
+
+    private String[] subsidyPurpose;
+
+    private String subsidyPurposeOther;
+
+    private String subsidyInterest;
+
+
+
     public void normalise() {
         keyword = blankToNull(keyword);
+        awardType = blankToNull(awardType);
+        isStandalone = "standalone award".equalsIgnoreCase(awardType);
+        isAwardUnderScheme = "award under a scheme".equalsIgnoreCase(awardType);
         pa = blankToNull(pa);
         schemeStartFromDay = blankToNull(schemeStartFromDay);
         schemeStartFromMonth = blankToNull(schemeStartFromMonth);
@@ -89,6 +115,39 @@ public class Filter {
 
         confirmationDateFrom = stringToDate(confirmationFromDay, confirmationFromMonth, confirmationFromYear);
         confirmationDateTo = stringToDate(confirmationToDay, confirmationToMonth, confirmationToYear);
+        if (sector != null) {
+            sectors = Arrays.stream(sector)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (sectors.isEmpty()) {
+                sectors = null;
+            }
+        }
+        if (subsidyForm != null) {
+            subsidyForms = Arrays.stream(subsidyForm)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (subsidyForms.isEmpty()) {
+                subsidyForm = null;
+            }
+        }
+        subsidyFormOther = blankToNull(subsidyFormOther);
+        if (subsidyPurpose != null) {
+            subsidyPurposes = Arrays.stream(subsidyPurpose)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (subsidyPurposes.isEmpty()) {
+                subsidyPurpose = null;
+            }
+        }
+        subsidyPurposeOther = blankToNull(subsidyPurposeOther);
+        subsidyInterest = blankToNull(subsidyInterest);
     }
 
     private String blankToNull(String value) {
