@@ -7,6 +7,7 @@ import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestExce
 import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
 import com.beis.subsidy.control.publicsearchservice.model.MFAAward;
 import com.beis.subsidy.control.publicsearchservice.model.MFAGrouping;
+import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Assertions;
@@ -32,8 +33,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -56,6 +61,8 @@ public class SearchControllerTest {
     @Mock
     HttpServletRequest requestMock;
 
+    GrantingAuthorityRepository grantingAuthorityRepositoryMock;
+
     MFAGrouping mfaGrouping = new MFAGrouping();
     MFAGroupingResponse mfaGroupingResponse;
     GrantingAuthority grantingAuthority = new GrantingAuthority();
@@ -64,6 +71,7 @@ public class SearchControllerTest {
     MFAAwardsResponse mfaAwardsResponse;
     Filter filter;
     Pageable mfaPageable;
+    List<GrantingAuthority> gaList = new ArrayList<>();
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -108,6 +116,7 @@ public class SearchControllerTest {
         mfaAwardsResponse = new MFAAwardsResponse(new ArrayList<>(Arrays.asList(mfaAward,mfaAward,mfaAward)),3,1,1);
 
         searchServiceMock = mock(SearchService.class);
+        grantingAuthorityRepositoryMock = mock(GrantingAuthorityRepository.class);
         MockitoAnnotations.openMocks(this);
     }
 
@@ -122,6 +131,23 @@ public class SearchControllerTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
         verify(searchServiceMock, times(1)).findMatchingAwards(searchInput);
+    }
+
+    @Test
+    public void testAllGas(){
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+        gaList.add(new GrantingAuthority());
+        Mockito.when(grantingAuthorityRepositoryMock.findAll()).thenReturn(gaList);
+
+        ResponseEntity<?> actual = searchController.allGas();
+
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+        assertThat(actual.getBody()).isInstanceOf(GrantingAuthorityListResponse.class);
+
+        GrantingAuthorityListResponse gaResponse = (GrantingAuthorityListResponse) actual.getBody();
+        assert gaResponse != null;
+        assertThat(gaResponse.getGaList()).isNotNull();
+        assertThat(gaResponse.getGaList().size()).isEqualTo(1);
     }
 
     @Test
@@ -228,5 +254,41 @@ public class SearchControllerTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
         verify(searchServiceMock, times(1)).findStandaloneAwards(searchInput);
+    }
+
+    @Test
+    void findSchemesTest() {
+        Filter filter = new Filter();
+        filter.setKeyword("keyword");
+
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.by(Sort.Direction.DESC, "publishedDate")
+        );
+
+        SubsidyMeasuresResponse expectedResponse = new SubsidyMeasuresResponse(
+                Collections.emptyList(),
+                0,
+                1,
+                0
+        );
+
+        when(searchServiceMock.findSchemes(any(Filter.class), any(Pageable.class)))
+                .thenReturn(expectedResponse);
+
+        ResponseEntity<SubsidyMeasuresResponse> response =
+                searchController.findSchemes(filter, pageable);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertSame(expectedResponse, response.getBody());
+
+        verify(searchServiceMock).findSchemes(
+                eq(filter),
+                argThat(mappedPageable ->
+                        mappedPageable.getPageNumber() == 0
+                                && mappedPageable.getPageSize() == 10
+                )
+        );
     }
 }

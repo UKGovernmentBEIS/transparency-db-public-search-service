@@ -3,6 +3,8 @@ package com.beis.subsidy.control.publicsearchservice.controller;
 import com.beis.subsidy.control.publicsearchservice.controller.request.Filter;
 import com.beis.subsidy.control.publicsearchservice.controller.response.*;
 import com.beis.subsidy.control.publicsearchservice.exception.InvalidRequestException;
+import com.beis.subsidy.control.publicsearchservice.model.GrantingAuthority;
+import com.beis.subsidy.control.publicsearchservice.repository.GrantingAuthorityRepository;
 import com.beis.subsidy.control.publicsearchservice.service.SearchService;
 
 
@@ -48,6 +50,9 @@ public class SearchController {
 
 	@Autowired
 	private HttpServletRequest request;
+
+	@Autowired
+	private GrantingAuthorityRepository grantingAuthorityRepository;
 	
 	/**
 	 * To get health of app 
@@ -56,6 +61,20 @@ public class SearchController {
 	@GetMapping("/health")
 	public ResponseEntity<String> getHealth() {
 		return new ResponseEntity<>("Successful health check - Public Search API", HttpStatus.OK);
+	}
+
+	/**
+	 *
+	 * @return response with list of granting authorities and HTTP status
+	 */
+	@GetMapping("/all_gas")
+	public ResponseEntity<GrantingAuthorityListResponse> allGas() {
+		List<GrantingAuthority> gaList = grantingAuthorityRepository.findAll();
+
+		SearchUtils.removeRolesFromGaList(gaList);
+		SearchUtils.removeInactiveFromGaList(gaList);
+
+		return new ResponseEntity<GrantingAuthorityListResponse>(new GrantingAuthorityListResponse(gaList), HttpStatus.OK);
 	}
 
 	/**
@@ -169,6 +188,44 @@ public class SearchController {
 		return new ResponseEntity<MFAAwardResponse>(mfaAwardById, HttpStatus.OK);
 	}
 
+	@GetMapping(
+			value = "/awards",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<AwardsResponse> findAwards(@ModelAttribute Filter filter, Pageable pageable){
+		filter.normalise();
+		Pageable mappedPageable = mapSort(pageable, "award");
+		return new ResponseEntity<AwardsResponse>(searchService.findAwards(filter, mappedPageable),HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/awards/export",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<AwardsExportResponse> exportAwards(@ModelAttribute Filter filter) {
+		filter.normalise();
+		return new ResponseEntity<AwardsExportResponse>(searchService.findAwardsForExport(filter),HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/schemes",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasuresResponse> findSchemes(@ModelAttribute Filter filter, Pageable pageable){
+		filter.normalise();
+		Pageable mappedPageable = mapSort(pageable, "scheme");
+		return new ResponseEntity<SubsidyMeasuresResponse>(searchService.findSchemes(filter, mappedPageable),HttpStatus.OK);
+	}
+
+	@GetMapping(
+			value = "/schemes/export",
+			produces = APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<SubsidyMeasuresExportResponse> exportSchemes(@ModelAttribute Filter filter) {
+		filter.normalise();
+		return new ResponseEntity<SubsidyMeasuresExportResponse>(searchService.findSchemesForExport(filter),HttpStatus.OK);
+	}
+
 	private Pageable mapSort(Pageable pageable, String type) {
 		Sort mappedSort = mapSort(pageable.getSort(), type);
 
@@ -202,6 +259,8 @@ public class SearchController {
         String publishedField = "publishedAwardDate";
         switch (type) {
             case "scheme":
+				publishedField = "publishedMeasureDate";
+				recipientField = "subsidyMeasureTitle";
                 break;
             case "mfa":
                 recipientField = "recipientName";
@@ -214,12 +273,10 @@ public class SearchController {
 			return publishedField;
 		}
 
-		switch (frontendField) {
-			case "recipientName":
-				return recipientField;
-
-			default:
-				return publishedField;
+		if (frontendField.equalsIgnoreCase("recipientName") || frontendField.equalsIgnoreCase("subsidySchemeName")){
+			return recipientField;
+		}else{
+			return publishedField;
 		}
 	}
 }
