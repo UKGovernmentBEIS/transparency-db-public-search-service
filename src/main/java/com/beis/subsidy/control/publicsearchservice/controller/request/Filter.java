@@ -66,23 +66,10 @@ public class Filter {
     private LocalDate schemeStartFromDate;
     private LocalDate schemeStartToDate;
 
-    private List<String> sectors;
-    private String[] sector;
-
     private List<String> subsidyForms;
 
     private String[] subsidyForm;
     private String subsidyFormOther;
-
-    private List<String> subsidyPurposes;
-
-    private String[] subsidyPurpose;
-
-    private String subsidyPurposeOther;
-
-    private String subsidyInterest;
-
-
 
     public void normalise() {
         keyword = blankToNull(keyword);
