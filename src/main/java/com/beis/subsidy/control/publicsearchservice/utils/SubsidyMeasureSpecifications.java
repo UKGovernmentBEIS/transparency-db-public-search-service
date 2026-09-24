@@ -42,8 +42,8 @@ public class SubsidyMeasureSpecifications {
                 }
 
                 // Confirmation Date
-                if(filter.getConfirmationDateFrom() != null && filter.getConfirmationDateTo() != null){
-                    predicates.add(criteriaBuilder.between(root.get("confirmationDate"), filter.getConfirmationDateFrom(), filter.getConfirmationDateTo()));
+                if(filter.getFromDate() != null && filter.getToDate() != null){
+                    predicates.add(criteriaBuilder.between(root.get("confirmationDate"), filter.getFromDate(), filter.getToDate()));
                 }
 
                 // Budget

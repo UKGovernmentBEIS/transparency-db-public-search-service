@@ -28,19 +28,13 @@ public class FilterTest {
         filter.setMfaAssistance("spei");
         filter.setAwardFullFromAmount("100");
         filter.setAwardFullToAmount("200");
-        filter.setConfirmationFromDay("30");
-        filter.setConfirmationFromMonth("09");
-        filter.setConfirmationFromYear("2026");
-        filter.setConfirmationToDay("31");
-        filter.setConfirmationToMonth("12");
-        filter.setConfirmationToYear("2026");
+        filter.setFromDay("30");
+        filter.setFromMonth("09");
+        filter.setFromYear("2026");
+        filter.setToDay("31");
+        filter.setToMonth("12");
+        filter.setToYear("2026");
         filter.setSchemeStatus("Active");
-        filter.setSchemeStartFromDay("01");
-        filter.setSchemeStartFromMonth("02");
-        filter.setSchemeStartFromYear("2003");
-        filter.setSchemeStartToDay("04");
-        filter.setSchemeStartToMonth("05");
-        filter.setSchemeStartToYear("2006");
         filter.setSchemeBudgetFromAmount("1000000");
         filter.setSchemeBudgetToAmount("2000000");
         filter.setSector(sectors);
@@ -50,8 +44,8 @@ public class FilterTest {
         // normalized values should be null before normalise
         assertThat(filter.getAwardFullAmountFrom()).isNull();
         assertThat(filter.getAwardFullAmountTo()).isNull();
-        assertThat(filter.getConfirmationDateFrom()).isNull();
-        assertThat(filter.getConfirmationDateTo()).isNull();
+        assertThat(filter.getFromDate()).isNull();
+        assertThat(filter.getToDate()).isNull();
         assertThat(filter.getGeoLocations()).isNull();
         assertThat(filter.getIsSpei()).isFalse();
         assertThat(filter.getSectors()).isNull();
@@ -66,19 +60,13 @@ public class FilterTest {
         assertThat(filter.getMfaAssistance()).isEqualTo("spei");
         assertThat(filter.getAwardFullFromAmount()).isEqualTo("100");
         assertThat(filter.getAwardFullToAmount()).isEqualTo("200");
-        assertThat(filter.getConfirmationFromDay()).isEqualTo("30");
-        assertThat(filter.getConfirmationFromMonth()).isEqualTo("09");
-        assertThat(filter.getConfirmationFromYear()).isEqualTo("2026");
-        assertThat(filter.getConfirmationToDay()).isEqualTo("31");
-        assertThat(filter.getConfirmationToMonth()).isEqualTo("12");
-        assertThat(filter.getConfirmationToYear()).isEqualTo("2026");
+        assertThat(filter.getFromDay()).isEqualTo("30");
+        assertThat(filter.getFromMonth()).isEqualTo("09");
+        assertThat(filter.getFromYear()).isEqualTo("2026");
+        assertThat(filter.getToDay()).isEqualTo("31");
+        assertThat(filter.getToMonth()).isEqualTo("12");
+        assertThat(filter.getToYear()).isEqualTo("2026");
         assertThat(filter.getSchemeStatus()).isEqualTo("Active");
-        assertThat(filter.getSchemeStartFromDay()).isEqualTo("01");
-        assertThat(filter.getSchemeStartFromMonth()).isEqualTo("02");
-        assertThat(filter.getSchemeStartFromYear()).isEqualTo("2003");
-        assertThat(filter.getSchemeStartToDay()).isEqualTo("04");
-        assertThat(filter.getSchemeStartToMonth()).isEqualTo("05");
-        assertThat(filter.getSchemeStartToYear()).isEqualTo("2006");
         assertThat(filter.getSchemeBudgetFromAmount()).isEqualTo("1000000");
         assertThat(filter.getSchemeBudgetToAmount()).isEqualTo("2000000");
         assertThat(filter.getSector()).isEqualTo(sectors);
@@ -87,8 +75,8 @@ public class FilterTest {
 
         assertThat(filter.getAwardFullAmountFrom()).isEqualTo(100);
         assertThat(filter.getAwardFullAmountTo()).isEqualTo(200);
-        assertThat(filter.getConfirmationDateFrom()).isEqualTo("2026-09-30");
-        assertThat(filter.getConfirmationDateTo()).isEqualTo("2026-12-31");
+        assertThat(filter.getFromDate()).isEqualTo("2026-09-30");
+        assertThat(filter.getToDate()).isEqualTo("2026-12-31");
         assertThat(filter.getGeoLocations()).isNotEmpty();
         assertThat(filter.getGeoLocations()).containsAll(new ArrayList<>(Arrays.asList(geoLocations)));
         assertThat(filter.getIsSpei()).isTrue();
@@ -96,8 +84,6 @@ public class FilterTest {
         assertThat(filter.getSubsidyPurposes()).containsAll(new ArrayList<>(Arrays.asList(purposes)));
         assertThat(filter.getSchemeBudgetFrom()).isEqualTo(BigDecimal.valueOf(Long.parseLong("1000000")));
         assertThat(filter.getSchemeBudgetTo()).isEqualTo(BigDecimal.valueOf(Long.parseLong("2000000")));
-        assertThat(filter.getSchemeStartFromDate()).isEqualTo("2003-02-01");
-        assertThat(filter.getSchemeStartToDate()).isEqualTo("2006-05-04");
     }
 
     @Test
@@ -113,19 +99,13 @@ public class FilterTest {
         assertThat(filter.getMfaAssistance()).isNull();
         assertThat(filter.getAwardFullFromAmount()).isNull();
         assertThat(filter.getAwardFullToAmount()).isNull();
-        assertThat(filter.getConfirmationFromDay()).isNull();
-        assertThat(filter.getConfirmationFromMonth()).isNull();
-        assertThat(filter.getConfirmationFromYear()).isNull();
-        assertThat(filter.getConfirmationToDay()).isNull();
-        assertThat(filter.getConfirmationToMonth()).isNull();
-        assertThat(filter.getConfirmationToYear()).isNull();
+        assertThat(filter.getFromDay()).isNull();
+        assertThat(filter.getFromMonth()).isNull();
+        assertThat(filter.getFromYear()).isNull();
+        assertThat(filter.getToDay()).isNull();
+        assertThat(filter.getToMonth()).isNull();
+        assertThat(filter.getToYear()).isNull();
         assertThat(filter.getSchemeStatus()).isNull();
-        assertThat(filter.getSchemeStartFromDay()).isNull();
-        assertThat(filter.getSchemeStartFromMonth()).isNull();
-        assertThat(filter.getSchemeStartFromYear()).isNull();
-        assertThat(filter.getSchemeStartToDay()).isNull();
-        assertThat(filter.getSchemeStartToMonth()).isNull();
-        assertThat(filter.getSchemeStartToYear()).isNull();
         assertThat(filter.getSchemeBudgetFromAmount()).isNull();
         assertThat(filter.getSchemeBudgetToAmount()).isNull();
         assertThat(filter.getSector()).isNull();
@@ -134,29 +114,27 @@ public class FilterTest {
 
         assertThat(filter.getAwardFullAmountFrom()).isNull();
         assertThat(filter.getAwardFullAmountTo()).isNull();
-        assertThat(filter.getConfirmationDateFrom()).isNull();
-        assertThat(filter.getConfirmationDateTo()).isNull();
+        assertThat(filter.getFromDate()).isNull();
+        assertThat(filter.getToDate()).isNull();
         assertThat(filter.getGeoLocations()).isNull();
         assertThat(filter.getIsSpei()).isFalse();
         assertThat(filter.getSectors()).isNull();
         assertThat(filter.getSubsidyPurposes()).isNull();
         assertThat(filter.getSchemeBudgetFrom()).isNull();
         assertThat(filter.getSchemeBudgetTo()).isNull();
-        assertThat(filter.getSchemeStartFromDate()).isNull();
-        assertThat(filter.getSchemeStartToDate()).isNull();
     }
 
     @Test
     public void invalidFilterDate(){
         Filter filter = new Filter();
 
-        filter.setSchemeStartFromDay("31");
-        filter.setSchemeStartFromMonth("02");
-        filter.setSchemeStartFromYear("2003");
+        filter.setFromDay("31");
+        filter.setFromMonth("02");
+        filter.setFromYear("2003");
 
         assertThrows(IllegalArgumentException.class, filter::normalise);
 
-        filter.setSchemeStartFromDay("abc");
+        filter.setFromDay("abc");
 
         assertThrows(IllegalArgumentException.class, filter::normalise);
     }

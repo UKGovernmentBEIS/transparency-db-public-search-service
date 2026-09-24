@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.DateTimeException;
@@ -36,12 +35,12 @@ public class Filter {
     private String mfaAssistance;
     private String awardFullFromAmount;
     private String awardFullToAmount;
-    private String confirmationFromDay;
-    private String confirmationFromMonth;
-    private String confirmationFromYear;
-    private String confirmationToDay;
-    private String confirmationToMonth;
-    private String confirmationToYear;
+    private String fromDay;
+    private String fromMonth;
+    private String fromYear;
+    private String toDay;
+    private String toMonth;
+    private String toYear;
 
     // Converted values for use in filtering
     private List<String> geoLocations;
@@ -55,8 +54,8 @@ public class Filter {
     private BigDecimal schemeBudgetFrom;
     private BigDecimal schemeBudgetTo;
 
-    private LocalDate confirmationDateFrom;
-    private LocalDate confirmationDateTo;
+    private LocalDate fromDate;
+    private LocalDate toDate;
 
     private List<String> subsidyForms;
 
@@ -84,8 +83,8 @@ public class Filter {
         awardFullAmountFrom = stringToInteger(awardFullFromAmount);
         awardFullAmountTo = stringToInteger(awardFullToAmount);
 
-        confirmationDateFrom = stringToDate(confirmationFromDay, confirmationFromMonth, confirmationFromYear);
-        confirmationDateTo = stringToDate(confirmationToDay, confirmationToMonth, confirmationToYear);
+        fromDate = stringToDate(fromDay, fromMonth, fromYear);
+        toDate = stringToDate(toDay, toMonth, toYear);
         if (sector != null) {
             sectors = Arrays.stream(sector)
                     .map(this::blankToNull)
