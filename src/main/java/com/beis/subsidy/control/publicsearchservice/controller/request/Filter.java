@@ -83,6 +83,13 @@ public class Filter {
         awardFullAmountFrom = stringToInteger(awardFullFromAmount);
         awardFullAmountTo = stringToInteger(awardFullToAmount);
 
+        fromDay = blankToNull(fromDay);
+        fromMonth = blankToNull(fromMonth);
+        fromYear = blankToNull(fromYear);
+        toDay = blankToNull(toDay);
+        toMonth = blankToNull(toMonth);
+        toYear = blankToNull(toYear);
+
         fromDate = stringToDate(fromDay, fromMonth, fromYear);
         toDate = stringToDate(toDay, toMonth, toYear);
         if (sector != null) {
