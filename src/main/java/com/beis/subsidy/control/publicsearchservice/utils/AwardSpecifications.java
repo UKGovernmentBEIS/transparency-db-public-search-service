@@ -59,8 +59,8 @@ public class AwardSpecifications {
                     predicates.add(criteriaBuilder.between(root.get("subsidyFullAmountExact"),filter.getAwardFullAmountFrom(),filter.getAwardFullAmountTo()));
                 }
 
-                if(filter.getConfirmationDateFrom() != null && filter.getConfirmationDateTo() != null){
-                    predicates.add(criteriaBuilder.between(root.get("legalGrantingDate"),filter.getConfirmationDateFrom(),filter.getConfirmationDateTo()));
+                if(filter.getFromDate() != null && filter.getToDate() != null){
+                    predicates.add(criteriaBuilder.between(root.get("legalGrantingDate"),filter.getFromDate(),filter.getToDate()));
                 }
 
                 if (filter.getGeoLocations() != null && !filter.getGeoLocations().isEmpty()) {

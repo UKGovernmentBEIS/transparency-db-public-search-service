@@ -41,9 +41,9 @@ public class SubsidyMeasureSpecifications {
                     predicates.add(criteriaBuilder.equal(root.get("status"),filter.getSchemeStatus().trim()));
                 }
 
-                // Start Date
-                if(filter.getSchemeStartFromDate() != null && filter.getSchemeStartToDate() != null){
-                    predicates.add(criteriaBuilder.between(root.get("startDate"), filter.getSchemeStartFromDate(), filter.getSchemeStartToDate()));
+                // Confirmation Date
+                if(filter.getFromDate() != null && filter.getToDate() != null){
+                    predicates.add(criteriaBuilder.between(root.get("confirmationDate"), filter.getFromDate(), filter.getToDate()));
                 }
 
                 // Budget

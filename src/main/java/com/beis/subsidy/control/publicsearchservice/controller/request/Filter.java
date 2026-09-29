@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.DateTimeException;
@@ -27,12 +26,6 @@ public class Filter {
     private String pa;
     private String[] geoLocation;
     private String schemeStatus;
-    private String schemeStartFromDay;
-    private String schemeStartFromMonth;
-    private String schemeStartFromYear;
-    private String schemeStartToDay;
-    private String schemeStartToMonth;
-    private String schemeStartToYear;
     private String schemeBudgetFromAmount;
     private String schemeBudgetToAmount;
     private String[] sector;
@@ -42,12 +35,12 @@ public class Filter {
     private String mfaAssistance;
     private String awardFullFromAmount;
     private String awardFullToAmount;
-    private String confirmationFromDay;
-    private String confirmationFromMonth;
-    private String confirmationFromYear;
-    private String confirmationToDay;
-    private String confirmationToMonth;
-    private String confirmationToYear;
+    private String fromDay;
+    private String fromMonth;
+    private String fromYear;
+    private String toDay;
+    private String toMonth;
+    private String toYear;
 
     // Converted values for use in filtering
     private List<String> geoLocations;
@@ -61,10 +54,8 @@ public class Filter {
     private BigDecimal schemeBudgetFrom;
     private BigDecimal schemeBudgetTo;
 
-    private LocalDate confirmationDateFrom;
-    private LocalDate confirmationDateTo;
-    private LocalDate schemeStartFromDate;
-    private LocalDate schemeStartToDate;
+    private LocalDate fromDate;
+    private LocalDate toDate;
 
     private List<String> subsidyForms;
 
@@ -77,12 +68,6 @@ public class Filter {
         isStandalone = "standalone award".equalsIgnoreCase(awardType);
         isAwardUnderScheme = "award under a scheme".equalsIgnoreCase(awardType);
         pa = blankToNull(pa);
-        schemeStartFromDay = blankToNull(schemeStartFromDay);
-        schemeStartFromMonth = blankToNull(schemeStartFromMonth);
-        schemeStartFromYear = blankToNull(schemeStartFromYear);
-        schemeStartToDay = blankToNull(schemeStartToDay);
-        schemeStartToMonth = blankToNull(schemeStartToMonth);
-        schemeStartToYear = blankToNull(schemeStartToYear);
         schemeBudgetFrom = stringToBigDecimal(schemeBudgetFromAmount);
         schemeBudgetTo = stringToBigDecimal(schemeBudgetToAmount);
         geoLocations = stringArrayToList(geoLocation);
@@ -91,8 +76,6 @@ public class Filter {
         subsidyPurposeOther = blankToNull(subsidyPurposeOther);
         subsidyInterest = blankToNull(subsidyInterest);
         schemeStatus = blankToNull(schemeStatus);
-        schemeStartFromDate = stringToDate(schemeStartFromDay, schemeStartFromMonth, schemeStartFromYear);
-        schemeStartToDate = stringToDate(schemeStartToDay, schemeStartToMonth, schemeStartToYear);
         mfaAssistance = blankToNull(mfaAssistance);
         if (mfaAssistance != null && mfaAssistance.equalsIgnoreCase("spei")){
             isSpei = true;
@@ -100,8 +83,15 @@ public class Filter {
         awardFullAmountFrom = stringToInteger(awardFullFromAmount);
         awardFullAmountTo = stringToInteger(awardFullToAmount);
 
-        confirmationDateFrom = stringToDate(confirmationFromDay, confirmationFromMonth, confirmationFromYear);
-        confirmationDateTo = stringToDate(confirmationToDay, confirmationToMonth, confirmationToYear);
+        fromDay = blankToNull(fromDay);
+        fromMonth = blankToNull(fromMonth);
+        fromYear = blankToNull(fromYear);
+        toDay = blankToNull(toDay);
+        toMonth = blankToNull(toMonth);
+        toYear = blankToNull(toYear);
+
+        fromDate = stringToDate(fromDay, fromMonth, fromYear);
+        toDate = stringToDate(toDay, toMonth, toYear);
         if (sector != null) {
             sectors = Arrays.stream(sector)
                     .map(this::blankToNull)
