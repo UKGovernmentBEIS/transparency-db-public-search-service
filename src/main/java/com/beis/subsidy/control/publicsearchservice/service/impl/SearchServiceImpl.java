@@ -270,6 +270,26 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
+	public AwardsResponse findAwards(Filter filter, Pageable pageable) {
+		Page<Award> awards = awardRepository.findAll(AwardSpecifications.withFilters(filter), pageable);
+
+		return new AwardsResponse(
+				awards.getContent(),
+				awards.getTotalElements(),
+				awards.getNumber() + 1,
+				awards.getTotalPages()
+		);
+	}
+
+	@Override
+	public AwardsExportResponse findAwardsForExport(Filter filter) {
+		List<Award> awards = awardRepository.findAll(
+				AwardSpecifications.withFilters(filter)
+		);
+		return new AwardsExportResponse(awards);
+	}
+
+	@Override
 	public MFAAwardsResponse findMfaAwards(Filter filter, Pageable pageable) {
 		Page<MFAAward> awards = mfaAwardRepository.findAll(MfaAwardSpecifications.withFilters(filter), pageable);
 
@@ -290,6 +310,26 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
+	public SubsidyMeasuresResponse findSchemes(Filter filter, Pageable pageable) {
+		Page<SubsidyMeasure> schemes = schemeRepository.findAll(SubsidyMeasureSpecifications.withFilters(filter), pageable);
+
+		return new SubsidyMeasuresResponse(
+				schemes.getContent(),
+				schemes.getTotalElements(),
+				schemes.getNumber() + 1,
+				schemes.getTotalPages()
+		);
+	}
+
+    @Override
+    public SubsidyMeasuresExportResponse findSchemesForExport(Filter filter) {
+		List<SubsidyMeasure> schemes = schemeRepository.findAll(
+				SubsidyMeasureSpecifications.withFilters(filter)
+		);
+		return new SubsidyMeasuresExportResponse(schemes);
+    }
+
+    @Override
 	public SubsidyMeasuresResponse findAllSchemes(SearchInput searchInput) {
 		Specification<SubsidyMeasure> subsidyMeasureSpecification = null;
 		List<Order> orders = getOrderByCondition(searchInput.getSortBy());

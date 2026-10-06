@@ -17,4 +17,6 @@ public interface AwardRepository extends JpaRepository<Award, Long>, JpaSpecific
 
     Award findByAwardNumber(Long awardNumber);
     Page<Award> findBySubsidyMeasure(SubsidyMeasure subsidyMeasure, Pageable pageable);
+
+    Page<Award> findByStatus(String status, Pageable pageable);
 }
