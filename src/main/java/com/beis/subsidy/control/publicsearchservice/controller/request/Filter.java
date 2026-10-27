@@ -3,8 +3,10 @@ package com.beis.subsidy.control.publicsearchservice.controller.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.DateTimeException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.DateTimeException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -14,39 +16,66 @@ import java.util.stream.Collectors;
 @Setter
 
 public class Filter {
+    // Values from front end
     private String keyword;
+
+    private String awardType;
+
+    private Boolean isStandalone = false;
+    private Boolean isAwardUnderScheme = false;
     private String pa;
     private String[] geoLocation;
+    private String schemeStatus;
+    private String schemeBudgetFromAmount;
+    private String schemeBudgetToAmount;
+    private String[] sector;
+    private String[] subsidyPurpose;
+    private String subsidyPurposeOther;
+    private String subsidyInterest;
     private String mfaAssistance;
     private String awardFullFromAmount;
     private String awardFullToAmount;
-    private String confirmationFromDay;
-    private String confirmationFromMonth;
-    private String confirmationFromYear;
-    private String confirmationToDay;
-    private String confirmationToMonth;
-    private String confirmationToYear;
+    private String fromDay;
+    private String fromMonth;
+    private String fromYear;
+    private String toDay;
+    private String toMonth;
+    private String toYear;
 
+    // Converted values for use in filtering
     private List<String> geoLocations;
+    private List<String> sectors;
+    private List<String> subsidyPurposes;
+
     private Boolean isSpei = false;
+
     private Integer awardFullAmountFrom;
     private Integer awardFullAmountTo;
-    private LocalDate confirmationDateFrom;
-    private LocalDate confirmationDateTo;
+    private BigDecimal schemeBudgetFrom;
+    private BigDecimal schemeBudgetTo;
+
+    private LocalDate fromDate;
+    private LocalDate toDate;
+
+    private List<String> subsidyForms;
+
+    private String[] subsidyForm;
+    private String subsidyFormOther;
 
     public void normalise() {
         keyword = blankToNull(keyword);
+        awardType = blankToNull(awardType);
+        isStandalone = "standalone award".equalsIgnoreCase(awardType);
+        isAwardUnderScheme = "award under a scheme".equalsIgnoreCase(awardType);
         pa = blankToNull(pa);
-        if (geoLocation != null) {
-            geoLocations = Arrays.stream(geoLocation)
-                    .map(this::blankToNull)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-
-            if (geoLocations.isEmpty()) {
-                geoLocations = null;
-            }
-        }
+        schemeBudgetFrom = stringToBigDecimal(schemeBudgetFromAmount);
+        schemeBudgetTo = stringToBigDecimal(schemeBudgetToAmount);
+        geoLocations = stringArrayToList(geoLocation);
+        sectors = stringArrayToList(sector);
+        subsidyPurposes = stringArrayToList(subsidyPurpose);
+        subsidyPurposeOther = blankToNull(subsidyPurposeOther);
+        subsidyInterest = blankToNull(subsidyInterest);
+        schemeStatus = blankToNull(schemeStatus);
         mfaAssistance = blankToNull(mfaAssistance);
         if (mfaAssistance != null && mfaAssistance.equalsIgnoreCase("spei")){
             isSpei = true;
@@ -54,13 +83,56 @@ public class Filter {
         awardFullAmountFrom = stringToInteger(awardFullFromAmount);
         awardFullAmountTo = stringToInteger(awardFullToAmount);
 
-        confirmationDateFrom = stringToDate(confirmationFromDay, confirmationFromMonth, confirmationFromYear);
-        confirmationDateTo = stringToDate(confirmationToDay, confirmationToMonth, confirmationToYear);
+        fromDay = blankToNull(fromDay);
+        fromMonth = blankToNull(fromMonth);
+        fromYear = blankToNull(fromYear);
+        toDay = blankToNull(toDay);
+        toMonth = blankToNull(toMonth);
+        toYear = blankToNull(toYear);
+
+        fromDate = stringToDate(fromDay, fromMonth, fromYear);
+        toDate = stringToDate(toDay, toMonth, toYear);
+        if (sector != null) {
+            sectors = Arrays.stream(sector)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (sectors.isEmpty()) {
+                sectors = null;
+            }
+        }
+        if (subsidyForm != null) {
+            subsidyForms = Arrays.stream(subsidyForm)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (subsidyForms.isEmpty()) {
+                subsidyForm = null;
+            }
+        }
+        subsidyFormOther = blankToNull(subsidyFormOther);
+        if (subsidyPurpose != null) {
+            subsidyPurposes = Arrays.stream(subsidyPurpose)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (subsidyPurposes.isEmpty()) {
+                subsidyPurpose = null;
+            }
+        }
+        subsidyPurposeOther = blankToNull(subsidyPurposeOther);
+        subsidyInterest = blankToNull(subsidyInterest);
     }
 
     private String blankToNull(String value) {
         return value == null || value.trim().isEmpty() ? null : value.trim();
     }
+
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private Integer stringToInteger(String value) {
         String normalisedValue = blankToNull(value);
@@ -71,6 +143,23 @@ public class Filter {
 
         try {
             return Integer.valueOf(normalisedValue);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException(
+                    "Value must be a valid whole number: " + value,
+                    exception
+            );
+        }
+    }
+
+    private BigDecimal stringToBigDecimal(String value){
+        String normalisedValue = blankToNull(value);
+
+        if (normalisedValue == null) {
+            return null;
+        }
+
+        try {
+            return BigDecimal.valueOf(Long.parseLong(normalisedValue));
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException(
                     "Value must be a valid whole number: " + value,
@@ -96,6 +185,17 @@ public class Filter {
                     exception
             );
         }
+    }
+
+    private List<String> stringArrayToList(String[] array){
+        List<String> list = null;
+        if (array != null) {
+            list = Arrays.stream(array)
+                    .map(this::blankToNull)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        }
+        return list;
     }
 
     private boolean isBlank(String value) {
