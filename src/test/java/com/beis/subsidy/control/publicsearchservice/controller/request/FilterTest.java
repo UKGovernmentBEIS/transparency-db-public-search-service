@@ -20,6 +20,7 @@ public class FilterTest {
                 "Activities of households as employers; undifferentiated goods- and services-producing activities of households for own use",
                 "Construction"
         };
+        String[] subsidyForms = {"Direct grant", "Equity"};
         String[] purposes = {"Culture or Heritage", "Other"};
 
         filter.setKeyword("keyword");
@@ -40,6 +41,7 @@ public class FilterTest {
         filter.setSector(sectors);
         filter.setSubsidyPurpose(purposes);
         filter.setSubsidyPurposeOther("Other purpose");
+        filter.setSubsidyForm(subsidyForms);
 
         // normalized values should be null before normalise
         assertThat(filter.getAwardFullAmountFrom()).isNull();
@@ -50,7 +52,7 @@ public class FilterTest {
         assertThat(filter.getIsSpei()).isFalse();
         assertThat(filter.getSectors()).isNull();
         assertThat(filter.getSubsidyPurposes()).isNull();
-
+        assertThat(filter.getSubsidyForms()).isNull();
         filter.normalise();
 
         assertThat(filter).isNotNull();
@@ -72,6 +74,7 @@ public class FilterTest {
         assertThat(filter.getSector()).isEqualTo(sectors);
         assertThat(filter.getSubsidyPurpose()).isEqualTo(purposes);
         assertThat(filter.getSubsidyPurposeOther()).isEqualTo("Other purpose");
+        assertThat(filter.getSubsidyForm()).isEqualTo(subsidyForms);
 
         assertThat(filter.getAwardFullAmountFrom()).isEqualTo(100);
         assertThat(filter.getAwardFullAmountTo()).isEqualTo(200);

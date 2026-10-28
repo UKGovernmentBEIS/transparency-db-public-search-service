@@ -41,6 +41,15 @@ public class SubsidyMeasureResponseTest {
         subsidyMeasure.setEndDate(LocalDate.now());
         subsidyMeasure.setCreatedTimestamp(LocalDateTime.now());
         subsidyMeasure.setLastModifiedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setDeletedBy("SYSTEM");
+        subsidyMeasure.setDeletedTimestamp(LocalDateTime.now());
+        subsidyMeasure.setHasNoEndDate(true);
+        subsidyMeasure.setSubsidySchemeDescription("Scheme description");
+        subsidyMeasure.setConfirmationDate(LocalDate.now());
+        subsidyMeasure.setSpendingSectors("Sector");
+        subsidyMeasure.setMaximumAmountUnderScheme("500000");
+        subsidyMeasure.setPurpose("Purpose");
+        subsidyMeasure.setReason("Reason");
         subsidyMeasure.setBudget("1000000");
         subsidyMeasure.setPublishedMeasureDate(LocalDate.now());
         subsidyMeasure.setCreatedBy("SYSTEM");
@@ -101,6 +110,17 @@ public class SubsidyMeasureResponseTest {
         assertThat(subsidyMeasureRes1.getCreatedTimestamp()).isNotNull();
         assertThat(subsidyMeasureRes1.getLastModifiedTimestamp()).isNotNull();
         assertThat(subsidyMeasureRes1.getSpecificPolicyObjective()).isNotNull();
+        assertThat(subsidyMeasureRes1.getGrantingAuthorityName()).isEqualTo("ganame");
+        assertThat(subsidyMeasureRes1.getDeletedBy()).isEqualTo("SYSTEM");
+        assertThat(subsidyMeasureRes1.getDeletedTimestamp()).isNotNull();
+        assertThat(subsidyMeasureRes1.isHasNoEndDate()).isTrue();
+        assertThat(subsidyMeasureRes1.getSubsidySchemeDescription()).isEqualTo("Scheme description");
+        assertThat(subsidyMeasureRes1.getConfirmationDate()).isNotNull();
+        assertThat(subsidyMeasureRes1.getSpendingSectors()).isEqualTo("Sector");
+        assertThat(subsidyMeasureRes1.getMaximumAmountUnderScheme()).isEqualTo("500000");
+        assertThat(subsidyMeasureRes1.getPurpose()).isEqualTo("Purpose");
+        assertThat(subsidyMeasureRes1.getSchemeVersions()).isEmpty();
+        assertThat(subsidyMeasureRes1.getReason()).isEqualTo("Reason");
 
         assertThat(subsidyMeasureRes1.getAwardSearchResults()).isNotNull();
         assertThat(subsidyMeasureRes.getSubsidySchemeInterest()).isNotNull();
