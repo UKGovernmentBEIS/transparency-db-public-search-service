@@ -291,4 +291,165 @@ public class SearchControllerTest {
                 )
         );
     }
+
+    @Test
+    void findSearchResultsPreservesNonDefaultPageSize() {
+        SearchInput input = new SearchInput();
+        input.setTotalRecordsPerPage(25);
+        when(searchServiceMock.findMatchingAwards(input)).thenReturn(searchResultsResponse);
+
+        ResponseEntity<SearchResults> response = searchController.findSearchResults(input);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(input.getTotalRecordsPerPage()).isEqualTo(25);
+        verify(searchServiceMock).findMatchingAwards(input);
+    }
+
+    @Test
+    void findStandaloneAwardsAppliesDefaultPageAndPageSize() {
+        SearchInput input = new SearchInput();
+        input.setSortBy(new String[]{""});
+        when(searchServiceMock.findStandaloneAwards(input)).thenReturn(searchResultsResponse);
+
+        ResponseEntity<SearchResults> response = searchController.findStandaloneAwards(input);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(input.getPageNumber()).isEqualTo(1);
+        assertThat(input.getTotalRecordsPerPage()).isEqualTo(10);
+        assertThat(input.getSortBy()).containsExactly("awardNumber,desc");
+        verify(searchServiceMock).findStandaloneAwards(input);
+    }
+
+    @Test
+    void findStandaloneAwardsPreservesExplicitPageAndPageSize() {
+        SearchInput input = new SearchInput();
+        input.setPageNumber(3);
+        input.setTotalRecordsPerPage(25);
+        input.setSortBy(new String[]{"awardNumber"});
+        when(searchServiceMock.findStandaloneAwards(input)).thenReturn(searchResultsResponse);
+
+        searchController.findStandaloneAwards(input);
+
+        assertThat(input.getPageNumber()).isEqualTo(3);
+        assertThat(input.getTotalRecordsPerPage()).isEqualTo(25);
+        assertThat(input.getSortBy()).containsExactly("awardNumber,asc");
+    }
+
+    @Test
+    void findMfaAwardRejectsNonNumericAwardNumber() {
+        ResponseEntity<MFAAwardResponse> response = searchController.findMfaAward("not-a-number");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).isNotNull();
+        verify(searchServiceMock, never()).findMfaByAwardNumber(anyLong());
+    }
+
+    @Test
+    void findMfaAwardReturnsMatchingAward() {
+        when(searchServiceMock.findMfaByAwardNumber(1L)).thenReturn(mfaAwardResponse);
+
+        ResponseEntity<MFAAwardResponse> response = searchController.findMfaAward("1");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isSameAs(mfaAwardResponse);
+        verify(searchServiceMock).findMfaByAwardNumber(1L);
+    }
+
+    @Test
+    void findMfaAwardRejectsMissingAwardNumber() {
+        Assertions.assertThrows(InvalidRequestException.class, () -> searchController.findMfaAward(null));
+    }
+
+    @Test
+    void exportEndpointsReturnServiceResponses() {
+        Filter mfaFilter = new Filter();
+        Filter awardFilter = new Filter();
+        Filter schemeFilter = new Filter();
+        MFAAwardsExportResponse mfaResponse = new MFAAwardsExportResponse(Collections.emptyList());
+        AwardsExportResponse awardExportResponse = new AwardsExportResponse(Collections.emptyList());
+        SubsidyMeasuresExportResponse schemeResponse = new SubsidyMeasuresExportResponse(Collections.emptyList());
+
+        when(searchServiceMock.findMfaAwardsForExport(mfaFilter)).thenReturn(mfaResponse);
+        when(searchServiceMock.findAwardsForExport(awardFilter)).thenReturn(awardExportResponse);
+        when(searchServiceMock.findSchemesForExport(schemeFilter)).thenReturn(schemeResponse);
+
+        assertThat(searchController.exportMfaAwards(mfaFilter).getBody()).isSameAs(mfaResponse);
+        assertThat(searchController.exportAwards(awardFilter).getBody()).isSameAs(awardExportResponse);
+        assertThat(searchController.exportSchemes(schemeFilter).getBody()).isSameAs(schemeResponse);
+
+        verify(searchServiceMock).findMfaAwardsForExport(mfaFilter);
+        verify(searchServiceMock).findAwardsForExport(awardFilter);
+        verify(searchServiceMock).findSchemesForExport(schemeFilter);
+    }
+
+    @Test
+    void findAwardsMapsUnsortedDefaultAndRecipientSorts() {
+        Filter unsortedFilter = new Filter();
+        Filter recipientFilter = new Filter();
+        Filter schemeNameFilter = new Filter();
+        Filter fallbackFilter = new Filter();
+        AwardsResponse expectedResponse = new AwardsResponse(Collections.emptyList(), 0, 0, 0);
+        Pageable unsorted = PageRequest.of(0, 10, Sort.unsorted());
+        Pageable recipientSort = PageRequest.of(0, 10, Sort.by("recipientName"));
+        Pageable schemeNameSort = PageRequest.of(0, 10, Sort.by("subsidySchemeName"));
+        Pageable fallbackSort = PageRequest.of(0, 10, Sort.by("other"));
+
+        when(searchServiceMock.findAwards(any(Filter.class), any(Pageable.class))).thenReturn(expectedResponse);
+
+        assertThat(searchController.findAwards(unsortedFilter, unsorted).getBody()).isSameAs(expectedResponse);
+        assertMappedSort(unsortedFilter, "publishedAwardDate");
+        assertThat(searchController.findAwards(recipientFilter, recipientSort).getBody()).isSameAs(expectedResponse);
+        assertMappedSort(recipientFilter, "beneficiary.beneficiaryName");
+        assertThat(searchController.findAwards(schemeNameFilter, schemeNameSort).getBody()).isSameAs(expectedResponse);
+        assertMappedSort(schemeNameFilter, "beneficiary.beneficiaryName");
+        assertThat(searchController.findAwards(fallbackFilter, fallbackSort).getBody()).isSameAs(expectedResponse);
+        assertMappedSort(fallbackFilter, "publishedAwardDate");
+    }
+
+    @Test
+    void findMfaAwardsMapsRecipientSortAndNullSort() {
+        Filter recipientFilter = new Filter();
+        Filter nullSortFilter = new Filter();
+        Pageable recipientSort = PageRequest.of(0, 10, Sort.by("recipientName"));
+        Pageable nullSort = mock(Pageable.class);
+        when(nullSort.getPageNumber()).thenReturn(0);
+        when(nullSort.getPageSize()).thenReturn(10);
+        when(nullSort.getSort()).thenReturn(null);
+        when(searchServiceMock.findMfaAwards(any(Filter.class), any(Pageable.class))).thenReturn(mfaAwardsResponse);
+
+        assertThat(searchController.findMfaAwards(recipientFilter, recipientSort).getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertMappedMfaSort(recipientFilter, "recipientName");
+        assertThat(searchController.findMfaAwards(nullSortFilter, nullSort).getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertMappedMfaSort(nullSortFilter, "publishedDate");
+    }
+
+    @Test
+    void findSchemesMapsSchemeRecipientSort() {
+        Filter schemeNameFilter = new Filter();
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("subsidySchemeName"));
+        SubsidyMeasuresResponse expectedResponse = new SubsidyMeasuresResponse(Collections.emptyList(), 0, 0, 0);
+        when(searchServiceMock.findSchemes(any(Filter.class), any(Pageable.class))).thenReturn(expectedResponse);
+
+        assertThat(searchController.findSchemes(schemeNameFilter, pageable).getBody()).isSameAs(expectedResponse);
+        verify(searchServiceMock).findSchemes(
+                eq(schemeNameFilter),
+                argThat(mappedPageable ->
+                        "subsidyMeasureTitle".equals(mappedPageable.getSort().iterator().next().getProperty())
+                )
+        );
+    }
+
+    private void assertMappedSort(Filter filter, String expectedProperty) {
+        verify(searchServiceMock).findAwards(
+                eq(filter),
+                argThat(pageable -> expectedProperty.equals(pageable.getSort().iterator().next().getProperty()))
+        );
+    }
+
+    private void assertMappedMfaSort(Filter filter, String expectedProperty) {
+        verify(searchServiceMock).findMfaAwards(
+                eq(filter),
+                argThat(pageable -> expectedProperty.equals(pageable.getSort().iterator().next().getProperty()))
+        );
+    }
 }
